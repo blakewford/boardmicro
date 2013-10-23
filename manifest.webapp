@@ -1,0 +1,27 @@
+{
+  "name": "Webduino",
+  "description": "AVR Virtual Platform",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "Blake W. Ford",
+    "url": "http://www.starlo.org"
+  },
+  "permissions": {
+  },
+  "activities": {
+  },
+  "messages": [],
+  "locales": {
+    "en-US": {
+      "name": "Webduino",
+      "description": "AVR Virtual Platform"
+    }
+  },
+  "default_locale": "en-US",
+  "icons": {
+    "60": "/style/icons/60/webduino.png",
+    "120": "/style/icons/webduino.png",
+    "128": "/style/icons/128/webduino.png"
+  },
+  "orientation": "portrait-primary"
+}

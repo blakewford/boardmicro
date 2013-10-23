@@ -1,0 +1,6 @@
+
+
+      loadMemory(hex);
+      exec();
+    </script>
+</html>

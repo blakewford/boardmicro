@@ -1,0 +1,46 @@
+/* Test code for webduino.
+
+This file is part of webduino.
+
+webduino is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+webduino is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with webduino; see the file LICENSE.  If not see
+<http://www.gnu.org/licenses/>.  */
+
+#include <avr/io.h>
+
+int main(void) {
+    
+    //Set as output pin
+    DDRB = _BV(3);
+    //Write value
+loop:
+        PORTB = 0x0;
+        PORTB = 0x1;
+        PORTB = 0x2;
+        PORTB = 0x3;
+        PORTB = 0x4;
+        PORTB = 0x5;
+        PORTB = 0x6;
+        PORTB = 0x7;
+        PORTB = 0x8;
+        PORTB = 0x9;
+        PORTB = 0xA;
+        PORTB = 0xB;
+        PORTB = 0xC;
+        PORTB = 0xD;
+        PORTB = 0xE;
+        PORTB = 0xF;
+goto loop;
+
+    return 0;
+}
