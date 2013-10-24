@@ -297,7 +297,7 @@
               case 0x82:
               case 0x83:
                   if(((params & 0xF) | 0x0) === 0x0){
-                      writeMemory(((r[31] << 0x8) | r[30]), parseInt(r[dst], 16));
+                      writeMemory(((r[31] << 0x8) | r[30]), r[dst]);
                   }
                   break;
               case 0x90:
