@@ -130,7 +130,7 @@
           S = N ^ V;
       }
     
-      function fetch(opcode, params){        
+      function fetch(opcode, params){
           var dst = ((opcode & 0x1)*16)+((params & 0xF0) >> 0x4);
           var src = (((opcode & 0x2) >> 1)*16)+(params & 0xF);
           var upperPair = (((params & 0x30) >> 0x4)*2)+24;
@@ -151,7 +151,7 @@
               case 0x06:
               case 0x07:
                   H = 0;
-                  setPostEvaluationFlags(r[smallReg] - bigConstant);
+                  setPostEvaluationFlags(r[dst] - r[src] + C);
                   break;
               case 0x08:
               case 0x09:
@@ -267,6 +267,24 @@
               case 0x5F:
                   r[smallReg] = r[smallReg] - bigConstant;
                   break;
+              case 0x60:
+              case 0x61:
+              case 0x62:
+              case 0x63:
+              case 0x64:
+              case 0x65:
+              case 0x66:
+              case 0x67:
+              case 0x68:
+              case 0x69:
+              case 0x6A:
+              case 0x6B:
+              case 0x6C:
+              case 0x6D:
+              case 0x6E:
+              case 0x6F:
+                  r[smallReg] = r[smallReg] | bigConstant;
+                  break;
               case 0x70:
               case 0x71:
               case 0x72:
@@ -302,21 +320,32 @@
                   break;
               case 0x90:
               case 0x91:
-                  if(params & 0xF === 0xF){
+                  if((params & 0xF) === 0xF){
                       r[dst] = memory[SP];
                       SP++;
-                  }else if(params & 0xF === 0x5){
+                  }else if((params & 0xF) === 0x5){
                       r[dst] = ((r[31] << 0x8) | r[30]);
                       r[30]++;
+                      if(r[30] === 0x100){
+                          r[30] = 0;
+                          r[31]++;
+                      }
                   }else{
                      r[dst] = memory[parseInt(memory[PC++] << 0x4 | memory[PC++], 16)];
                   }
                   break;
               case 0x92:
               case 0x93:
-                  if(params & 0xFF === 0xF){
+                  if((params & 0xFF) === 0xF){
                       writeMemory(SP, r[dst]);
                       SP--;
+                  }else if((params & 0xF) === 0xD){
+                      memory[parseInt((r[27] << 0x8) | r[26])] = r[dst];
+                      r[26]++;
+                      if(r[26] === 0x100){
+                          r[26] = 0;
+                          r[27]++;
+                      }
                   }else{
                      memory[parseInt(memory[PC++] << 0x4 | memory[PC++], 16)] = r[dst];
                   }
@@ -444,7 +473,7 @@
               case 0xF5:
               case 0xF6:
               case 0xF7:
-                  if((params ^ 0x1) > 0x0){
+                  if(((params ^ 0x1) > 0x0) && !Z){
                       var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
                       if(breakDistance > 0x40)
                         PC-=(128-breakDistance)*2;
