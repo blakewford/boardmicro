@@ -36,7 +36,8 @@
       var memory = new Array(0x4400);
       var flashStart = 0x4000;
       var dataStart = 0x40;
-      var dataEnd = 0x60; 
+      var dataEnd = 0x60;
+      var ioregStart = 0x0;
       var portBloc = 0x2;
       var bitsPerPort = 0x4;
       */
@@ -46,6 +47,7 @@
       var flashStart = 0x460;
       var dataStart = 0x60;
       var dataEnd = 0x460; 
+      var ioRegStart = 0x20;
       var portBloc = 0x38;
       var bitsPerPort = 0x8;
     
@@ -139,6 +141,8 @@
           var bigConstant = ((opcode & 0xF) << 0x4) | (params & 0xF);
           var jumpConstant = ((opcode & 0xF) << 0x8) | params;
           var io = parseInt(((opcode & 0x6) << 0x3) & (params & 0xF), 16);
+          var regSet = (params & 0xF8) >> 0x3;
+          var regVal = (params & 0x07);
           switch(opcode){
               case 0x01:
                   var halfDest = ((params & 0xF0) >> 0x4)*2;
@@ -340,14 +344,14 @@
                       writeMemory(SP, r[dst]);
                       SP--;
                   }else if((params & 0xF) === 0xD){
-                      memory[parseInt((r[27] << 0x8) | r[26])] = r[dst];
+                      writeMemory(parseInt((r[27] << 0x8) | r[26]), r[dst]);
                       r[26]++;
                       if(r[26] === 0x100){
                           r[26] = 0;
                           r[27]++;
                       }
                   }else{
-                     memory[parseInt(memory[PC++] << 0x4 | memory[PC++], 16)] = r[dst];
+                     writeMemory(parseInt(memory[PC++] << 0x4 | memory[PC++], 16), r[dst]);
                   }
                   break;
               case 0x94:
@@ -378,6 +382,10 @@
                       Z = 0;
                   }
                   break;
+              case 0x9A:
+                  var register = ioRegStart+regSet;
+                  writeMemory(register, memory[register] | 1 << regVal);
+                  break;
               case 0xB0:
               case 0xB1:
               case 0xB2:
@@ -396,7 +404,7 @@
               case 0xBD:
               case 0xBE:
               case 0xBF:
-                  memory[io] = r[dst]; 
+                  writeMemory(io, r[dst]); 
                   break;
               case 0xC0:
               case 0xC1:
