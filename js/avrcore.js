@@ -356,7 +356,7 @@
                   break;
               case 0x94:
               case 0x95:
-                  if(params & 0xFF === 0x5){
+                  if((params & 0xFF) === 0x5){
                       var value = r[dst];
                       var topBit = value & 0x80;
                       var lowBit = value & 0x1;
@@ -366,7 +366,7 @@
                       r[dst] = value;
                       C = lowBit;
                       V = N ^ C;
-                  }else if(params & 0xFF === 0x08){
+                  }else if((params & 0xFF) === 0x08){
                      PC = memory[SP];
                      SP++;
                   }
