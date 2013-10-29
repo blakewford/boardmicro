@@ -308,25 +308,27 @@
                   H = 0;
                   r[smallReg] = r[smallReg] & bigConstant;
                   setPostEvaluationFlags(r[smallReg]);
-                 C = 0;
-                 break;
+                  C = 0;
+                  break;
               case 0x80:
               case 0x81:
                   if(((params & 0x8) | 0x0) === 0x0){
-                      writeMemory(parseInt((r[29] << 0x8) | r[28], 16), parseInt(r[dst], 16));
+                      var base = parseInt(r[dst], 16);
+                      writeMemory(parseInt(r[28], 16), base);
+                      writeMemory(parseInt(r[29], 16), ++base);
                   }
                   break;
               case 0x82:
               case 0x83:
                   if(((params & 0xF) | 0x0) === 0x0){
-                      writeMemory(((r[31] << 0x8) | r[30]), r[dst]);
+                      writeMemory((r[30]), r[dst]);
+                      writeMemory((r[31]), r[dst]+1);
                   }
                   break;
               case 0x90:
               case 0x91:
                   if((params & 0xF) === 0xF){
-                      r[dst] = memory[SP];
-                      SP++;
+                      r[dst] = memory[SP++];
                   }else if((params & 0xF) === 0x5){
                       r[dst] = ((r[31] << 0x8) | r[30]);
                       r[30]++;
@@ -344,14 +346,16 @@
                       writeMemory(SP, r[dst]);
                       SP--;
                   }else if((params & 0xF) === 0xD){
-                      writeMemory(parseInt((r[27] << 0x8) | r[26]), r[dst]);
+                      writeMemory(parseInt(r[26], r[dst]));
+                      writeMemory(parseInt(r[27], r[dst]+1));
                       r[26]++;
                       if(r[26] === 0x100){
                           r[26] = 0;
                           r[27]++;
                       }
                   }else{
-                     writeMemory(parseInt(memory[PC++] << 0x4 | memory[PC++], 16), r[dst]);
+                     writeMemory(parseInt(memory[PC++], 16), r[dst]);
+                     writeMemory(parseInt(memory[PC++], 16), r[dst]+1);
                   }
                   break;
               case 0x94:
@@ -367,8 +371,8 @@
                       C = lowBit;
                       V = N ^ C;
                   }else if((params & 0xFF) === 0x08){
-                     PC = memory[SP];
-                     SP++;
+                     var upper = memory[++SP];
+                     PC = ((upper << 0x8)|memory[++SP]);
                   }
                   break;
               case 0x96:
@@ -444,8 +448,8 @@
               case 0xDD:
               case 0xDE:
               case 0xDF:
-                  writeMemory(SP, PC+1);
-                  SP--;
+                  writeMemory(SP--, (PC & 0xFF));
+                  writeMemory(SP--, (PC >> 0x8));
                   if((jumpConstant & 0x800) === 0x800){
                       PC-=4096-((jumpConstant ^ 0x800)*2);
                   }else{
