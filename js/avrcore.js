@@ -143,6 +143,7 @@
           var io = parseInt(((opcode & 0x6) << 0x3) & (params & 0xF), 16);
           var regSet = (params & 0xF8) >> 0x3;
           var regVal = (params & 0x07);
+          var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
           switch(opcode){
               case 0x01:
                   var halfDest = ((params & 0xF0) >> 0x4)*2;
@@ -386,6 +387,10 @@
                       Z = 0;
                   }
                   break;
+              case 0x97:
+                  r[upperPair] = r[upperPair] - (constant & 0xF);
+                  r[upperPair+1] = r[upperPair+1] - ((constant & 0xF0) >> 0x4);
+                  break;
               case 0x9A:
                   var register = ioRegStart+regSet;
                   writeMemory(register, memory[register] | 1 << regVal);
@@ -474,19 +479,22 @@
               case 0xEF:
                   r[smallReg] = bigConstant;
                   break;
-      /*
               case 0xF0:
               case 0xF1:
               case 0xF2:
               case 0xF3:
-                  break;
-      */
+                if(((params ^ 0x1) > 0x0) && Z){
+                    if(breakDistance > 0x40)
+                      PC-=(128-breakDistance)*2;
+                    else
+                      PC+=breakDistance;
+                }
+                break;
               case 0xF4:
               case 0xF5:
               case 0xF6:
               case 0xF7:
                   if(((params ^ 0x1) > 0x0) && !Z){
-                      var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
                       if(breakDistance > 0x40)
                         PC-=(128-breakDistance)*2;
                       else
