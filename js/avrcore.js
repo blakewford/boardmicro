@@ -140,7 +140,7 @@
           var smallReg = ((params & 0xF0) >> 0x4)+16;
           var bigConstant = ((opcode & 0xF) << 0x4) | (params & 0xF);
           var jumpConstant = ((opcode & 0xF) << 0x8) | params;
-          var io = parseInt(((opcode & 0x6) << 0x3) & (params & 0xF), 16);
+          var io = ((((opcode & 0x6) >> 0x1) << 0x4) | (params & 0xF));
           var regSet = (params & 0xF8) >> 0x3;
           var regVal = (params & 0x07);
           var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
@@ -403,7 +403,7 @@
               case 0xB5:
               case 0xB6:
               case 0xB7:
-                  r[dst] = memory[io];
+                  r[dst] = memory[ioRegStart+io];
                   break;
               case 0xB8:
               case 0xB9:
@@ -413,7 +413,7 @@
               case 0xBD:
               case 0xBE:
               case 0xBF:
-                  writeMemory(io, r[dst]); 
+                  writeMemory(ioRegStart+io, r[dst]); 
                   break;
               case 0xC0:
               case 0xC1:
