@@ -155,6 +155,7 @@
           var regSet = (params & 0xF8) >> 0x3;
           var regVal = (params & 0x07);
           var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
+          var long = parseInt((opcode & 0x1 << 20) | (params & 0xF0 << 17) | (params & 0x1 << 16) | (memory[PC]) << 0x8 | (memory[PC+1]), 16)*2;
           switch(opcode){
               case 0x01:
                   var halfDest = ((params & 0xF0) >> 0x4)*2;
@@ -386,7 +387,11 @@
                      var upper = memory[++SP];
                      PC = ((upper << 0x8)|memory[++SP]);
                   }else if((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D){
-                    PC += parseInt((opcode & 0x1 << 20) | (params & 0xF0 << 17) | (params & 0x1 << 16) | (memory[PC]) << 0x8 | (memory[PC+1]), 16)*2;
+                    PC += long;
+                  }else if((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F){
+                    writeMemory(SP--, (PC & 0xFF));
+                    writeMemory(SP--, (PC >> 0x8));
+                    PC = flashStart+long;
                   }
                   break;
               case 0x96:
