@@ -42,6 +42,7 @@
       var bitsPerPort = 0x4;
       */
     
+      /*
       //ATMega8
       var memory = new Array(0x2000);
       var flashStart = 0x460;
@@ -49,6 +50,16 @@
       var dataEnd = 0x460; 
       var ioRegStart = 0x20;
       var portBloc = 0x38;
+      var bitsPerPort = 0x8;
+      */
+      
+      //ATMega32u4
+      var memory = new Array(0x8000);
+      var flashStart = 0xB00;
+      var dataStart = 0x100;
+      var dataEnd = 0xB00; 
+      var ioRegStart = 0x20;
+      var portBloc = 0x25;
       var bitsPerPort = 0x8;
     
       var dataQueue = [];
@@ -374,6 +385,8 @@
                   }else if((params & 0xFF) === 0x08){
                      var upper = memory[++SP];
                      PC = ((upper << 0x8)|memory[++SP]);
+                  }else if((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D){
+                    PC += parseInt((opcode & 0x1 << 20) | (params & 0xF0 << 17) | (params & 0x1 << 16) | (memory[PC]) << 0x8 | (memory[PC+1]), 16)*2;
                   }
                   break;
               case 0x96:

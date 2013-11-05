@@ -17,7 +17,9 @@
 #<http://www.gnu.org/licenses/>.
 
 #TARGET = attiny4
-TARGET = atmega8
+#TARGET = atmega8
+TARGET = atmega32u4
+
 SRC = blink
 BASENAME = $(SRC)_$(TARGET)
 
@@ -31,7 +33,8 @@ $(BASENAME).dis: $(BASENAME).elf
 
 $(BASENAME).hex: $(BASENAME).elf
 #	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0x4000 --change-section-address .data=0x40
-	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0x460 --change-section-address .data=0x60
+#	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0x460 --change-section-address .data=0x60
+	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0xB00 --change-section-address .data=0x60
 
 .PHONY index.html: $(BASENAME).hex
 	cat header > $@
