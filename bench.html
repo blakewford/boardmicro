@@ -23,6 +23,7 @@
     <span class="loadMemory">
       <button>Load Memory</button>
     </span>
+    <button onClick="exec()">Continue</button>
     </div>
     <div style="width: 25%; display: table;">
         <div style="display: table-row">
@@ -57,6 +58,7 @@
         reader.onloadend = function(evt) {
           if (evt.target.readyState == FileReader.DONE) {
               loadMemory(evt.target.result);
+              engineInit();
               exec();
           }
         };

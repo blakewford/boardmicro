@@ -26,11 +26,6 @@
           ctx.fillRect(0,0,10,10);    
       }
     
-      var PC = 0;
-      var SP = 0x5F;
-      var r = new Array(32);
-      var SREG, C, Z, N, V, S, H, T, I;
-    
       /*
       //ATTiny4
       var memory = new Array(0x4400);
@@ -61,8 +56,14 @@
       var ioRegStart = 0x20;
       var portBloc = 0x25;
       var bitsPerPort = 0x8;
+      
+      var PC = flashStart;
+      var SP = 0x5F;
+      var r = new Array(32);
+      var SREG, C, Z, N, V, S, H, T, I;
     
       var dataQueue = [];
+      var isPaused = true;
     
       function writeDataToPort(){
           if(dataQueue.length > 0){
@@ -531,7 +532,7 @@
                   r[dst] = T << (params & 0x7);
                   break;
               default:
-                  document.write("unknown "+(PC-2)+" "+opcode+" "+params+"<br/>");
+                  document.write("unknown 0x"+(PC-2).toString(16).toUpperCase()+" "+opcode+" "+params+"<br/>");
           }        
       }
     
@@ -539,18 +540,27 @@
           var opcode = parseInt(memory[PC], 16);
           var params = parseInt(memory[++PC], 16);
           PC++;
-          if(!(opcode == 0x95 && params == 0x98) && !(opcode == 0xCF && params == 0xFF))
+          var isBreak = (opcode == 0x95 && params == 0x98);
+          if(!isBreak && !(opcode == 0xCF && params == 0xFF))
               setTimeout(loop, 10);
+          else if(isBreak){
+              isPaused = true;
+              alert('Breakpoint at 0x'+(PC-2).toString(16).toUpperCase());
+          }
           fetch(opcode, params);
           while(dataQueue.length > 0){
               writeDataToPort();
           } 
       }
-    
-      function exec(){
-          PC=flashStart;
+      
+      function engineInit(){
           for(i = 0; i < r.length; i++)
               r[i] = 0;
+      }
     
-          loop();
+      function exec(){
+          if(isPaused){
+            isPaused = false;  
+            loop();
+          }
       }
