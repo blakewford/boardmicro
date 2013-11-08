@@ -186,6 +186,13 @@
                   r[dst] = r[dst]+r[src];
                   setPostEvaluationFlags(r[dst]);
                   break;
+              case 0x14:
+              case 0x15:
+              case 0x16:
+              case 0x17:
+                  setPreEvaluationFlags(r[dst], r[src]);
+                  setPostEvaluationFlags(r[dst]);
+                  break;
               case 0x18:
               case 0x19:
               case 0x1A:
