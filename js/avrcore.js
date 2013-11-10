@@ -535,6 +535,10 @@
                   document.write("unknown 0x"+(PC-2).toString(16).toUpperCase()+" "+opcode+" "+params+"<br/>");
           }        
       }
+      
+      function handleBreakpoint(address){
+            alert('Breakpoint at 0x'+address);          
+      }
     
       function loop(){
           var opcode = parseInt(memory[PC], 16);
@@ -545,7 +549,7 @@
               setTimeout(loop, 10);
           else if(isBreak){
               isPaused = true;
-              alert('Breakpoint at 0x'+(PC-2).toString(16).toUpperCase());
+              handleBreakpoint((PC-2).toString(16).toUpperCase());
           }
           fetch(opcode, params);
           while(dataQueue.length > 0){

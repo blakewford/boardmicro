@@ -29,7 +29,7 @@ $(BASENAME).elf: $(SRC).c
 	avr-gcc $< -o $(BASENAME).elf -mmcu=$(TARGET)
 
 $(BASENAME).dis: $(BASENAME).elf
-	avr-objdump -d $(BASENAME).elf > $(BASENAME).dis
+	avr-objdump -d $(BASENAME).elf > $(BASENAME).hex.dis
 
 $(BASENAME).hex: $(BASENAME).elf
 #	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0x4000 --change-section-address .data=0x40

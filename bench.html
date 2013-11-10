@@ -18,13 +18,15 @@
 <html>  
     <script type="text/javascript" src="js/avrcore.js"></script>
     <div>
-    <input type="file" id="hexfile"/>
+    Intel Hex File <input type="file" id="hexfile"/>
+    Disassembly File <input name="debug" type="file" id="debugfile"/>
     <br/>
     <span class="loadMemory">
       <button>Load Memory</button>
     </span>
     <button onClick="exec()">Continue</button>
     </div>
+    <br/>
     <div style="width: 25%; display: table;">
         <div style="display: table-row">
             <div style="display: table-cell;">  <canvas id="led0" width="10" height="10"/> </div>
@@ -37,6 +39,8 @@
             <div style="display: table-cell;">  <canvas id="led7" width="10" height="10"/> </div>
         </div>
     </div>
+    <br/>
+    <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
     <script>
       fillLED("led0", "#FF0000");
       fillLED("led1", "#FF0000");
@@ -46,13 +50,57 @@
       fillLED("led5", "#FF0000");
       fillLED("led6", "#FF0000");
       fillLED("led7", "#FF0000");
-
+      
+      var cachedDisassembly;
+      var pointsPerLine = 16;
+      
+      function matchTextToBreakpoint(text, address) {
+         var start = 0;
+         var lineCount = 0;
+         while(start >= 0 && start < text.length){
+            start = text.indexOf('\n', start)+1;
+            if(text.substring(start).indexOf(address) != -1)
+                lineCount++;
+         }
+         return pointsPerLine*lineCount;
+      }
+      
+      function handleBreakpoint(address){
+        var addressString = " "+(parseInt(address, 16) - flashStart).toString(16)+":";
+        var textarea = document.getElementById('disassembly');
+        textarea.value = cachedDisassembly;
+        var retVal = 
+            matchTextToBreakpoint(
+                cachedDisassembly, 
+                addressString
+            ); 
+        textarea.scrollTop = retVal;
+        var line = (retVal/pointsPerLine);
+        var limit = (textarea.scrollTop/pointsPerLine);
+        if(line > limit){
+           textarea.value = cachedDisassembly.substring(cachedDisassembly.indexOf(addressString));
+        }
+      }
+      
       document.querySelector('.loadMemory').addEventListener('click', function(evt) {
         var file = document.getElementById('hexfile').files[0];
+        var debugfile = document.getElementById('debugfile').files[0];
         if (!file) {
           alert('Intel Hex File Required');
           return;
         }
+        var textarea = document.getElementById('disassembly');
+        if (!debugfile) {
+          textarea.value = "No debug file selected";
+        }else{
+            var reader = new FileReader();
+            reader.onloadend = function(evt) {
+              if (evt.target.readyState == FileReader.DONE)
+                 textarea.value = evt.target.result;
+                 cachedDisassembly = textarea.value;
+            };
+            reader.readAsBinaryString(debugfile.slice(0, debugfile.size));
+        }  
   
         var reader = new FileReader();
         reader.onloadend = function(evt) {
