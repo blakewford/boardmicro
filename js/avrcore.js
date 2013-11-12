@@ -63,6 +63,7 @@
       var SREG, C, Z, N, V, S, H, T, I;
     
       var dataQueue = [];
+      var softBreakpoints = [];
       var isPaused = true;
     
       function writeDataToPort(){
@@ -539,12 +540,21 @@
       function handleBreakpoint(address){
             alert('Breakpoint at 0x'+address);          
       }
+      
+      function isSoftBreakpoint(address){
+          for(i =0; i < softBreakpoints.length; i++){
+              if((softBreakpoints[i]+flashStart) === address)
+                return true;
+          }
+          
+          return false;
+      }
     
       function loop(){
           var opcode = parseInt(memory[PC], 16);
           var params = parseInt(memory[++PC], 16);
           PC++;
-          var isBreak = (opcode == 0x95 && params == 0x98);
+          var isBreak = (opcode == 0x95 && params == 0x98) || isSoftBreakpoint(PC);
           if(!isBreak && !(opcode == 0xCF && params == 0xFF))
               setTimeout(loop, 10);
           else if(isBreak){

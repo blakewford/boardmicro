@@ -41,6 +41,9 @@
     </div>
     <br/>
     <select id = "breakpoints"></select>
+    <button onClick="setBreakpoint()">Set Breakpoint</button>
+    <button onClick="">Step</button>
+    <button onClick="softBreakpoints = [];">Clear Breakpoints</button>    
     <br/>
     <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
     <script>
@@ -55,6 +58,13 @@
       
       var cachedDisassembly;
       var pointsPerLine = 16;
+      
+      function setBreakpoint(){
+        var list = document.getElementById('breakpoints');
+        var selected = list.options[list.selectedIndex].value;
+        var address = parseInt(selected.substring(0, selected.length-1), 16);
+        softBreakpoints.push(address);
+      }
       
       function matchTextToBreakpoint(text, address) {
          var start = 0;
