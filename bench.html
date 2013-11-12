@@ -40,6 +40,8 @@
         </div>
     </div>
     <br/>
+    <select id = "breakpoints"></select>
+    <br/>
     <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
     <script>
       fillLED("led0", "#FF0000");
@@ -65,8 +67,12 @@
          return pointsPerLine*lineCount;
       }
       
+      function getAddressString(address){
+        return " "+(parseInt(address, 16) - flashStart).toString(16)+":"          
+      }
+      
       function handleBreakpoint(address){
-        var addressString = " "+(parseInt(address, 16) - flashStart).toString(16)+":";
+        var addressString = getAddressString(address);
         var textarea = document.getElementById('disassembly');
         textarea.value = cachedDisassembly;
         var retVal = 
@@ -80,6 +86,33 @@
         if(line > limit){
            textarea.value = cachedDisassembly.substring(cachedDisassembly.indexOf(addressString));
         }
+      }
+      
+      function checkBreakpoint(address){
+        if(matchTextToBreakpoint(cachedDisassembly, address) > 0){
+            var option = document.createElement("OPTION");
+            option.appendChild(document.createTextNode(address));
+            document.getElementById("breakpoints").appendChild(option);
+            
+            return true;
+        }
+        
+        return false;
+      }
+      
+      function initializeBreakpoints(){
+          var skips = 0;
+          var endPoint = (matchTextToBreakpoint(cachedDisassembly, "__stop_program")/16);
+          for(i = 0; i < endPoint; i++){
+            var address = getAddressString((flashStart+(i*2)).toString(16));
+            if(!checkBreakpoint(address)){
+                skips++;
+            }
+          }
+          for(i = endPoint; i < endPoint+skips; i++){
+              var address = getAddressString((flashStart+(i*2)).toString(16));
+              checkBreakpoint(address);             
+          }
       }
       
       document.querySelector('.loadMemory').addEventListener('click', function(evt) {
@@ -98,6 +131,7 @@
               if (evt.target.readyState == FileReader.DONE)
                  textarea.value = evt.target.result;
                  cachedDisassembly = textarea.value;
+                 initializeBreakpoints();
             };
             reader.readAsBinaryString(debugfile.slice(0, debugfile.size));
         }  
