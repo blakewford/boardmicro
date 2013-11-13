@@ -63,7 +63,7 @@
       var SREG, C, Z, N, V, S, H, T, I;
     
       var dataQueue = [];
-      var softBreakpoints = [];
+      var softBreakpoints = [2];
       var isPaused = true;
     
       function writeDataToPort(){
