@@ -65,7 +65,8 @@
       var dataQueue = [];
       var softBreakpoints = [2];
       var isPaused = true;
-    
+      var forceBreak = false;
+      
       function writeDataToPort(){
           if(dataQueue.length > 0){
               for(i = 0; i < bitsPerPort; i++)
@@ -554,10 +555,11 @@
           var opcode = parseInt(memory[PC], 16);
           var params = parseInt(memory[++PC], 16);
           PC++;
-          var isBreak = (opcode == 0x95 && params == 0x98) || isSoftBreakpoint(PC);
+          var isBreak = (opcode == 0x95 && params == 0x98) || isSoftBreakpoint(PC) || forceBreak;
           if(!isBreak && !(opcode == 0xCF && params == 0xFF))
               setTimeout(loop, 10);
           else if(isBreak){
+              forceBreak = false;
               isPaused = true;
               handleBreakpoint((PC-2).toString(16).toUpperCase());
           }

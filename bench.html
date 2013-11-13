@@ -42,7 +42,7 @@
     <br/>
     <select id = "breakpoints"></select>
     <button onClick="setBreakpoint()">Set Breakpoint</button>
-    <button onClick="">Step</button>
+    <button onClick="forceBreak = true; exec();">Step</button>
     <button onClick="softBreakpoints = [];">Clear Breakpoints</button>    
     <br/>
     <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
