@@ -63,7 +63,7 @@
       var SREG, C, Z, N, V, S, H, T, I;
     
       var dataQueue = [];
-      var softBreakpoints = [2];
+      var softBreakpoints = [];
       var isPaused = true;
       var forceBreak = false;
       
@@ -158,7 +158,8 @@
           var regSet = (params & 0xF8) >> 0x3;
           var regVal = (params & 0x07);
           var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
-          var long = parseInt((opcode & 0x1 << 20) | (params & 0xF0 << 17) | (params & 0x1 << 16) | (memory[PC]) << 0x8 | (memory[PC+1]), 16)*2;
+          var long = ((opcode & 0x1) << 20 | (params & 0xF0) << 17 | (params & 0x1) << 16 | 
+            parseInt(memory[PC], 16) << 0x8 | parseInt(memory[PC+1], 16))*2;
           switch(opcode){
               case 0x01:
                   var halfDest = ((params & 0xF0) >> 0x4)*2;

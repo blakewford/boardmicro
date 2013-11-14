@@ -111,6 +111,7 @@
       }
       
       function initializeBreakpoints(){
+          softBreakpoints.push(2);
           var skips = 0;
           var endPoint = (matchTextToBreakpoint(cachedDisassembly, "__stop_program")/16);
           for(i = 0; i < endPoint; i++){
