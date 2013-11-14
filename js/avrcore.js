@@ -534,6 +534,10 @@
               case 0xF9:
                   r[dst] = T << (params & 0x7);
                   break;
+              case 0xFE:
+                  if(r[dst] & (0x1 << (params & 0x7)) > 0)
+                    PC+=2;
+                  break;
               default:
                   document.write("unknown 0x"+(PC-2).toString(16).toUpperCase()+" "+opcode+" "+params+"<br/>");
           }        
