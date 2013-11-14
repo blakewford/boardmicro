@@ -400,9 +400,9 @@
                   }else if((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D){
                     PC += long;
                   }else if((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F){
-                    writeMemory(SP--, (PC & 0xFF));
-                    writeMemory(SP--, (PC >> 0x8));
-                    PC = flashStart+long;
+                    writeMemory(SP--, ((PC+2) & 0xFF));
+                    writeMemory(SP--, ((PC+2) >> 0x8));
+                    PC = flashStart+(parseInt(memory[PC], 16) << 0x8 | parseInt(memory[PC+1], 16))*2;
                   }
                   break;
               case 0x96:
