@@ -32,8 +32,9 @@
       var flashStart = 0x4000;
       var dataStart = 0x40;
       var dataEnd = 0x60;
-      var ioregStart = 0x0;
+      var ioRegStart = 0x0;
       var portBloc = 0x2;
+      var pllCsr = 0xDEAD;
       var bitsPerPort = 0x4;
       */
     
@@ -45,6 +46,7 @@
       var dataEnd = 0x460; 
       var ioRegStart = 0x20;
       var portBloc = 0x38;
+      var pllCsr = 0xDEAD;
       var bitsPerPort = 0x8;
       */
       
@@ -55,6 +57,7 @@
       var dataEnd = 0xB00; 
       var ioRegStart = 0x20;
       var portBloc = 0x25;
+      var pllCsr = 0x49;
       var bitsPerPort = 0x8;
       
       var PC = flashStart;
@@ -66,6 +69,13 @@
       var softBreakpoints = [];
       var isPaused = true;
       var forceBreak = false;
+      
+      function writeClockRegister(data){
+          if((data & 0x02) > 0)
+            memory[pllCsr] |= 0x1;
+          else
+            memory[pllCsr] &= 0xFE;          
+      }
       
       function writeDataToPort(){
           if(dataQueue.length > 0){
@@ -83,6 +93,8 @@
           memory[address] = data;
           if(address == portBloc)
               dataQueue.push(data);
+          if(address == pllCsr)
+              writeClockRegister(data);
       }
     
       function loadMemory(result){
