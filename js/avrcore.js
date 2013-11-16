@@ -33,7 +33,8 @@
       var dataStart = 0x40;
       var dataEnd = 0x60;
       var ioRegStart = 0x0;
-      var portBloc = 0x2;
+      var portB = 0x2;
+      var portC = 0xDEAD;
       var pllCsr = 0xDEAD;
       var bitsPerPort = 0x4;
       */
@@ -45,7 +46,8 @@
       var dataStart = 0x60;
       var dataEnd = 0x460; 
       var ioRegStart = 0x20;
-      var portBloc = 0x38;
+      var portB = 0x38;
+      var portC = 0x35;
       var pllCsr = 0xDEAD;
       var bitsPerPort = 0x8;
       */
@@ -56,7 +58,8 @@
       var dataStart = 0x100;
       var dataEnd = 0xB00; 
       var ioRegStart = 0x20;
-      var portBloc = 0x25;
+      var portB = 0x25;
+      var portC = 0x28;
       var pllCsr = 0x49;
       var bitsPerPort = 0x8;
       
@@ -65,7 +68,8 @@
       var r = new Array(32);
       var SREG, C, Z, N, V, S, H, T, I;
     
-      var dataQueue = [];
+      var dataQueueB = [];
+      var dataQueueC = [];
       var softBreakpoints = [];
       var isPaused = true;
       var forceBreak = false;
@@ -77,22 +81,32 @@
             memory[pllCsr] &= 0xFE;          
       }
       
-      function writeDataToPort(){
-          if(dataQueue.length > 0){
-              for(i = 0; i < bitsPerPort; i++)
-                  fillLED("led"+i, "#FF0000");
-              var data = dataQueue.shift();
-              for(i = 0; i < bitsPerPort; i++){
-                  if(data & (0x1 << i))
-                      fillLED("led"+i, "#00FF00");
-              }
+      function writeSpecificPort(index){
+          var queue;
+          var offset = 0x8*index;
+          switch(index){
+              case 0:
+                  queue = dataQueueB;
+                  break;
+              case 1:
+                  queue = dataQueueC;
+                  break;              
           }
+          for(i = 0; i < bitsPerPort; i++)
+              fillLED("led"+parseInt(i+offset), "#FF0000");
+          var data = queue.shift();
+          for(i = 0; i < bitsPerPort; i++){
+              if(data & (0x1 << i))
+                  fillLED("led"+parseInt(i+offset), "#00FF00");
+          }          
       }
     
       function writeMemory(address, data){
           memory[address] = data;
-          if(address == portBloc)
-              dataQueue.push(data);
+          if(address == portB)
+              dataQueueB.push(data);
+          if(address == portC)
+              dataQueueC.push(data);
           if(address == pllCsr)
               writeClockRegister(data);
       }
@@ -581,8 +595,9 @@
               handleBreakpoint((PC-2).toString(16).toUpperCase());
           }
           fetch(opcode, params);
-          while(dataQueue.length > 0){
-              writeDataToPort();
+          while((dataQueueB.length > 0) || (dataQueueC.length > 0)){
+            writeSpecificPort(0);
+            writeSpecificPort(1);
           } 
       }
       
