@@ -1,23 +1,4 @@
-<html>  
-    <div style="width: 25%; display: table;">
-        <div style="display: table-row">
-            <div style="display: table-cell;">  <canvas id="led0" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led1" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led2" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led3" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led4" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led5" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led6" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led7" width="10" height="10"/> </div>
-        </div>
-    </div>
+<html>
     <script>
-      fillLED("led0", "#FF0000");
-      fillLED("led1", "#FF0000");
-      fillLED("led2", "#FF0000");
-      fillLED("led3", "#FF0000");
-      fillLED("led4", "#FF0000");
-      fillLED("led5", "#FF0000");
-      fillLED("led6", "#FF0000");
-      fillLED("led7", "#FF0000");
+
 

@@ -33,7 +33,7 @@
             if(((0x1 << i) & mask) > 0){
                 var id = parseInt(offset+i);
                 portString+="<div style=\"display: table-cell;\">  <canvas id=\"led"+id+"\" width=\"10\" height=\"10\"/> </div>";
-                portString+="<script>"+"fillLED(\"led"+id+"\", \"#FF0000\");"+"</script>";
+                portString+="<script>"+"fillLED(\"led"+id+"\", \"#FF0000\");"+"</"+"script>";
             }
         }
         return portString+"</div>";
