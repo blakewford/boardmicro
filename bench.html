@@ -29,27 +29,13 @@
     <br/>
     PORT B - PORT C
     <div style="width: 25%; display: table;">
-        <div style="display: table-row">
-            <div style="display: table-cell;">  <canvas id="led0" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led1" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led2" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led3" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led4" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led5" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led6" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led7" width="10" height="10"/> </div>
-        </div>
+        <script>
+        document.write(generatePortHtml(0, 0xFF));
+        </script>
         <br/>
-        <div style="display: table-row">
-            <div style="display: table-cell;">  <canvas id="led8" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led9" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led10" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led11" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led12" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led13" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led14" width="10" height="10"/> </div>
-            <div style="display: table-cell;">  <canvas id="led15" width="10" height="10"/> </div>
-        </div>
+        <script>
+        document.write(generatePortHtml(1, 0xFF));
+        </script>
     </div>
     <br/>
     <select id = "breakpoints"></select>
@@ -59,24 +45,6 @@
     <br/>
     <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
     <script>
-      fillLED("led0", "#FF0000");
-      fillLED("led1", "#FF0000");
-      fillLED("led2", "#FF0000");
-      fillLED("led3", "#FF0000");
-      fillLED("led4", "#FF0000");
-      fillLED("led5", "#FF0000");
-      fillLED("led6", "#FF0000");
-      fillLED("led7", "#FF0000");
-      
-      fillLED("led8", "#FF0000");
-      fillLED("led9", "#FF0000");
-      fillLED("led10", "#FF0000");
-      fillLED("led11", "#FF0000");
-      fillLED("led12", "#FF0000");
-      fillLED("led13", "#FF0000");
-      fillLED("led14", "#FF0000");
-      fillLED("led15", "#FF0000");
-      
       var cachedDisassembly;
       var pointsPerLine = 16;
       

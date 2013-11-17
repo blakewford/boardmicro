@@ -25,6 +25,19 @@
           ctx.fillStyle=color;
           ctx.fillRect(0,0,10,10);    
       }
+      
+      function generatePortHtml(index, mask){
+        var offset = 0x8*index;
+        var portString = "<div style=\"display: table-row\">"; 
+        for(i=0; i < 8; i++){
+            if(((0x1 << i) & mask) > 0){
+                var id = parseInt(offset+i);
+                portString+="<div style=\"display: table-cell;\">  <canvas id=\"led"+id+"\" width=\"10\" height=\"10\"/> </div>";
+                portString+="<script>"+"fillLED(\"led"+id+"\", \"#FF0000\");"+"</script>";
+            }
+        }
+        return portString+"</div>";
+      }
     
       /*
       //ATTiny4
