@@ -105,8 +105,14 @@
                   queue = dataQueueC;
                   break;              
           }
-          for(i = 0; i < bitsPerPort; i++)
-              fillLED("led"+parseInt(i+offset), "#FF0000");
+          var id = "led"+parseInt(i+offset);
+          var c=document.getElementById(id);
+          var ctx=c.getContext("2d");
+          var imgData=ctx.getImageData(0,0,10,10);
+          for(i = 0; i < bitsPerPort; i++){
+              if(imgData.data[1] > 0)
+                fillLED("led"+parseInt(i+offset), "#FF0000");
+          }
           var data = queue.shift();
           for(i = 0; i < bitsPerPort; i++){
               if(data & (0x1 << i))
