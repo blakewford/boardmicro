@@ -142,13 +142,13 @@
               for(j = 4; j < parseInt(line.substring(0,2), 16)+4; j+=2){
                   var ndx = 2*j;
                   var word = line.substring(ndx, ndx+4);
-                  if(offset+k >= dataStart && offset+k < dataEnd){
-                      writeMemory(offset+k, word.substring(0,2));
-                      writeMemory(offset+k+1, word.substring(2));
-                  }else{
-                      writeMemory(offset+k, word.substring(2));
-                      writeMemory(offset+k+1, word.substring(0,2));                
-                  }
+//                  if(offset+k >= dataStart && offset+k < dataEnd){
+//                      writeMemory(offset+k, word.substring(0,2));
+//                      writeMemory(offset+k+1, word.substring(2));
+//                  }else{
+                      writeMemory(flashStart+offset+k, word.substring(2));
+                      writeMemory(flashStart+offset+k+1, word.substring(0,2));                
+//                  }
                   k+=2;
               }
               i++;

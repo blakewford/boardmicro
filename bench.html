@@ -79,11 +79,11 @@
       }
       
       function getAddressString(address){
-        return " "+(parseInt(address, 16) - flashStart).toString(16)+":"          
+        return " "+address.toString(16)+":";         
       }
       
       function handleBreakpoint(address){
-        var addressString = getAddressString(address);
+        var addressString = getAddressString(parseInt(address, 16)-flashStart);
         var textarea = document.getElementById('disassembly');
         textarea.value = cachedDisassembly;
         var retVal = 
@@ -116,13 +116,13 @@
           var skips = 0;
           var endPoint = (matchTextToBreakpoint(cachedDisassembly, "__stop_program")/16);
           for(i = 0; i < endPoint; i++){
-            var address = getAddressString((flashStart+(i*2)).toString(16));
+            var address = getAddressString(i*2);
             if(!checkBreakpoint(address)){
                 skips++;
             }
           }
           for(i = endPoint; i < endPoint+skips; i++){
-              var address = getAddressString((flashStart+(i*2)).toString(16));
+              var address = getAddressString(i*2);
               checkBreakpoint(address);             
           }
       }

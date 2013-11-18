@@ -32,9 +32,9 @@ $(BASENAME).dis: $(BASENAME).elf
 	avr-objdump -d $(BASENAME).elf > $(BASENAME).hex.dis
 
 $(BASENAME).hex: $(BASENAME).elf
-#	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0x4000 --change-section-address .data=0x40
-#	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0x460 --change-section-address .data=0x60
-	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .text=0xB00 --change-section-address .data=0x60
+#	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .data=0x40
+#	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .data=0x60
+	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex --change-section-address .data=0x60
 
 .PHONY index.html: $(BASENAME).hex
 	cat header > $@
