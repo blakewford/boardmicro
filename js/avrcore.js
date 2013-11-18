@@ -30,9 +30,9 @@
         var offset = 0x8*index;
         var portString = "<div style=\"display: table-row\">"; 
         for(i=0; i < 8; i++){
+            var id = parseInt(offset+i);
+            portString+="<div style=\"display: table-cell;\">  <canvas id=\"led"+id+"\" width=\"10\" height=\"10\"/> </div>";
             if(((0x1 << i) & mask) > 0){
-                var id = parseInt(offset+i);
-                portString+="<div style=\"display: table-cell;\">  <canvas id=\"led"+id+"\" width=\"10\" height=\"10\"/> </div>";
                 portString+="<script>"+"fillLED(\"led"+id+"\", \"#FF0000\");"+"</"+"script>";
             }
         }
@@ -196,6 +196,7 @@
           var io = ((((opcode & 0x6) >> 0x1) << 0x4) | (params & 0xF));
           var regSet = (params & 0xF8) >> 0x3;
           var regVal = (params & 0x07);
+          var register = ioRegStart+regSet
           var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
           var long = ((opcode & 0x1) << 20 | (params & 0xF0) << 17 | (params & 0x1) << 16 | 
             parseInt(memory[PC], 16) << 0x8 | parseInt(memory[PC+1], 16))*2;
@@ -459,9 +460,18 @@
                   r[upperPair] = r[upperPair] - (constant & 0xF);
                   r[upperPair+1] = r[upperPair+1] - ((constant & 0xF0) >> 0x4);
                   break;
+              case 0x98:
+                  if((memory[register] & (1 << regVal)) > 0){
+                    writeMemory(register, memory[register] ^ (1 << regVal));  
+                  }
+                  break;
               case 0x9A:
-                  var register = ioRegStart+regSet;
-                  writeMemory(register, memory[register] | 1 << regVal);
+                  writeMemory(register, memory[register] | (1 << regVal));
+                  break;
+              case 0x9B:
+                  if((memory[register] & (1 << regVal)) > 0){
+                    PC+=2;  
+                  }
                   break;
               case 0xB0:
               case 0xB1:
