@@ -32,8 +32,6 @@ $(BASENAME).dis: $(BASENAME).elf
 	avr-objdump -d $(BASENAME).elf > $(BASENAME).hex.dis
 
 $(BASENAME).hex: $(BASENAME).elf
-#	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex
-#	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex
 	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex
 
 .PHONY index.html: $(BASENAME).hex
