@@ -213,7 +213,13 @@
               case 0x06:
               case 0x07:
                   H = 0;
-                  setPostEvaluationFlags(r[dst] - r[src] + C);
+                  var prev = Z;
+                  var result = r[dst] - r[src] + C;
+                  setPostEvaluationFlags(result);
+                  if(result === 0x0)
+                    Z = prev;
+                  else
+                    Z = 0;
                   break;
               case 0x08:
               case 0x09:
@@ -407,7 +413,7 @@
                   break;
               case 0x92:
               case 0x93:
-                  if((params & 0xFF) === 0xF){
+                  if((params & 0xFF) >= 0xF){
                       writeMemory(SP, r[dst]);
                       SP--;
                   }else if((params & 0xF) === 0xD){
@@ -439,7 +445,7 @@
                      var upper = memory[++SP];
                      PC = ((upper << 0x8)|memory[++SP]);
                   }else if((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D){
-                    PC += long;
+                    PC = flashStart+long;
                   }else if((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F){
                     writeMemory(SP--, ((PC+2) & 0xFF));
                     writeMemory(SP--, ((PC+2) >> 0x8));
