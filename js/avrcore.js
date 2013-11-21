@@ -115,7 +115,7 @@
           }
           var data = queue.shift();
           for(i = 0; i < bitsPerPort; i++){
-              if(data & (0x1 << i))
+              if(parseInt(data) & (0x1 << i))
                   fillLED("led"+parseInt(i+offset), "#00FF00");
           }          
       }
@@ -142,8 +142,8 @@
               for(j = 4; j < parseInt(line.substring(0,2), 16)+4; j+=2){
                   var ndx = 2*j;
                   var word = line.substring(ndx, ndx+4);
-                  writeMemory(flashStart+offset+k, word.substring(2));
-                  writeMemory(flashStart+offset+k+1, word.substring(0,2));
+                  writeMemory(flashStart+offset+k, word.substring(0,2));
+                  writeMemory(flashStart+offset+k+1, word.substring(2));
                   k+=2;
               }
               i++;
@@ -200,7 +200,7 @@
           var register = ioRegStart+regSet
           var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
           var long = ((opcode & 0x1) << 20 | (params & 0xF0) << 17 | (params & 0x1) << 16 | 
-            parseInt(memory[PC], 16) << 0x8 | parseInt(memory[PC+1], 16))*2;
+              parseInt(memory[PC+1], 16) << 0x8 | parseInt(memory[PC], 16))*2;
           switch(opcode){
               case 0x01:
                   var halfDest = ((params & 0xF0) >> 0x4)*2;
@@ -392,8 +392,7 @@
               case 0x82:
               case 0x83:
                   if(((params & 0xF) | 0x0) === 0x0){
-                      writeMemory((r[30]), r[dst]);
-                      writeMemory((r[31]), r[dst]+1);
+                      writeMemory((r[31] << 0x8 | r[30]), r[dst]);
                   }
                   break;
               case 0x90:
@@ -401,14 +400,14 @@
                   if((params & 0xF) === 0xF){
                       r[dst] = memory[SP++];
                   }else if((params & 0xF) === 0x5){
-                      r[dst] = ((r[31] << 0x8) | r[30]);
+                      r[dst] = parseInt(memory[((r[31] << 0x8) | r[30])+flashStart], 16);
                       r[30]++;
                       if(r[30] === 0x100){
                           r[30] = 0;
                           r[31]++;
                       }
                   }else{
-                     r[dst] = memory[parseInt(memory[PC++] << 0x4 | memory[PC++], 16)];
+                     r[dst] = memory[parseInt(memory[PC++], 16) | (parseInt(memory[PC++], 16) << 0x8)];
                   }
                   break;
               case 0x92:
@@ -417,16 +416,17 @@
                       writeMemory(SP, r[dst]);
                       SP--;
                   }else if((params & 0xF) === 0xD){
-                      writeMemory(parseInt(r[26], r[dst]));
-                      writeMemory(parseInt(r[27], r[dst]+1));
+                      var lower = parseInt(r[26]);
+                      var upper = parseInt(r[27]) << 0x8;
+                      writeMemory(upper | lower, r[dst]);
                       r[26]++;
                       if(r[26] === 0x100){
                           r[26] = 0;
                           r[27]++;
                       }
                   }else{
-                     writeMemory(parseInt(memory[PC++], 16), r[dst]);
                      writeMemory(parseInt(memory[PC++], 16), r[dst]+1);
+                     writeMemory(parseInt(memory[PC++], 16), r[dst]);
                   }
                   break;
               case 0x94:
@@ -449,7 +449,7 @@
                   }else if((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F){
                     writeMemory(SP--, ((PC+2) & 0xFF));
                     writeMemory(SP--, ((PC+2) >> 0x8));
-                    PC = flashStart+(parseInt(memory[PC], 16) << 0x8 | parseInt(memory[PC+1], 16))*2;
+                    PC = flashStart+(parseInt(memory[PC+1], 16) << 0x8 | parseInt(memory[PC], 16))*2;
                   }
                   break;
               case 0x96:
@@ -613,8 +613,8 @@
       }
     
       function loop(){
-          var opcode = parseInt(memory[PC], 16);
-          var params = parseInt(memory[++PC], 16);
+          var params = parseInt(memory[PC], 16);
+          var opcode = parseInt(memory[++PC], 16);
           PC++;
           var isBreak = (opcode == 0x95 && params == 0x98) || isSoftBreakpoint(PC) || forceBreak;
           if(!isBreak && !(opcode == 0xCF && params == 0xFF))
