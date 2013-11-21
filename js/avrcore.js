@@ -412,7 +412,7 @@
                   break;
               case 0x92:
               case 0x93:
-                  if((params & 0xFF) >= 0xF){
+                  if((params & 0xF) === 0xF){
                       writeMemory(SP, r[dst]);
                       SP--;
                   }else if((params & 0xF) === 0xD){
