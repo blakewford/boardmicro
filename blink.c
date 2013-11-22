@@ -18,10 +18,12 @@ along with webduino; see the file LICENSE.  If not see
 
 #include <avr/io.h>
 
+char bssValue;
 char finalValue = 0xF;
 
 int main(void) {
     
+    bssValue = finalValue;
     //Set as output pin
     DDRB = _BV(3);
     //Write value
@@ -41,7 +43,7 @@ loop:
         PORTB = 0xC;
         PORTB = 0xD;
         PORTB = 0xE;
-        PORTB = finalValue;
+        PORTB = bssValue;
 goto loop;
 
     return 0;

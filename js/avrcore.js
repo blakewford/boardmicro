@@ -399,12 +399,14 @@
               case 0x91:
                   if((params & 0xF) === 0xF){
                       r[dst] = memory[SP++];
-                  }else if((params & 0xF) === 0x5){
+                  }else if((params & 0xF) === 0x4 || (params & 0xF) === 0x5){
                       r[dst] = parseInt(memory[((r[31] << 0x8) | r[30])+flashStart], 16);
-                      r[30]++;
-                      if(r[30] === 0x100){
+                      if((params & 0xF) === 0x5){
+                        r[30]++;
+                        if(r[30] === 0x100){
                           r[30] = 0;
                           r[31]++;
+                        }
                       }
                   }else{
                      r[dst] = memory[parseInt(memory[PC++], 16) | (parseInt(memory[PC++], 16) << 0x8)];
@@ -444,6 +446,8 @@
                   }else if((params & 0xFF) === 0x08){
                      var upper = memory[++SP];
                      PC = ((upper << 0x8)|memory[++SP]);
+                  }else if((params & 0xFF) === 0x09){
+                     PC = ((r[31] << 0x8) | r[30])+flashStart;
                   }else if((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D){
                     PC = flashStart+long;
                   }else if((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F){
