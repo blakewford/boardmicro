@@ -594,6 +594,11 @@
               case 0xF9:
                   r[dst] = T << (params & 0x7);
                   break;
+              case 0xFC:
+              case 0xFD:
+                  if((r[dst] & (0x1 << (params & 0x7))) === 0)
+                    PC+=2;
+                  break;
               case 0xFE:
                   if(r[dst] & (0x1 << (params & 0x7)) > 0)
                     PC+=2;
