@@ -400,7 +400,13 @@
                   if((params & 0xF) === 0xF){
                       r[dst] = memory[SP++];
                   }else if((params & 0xF) === 0x4 || (params & 0xF) === 0x5){
-                      r[dst] = parseInt(memory[((r[31] << 0x8) | r[30])+flashStart], 16);
+                      var resolvedValue = ((r[31] << 0x8) | r[30]);
+                      var address = ((resolvedValue >> 0x1)*2)+flashStart
+                      var value = memory[address];
+                      if((resolvedValue & 0x1) === 0x0)
+                        r[dst] = parseInt(value & 0xFF, 16);
+                      else
+                        r[dst] = parseInt((value & 0xFF00) >> 0x8, 16);
                       if((params & 0xF) === 0x5){
                         r[30]++;
                         if(r[30] === 0x100){
