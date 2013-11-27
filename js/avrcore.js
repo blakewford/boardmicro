@@ -75,9 +75,12 @@
       var portC = 0x28;
       var pllCsr = 0x49;
       var bitsPerPort = 0x8;
+      var jumpTableAddress = flashStart+0x1066;
+      var mainAddress = flashStart+0x2B8;
       
       var PC = flashStart;
       var SP = 0x5F;
+      var signatureOffset = flashStart+0xB2;
       var r = new Array(32);
       var SREG, C, Z, N, V, S, H, T, I;
     
@@ -86,6 +89,7 @@
       var softBreakpoints = [];
       var isPaused = true;
       var forceBreak = false;
+      var hasDeviceSignature = false;
       
       function writeClockRegister(data){
           if((data & 0x02) > 0)
@@ -460,6 +464,10 @@
                     writeMemory(SP--, ((PC+2) & 0xFF));
                     writeMemory(SP--, ((PC+2) >> 0x8));
                     PC = flashStart+(parseInt(memory[PC+1], 16) << 0x8 | parseInt(memory[PC], 16))*2;
+                    if(hasDeviceSignature && PC === jumpTableAddress)      //__tablejump__
+                        PC = mainAddress;  //Go to main
+                    if(PC === 0xe6e)       //_delay
+                        fetch(0x95, 0x08); //Return instantly
                   }
                   break;
               case 0x96:
@@ -650,6 +658,15 @@
       function engineInit(){
           for(i = 0; i < r.length; i++)
               r[i] = 0;
+          
+          var id = new Array(0);
+          for(i = signatureOffset; i < signatureOffset+32; i+=2)
+            id.push(String.fromCharCode(parseInt(memory[i], 16)));
+          switch(id.toString().replace(/,/g, "")){
+            case "Arduino Micro   ":
+              hasDeviceSignature = true;
+              break;
+          };
       }
     
       function exec(){
