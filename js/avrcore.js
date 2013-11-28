@@ -326,7 +326,9 @@
               case 0x4D:
               case 0x4E:
               case 0x4F:
-                  r[smallReg] = r[smallReg] - bigConstant - C;
+                  if(r[smallReg] > 0 ^ bigConstant > 0)
+                    r[smallReg] = r[smallReg] - bigConstant - C;
+                  C = Math.abs(r[smallReg]) < (bigConstant+C);
                   break;
               case 0x50:
               case 0x51:
@@ -345,6 +347,10 @@
               case 0x5E:
               case 0x5F:
                   r[smallReg] = r[smallReg] - bigConstant;
+                  if(r[smallReg] < 0x0){
+                    r[smallReg] = 0xFF - r[smallReg];
+                    C = 1;
+                  }
                   break;
               case 0x60:
               case 0x61:
@@ -466,8 +472,6 @@
                     PC = flashStart+(parseInt(memory[PC+1], 16) << 0x8 | parseInt(memory[PC], 16))*2;
                     if(hasDeviceSignature && PC === jumpTableAddress)      //__tablejump__
                         PC = mainAddress;  //Go to main
-                    if(PC === 0xe6e)       //_delay
-                        fetch(0x95, 0x08); //Return instantly
                   }
                   break;
               case 0x96:
@@ -586,24 +590,42 @@
               case 0xF1:
               case 0xF2:
               case 0xF3:
-                if(((params ^ 0x1) > 0x0) && Z){
+                var jump = false;
+                switch(params & 0x7){
+                    case 0x0:
+                        jump = C;
+                        break;
+                    case 0x1:
+                        jump = Z;
+                        break;
+                }
+                if(jump){
                     if(breakDistance > 0x40)
-                      PC-=(128-breakDistance)*2;
+                        PC-=(128-breakDistance)*2;
                     else
-                      PC+=breakDistance;
+                        PC+=breakDistance;
                 }
                 break;
               case 0xF4:
               case 0xF5:
               case 0xF6:
               case 0xF7:
-                  if(((params ^ 0x1) > 0x0) && !Z){
-                      if(breakDistance > 0x40)
-                        PC-=(128-breakDistance)*2;
-                      else
-                        PC+=breakDistance;
-                    }
-                  break;
+                var jump = false;
+                switch(params & 0x7){
+                  case 0x0:
+                    jump = !C;
+                    break;
+                  case 0x1:
+                    jump = !Z;
+                    break;
+                }
+                if(jump){
+                  if(breakDistance > 0x40)
+                    PC-=(128-breakDistance)*2;
+                  else
+                    PC+=breakDistance;
+                }
+                break;
               case 0xF8:
               case 0xF9:
                   r[dst] = T << (params & 0x7);
