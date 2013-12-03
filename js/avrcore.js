@@ -75,12 +75,16 @@
       var portC = 0x28;
       var pllCsr = 0x49;
       var bitsPerPort = 0x8;
-      var jumpTableAddress = flashStart+0x1066;
-      var mainAddress = flashStart+0x2B8;
-      
+      var vectorBase = flashStart+0xAC;
+      var usbVectorBase = vectorBase+0x1AE;
+
+      var signatureOffset = flashStart+0xB2;
+      var jumpTableAddress = usbVectorBase+0x40;
+      var mainAddress = usbVectorBase+0x48;
+      var calculatedOffset = 0x0;
+
       var PC = flashStart;
       var SP = 0x5F;
-      var signatureOffset = flashStart+0xB2;
       var r = new Array(32);
       var SREG, C, Z, N, V, S, H, T, I;
     
@@ -467,11 +471,13 @@
                   }else if((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D){
                     PC = flashStart+long;
                   }else if((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F){
+                    if(hasDeviceSignature && PC === jumpTableAddress+calculatedOffset){      //__tablejump__
+                        PC = mainAddress+calculatedOffset;  //Go to main
+                        break;
+                    }
                     writeMemory(SP--, ((PC+2) & 0xFF));
                     writeMemory(SP--, ((PC+2) >> 0x8));
                     PC = flashStart+(parseInt(memory[PC+1], 16) << 0x8 | parseInt(memory[PC], 16))*2;
-                    if(hasDeviceSignature && PC === jumpTableAddress)      //__tablejump__
-                        PC = mainAddress;  //Go to main
                   }
                   break;
               case 0x96:
@@ -680,9 +686,13 @@
       function engineInit(){
           for(i = 0; i < r.length; i++)
               r[i] = 0;
-          
+          var ctorEnd = 0x0;
+          if(parseInt(memory[flashStart], 16) === 0xC)
+            ctorEnd = flashStart+(parseInt(memory[flashStart+3],16) << 0x8 | parseInt(memory[flashStart+2], 16))*2;
+          if(ctorEnd > usbVectorBase)
+            calculatedOffset = ctorEnd - usbVectorBase;
           var id = new Array(0);
-          for(i = signatureOffset; i < signatureOffset+32; i+=2)
+          for(i = signatureOffset+calculatedOffset; i < signatureOffset+calculatedOffset+32; i+=2)
             id.push(String.fromCharCode(parseInt(memory[i], 16)));
           switch(id.toString().replace(/,/g, "")){
             case "Arduino Micro   ":
