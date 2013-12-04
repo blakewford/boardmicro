@@ -113,13 +113,11 @@
                   queue = dataQueueC;
                   break;              
           }
-          var id = "led"+parseInt(i+offset);
-          var c=document.getElementById(id);
-          var ctx=c.getContext("2d");
-          var imgData=ctx.getImageData(0,0,10,10);
           for(i = 0; i < bitsPerPort; i++){
-              if(imgData.data[1] > 0)
-                fillLED("led"+parseInt(i+offset), "#FF0000");
+              var id = "led"+parseInt(i+offset);
+              var imgData=document.getElementById(id).getContext("2d").getImageData(0,0,10,10);
+              if(imgData.data[1] > 0) //Green color data
+                fillLED(id, "#FF0000");
           }
           var data = queue.shift();
           for(i = 0; i < bitsPerPort; i++){
@@ -677,8 +675,10 @@
               handleBreakpoint((PC-2).toString(16).toUpperCase());
           }
           fetch(opcode, params);
-          while((dataQueueB.length > 0) || (dataQueueC.length > 0)){
+          while(dataQueueB.length > 0){
             writeSpecificPort(0);
+          }
+          while(dataQueueC.length > 0){
             writeSpecificPort(1);
           } 
       }
