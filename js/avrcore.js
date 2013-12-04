@@ -609,7 +609,7 @@
                     if(breakDistance > 0x40)
                         PC-=(128-breakDistance)*2;
                     else
-                        PC+=breakDistance;
+                        PC+=breakDistance*2;
                 }
                 break;
               case 0xF4:
@@ -629,7 +629,7 @@
                   if(breakDistance > 0x40)
                     PC-=(128-breakDistance)*2;
                   else
-                    PC+=breakDistance;
+                    PC+=breakDistance*2;
                 }
                 break;
               case 0xF8:
