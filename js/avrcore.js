@@ -438,6 +438,10 @@
                   if((params & 0xF) === 0xF){
                       writeMemory(SP, r[dst]);
                       SP--;
+                  }else if((params & 0xF) === 0xC){
+                      var lower = parseInt(r[26]);
+                      var upper = parseInt(r[27]) << 0x8;
+                      writeMemory(upper | lower, r[dst]);
                   }else if((params & 0xF) === 0xD){
                       var lower = parseInt(r[26]);
                       var upper = parseInt(r[27]) << 0x8;
