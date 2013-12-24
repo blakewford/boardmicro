@@ -330,6 +330,8 @@
               case 0x4F:
                   if(r[smallReg] > 0 ^ bigConstant > 0)
                     r[smallReg] = r[smallReg] - bigConstant - C;
+                  while(r[smallReg] < 0x0)
+                    r[smallReg] = 0x100 + r[smallReg];
                   C = Math.abs(r[smallReg]) < (bigConstant+C);
                   break;
               case 0x50:
@@ -349,8 +351,8 @@
               case 0x5E:
               case 0x5F:
                   r[smallReg] = r[smallReg] - bigConstant;
-                  if(r[smallReg] < 0x0){
-                    r[smallReg] = 0xFF - r[smallReg];
+                  while(r[smallReg] < 0x0){
+                    r[smallReg] = 0x100 + r[smallReg];
                     C = 1;
                   }
                   break;
@@ -413,12 +415,13 @@
                       r[dst] = memory[SP++];
                   }else if((params & 0xF) === 0x4 || (params & 0xF) === 0x5){
                       var resolvedValue = ((r[31] << 0x8) | r[30]);
-                      var address = ((resolvedValue >> 0x1)*2)+flashStart
-                      var value = memory[address];
+                      var address = ((resolvedValue >> 0x1)*2)+flashStart;
+                      var highValue = parseInt(memory[address], 16);
+                      var lowValue = parseInt(memory[address+1], 16);
                       if((resolvedValue & 0x1) === 0x0)
-                        r[dst] = parseInt(value & 0xFF, 16);
+                        r[dst] = highValue;
                       else
-                        r[dst] = parseInt((value & 0xFF00) >> 0x8, 16);
+                        r[dst] = lowValue;
                       if((params & 0xF) === 0x5){
                         r[30]++;
                         if(r[30] === 0x100){
