@@ -433,6 +433,8 @@
                           r[31]++;
                         }
                       }
+                  }else if((params & 0xF) === 0xC){
+                     r[dst] = parseInt(memory[((((r[27] << 0x8) | r[26]) >> 0x1)*2)+flashStart], 16);
                   }else{
                      r[dst] = memory[parseInt(memory[PC++], 16) | (parseInt(memory[PC++], 16) << 0x8)];
                   }
@@ -462,7 +464,9 @@
                   break;
               case 0x94:
               case 0x95:
-                  if((params & 0xFF) === 0x5){
+                  if((params & 0xFF) === 0x0){
+                    r[dst] = 0xFF - r[dst];
+                  }else if((params & 0xFF) === 0x5){
                       var value = r[dst];
                       var topBit = value & 0x80;
                       var lowBit = value & 0x1;
