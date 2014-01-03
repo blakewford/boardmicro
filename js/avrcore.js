@@ -25,6 +25,10 @@
           ctx.fillStyle=color;
           ctx.fillRect(0,0,10,10);    
       }
+
+      function generateRegisterHtml(index){
+        return "<textarea id=\"register"+index+"\" rows=\"1\" cols=\"4\">0x00</textarea>";
+      }
       
       function generatePortHtml(index, mask){
         var offset = 0x8*index;

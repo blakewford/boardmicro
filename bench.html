@@ -25,6 +25,14 @@
       <button>Load Memory</button>
     </span>
     <button onClick="exec()">Continue</button>
+    <br/>
+    <script>
+      for(j = 0; j < 4; j++){
+        for(i = 0; i < 8; i++)
+            document.write(generateRegisterHtml((j*8)+i));
+        document.write("<br/>")
+      }
+    </script>
     </div>
     <br/>
     PORT B - PORT F
@@ -97,6 +105,8 @@
         if(line > limit){
            textarea.value = cachedDisassembly.substring(cachedDisassembly.indexOf(addressString));
         }
+        for(i = 0; i < 32; i++)
+            document.getElementById('register'+i).value = r[i].toString(16);
       }
       
       function checkBreakpoint(address){
