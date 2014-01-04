@@ -434,7 +434,7 @@
                         }
                       }
                   }else if((params & 0xF) === 0xC){
-                     r[dst] = parseInt(memory[((((r[27] << 0x8) | r[26]) >> 0x1)*2)+flashStart], 16);
+                     r[dst] = parseInt(memory[((((r[27] << 0x8) | r[26]) >> 0x1)*2)], 16);
                   }else{
                      r[dst] = memory[parseInt(memory[PC++], 16) | (parseInt(memory[PC++], 16) << 0x8)];
                   }
