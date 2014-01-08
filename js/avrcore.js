@@ -355,6 +355,7 @@
               case 0x5E:
               case 0x5F:
                   r[smallReg] = r[smallReg] - bigConstant;
+                  C = 0;
                   while(r[smallReg] < 0x0){
                     r[smallReg] = 0x100 + r[smallReg];
                     C = 1;
