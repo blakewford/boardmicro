@@ -444,6 +444,8 @@
                   if((params & 0xF) === 0xF){
                       writeMemory(SP, r[dst]);
                       SP--;
+                  }else if((params & 0xF) === 0x0){
+                     writeMemory(parseInt(memory[PC++], 16)|parseInt(memory[PC++], 16) << 0x8, r[dst]);
                   }else if((params & 0xF) === 0xC){
                       var lower = parseInt(r[26]);
                       var upper = parseInt(r[27]) << 0x8;
@@ -457,9 +459,6 @@
                           r[26] = 0;
                           r[27]++;
                       }
-                  }else{
-                     writeMemory(parseInt(memory[PC++], 16), r[dst]+1);
-                     writeMemory(parseInt(memory[PC++], 16), r[dst]);
                   }
                   break;
               case 0x94:
