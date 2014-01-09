@@ -15,19 +15,58 @@ for more details.
 You should have received a copy of the GNU General Public License
 along with webduino; see the file LICENSE.  If not see
 <http://www.gnu.org/licenses/>.  */
-    
+#include <avr/io.h>
+
 int main(){
     
     asm("start:\n");
+
+    asm("ldi r16, 0x1;");
     asm("add r16, r16;");
+    asm("cpi r16, 0x2;");
+    asm("breq test1_pass;");
+    asm("jmp fail;");
+    asm("test1_pass:\n");
+
     asm("adc r16, r16;");
+    asm("cpi r16, 0x4;");
+    asm("breq test2_pass;");
+    asm("jmp fail;");
+    asm("test2_pass:\n");
+
     /*adiw*/
+
     asm("sub r16, r16;");
-    asm("subi r16, 0x1;");
+    asm("cpi r16, 0x0;");
+    asm("breq test3_pass;");
+    asm("jmp fail;");
+    asm("test3_pass:\n");
+
+    asm("subi r16, 0xFF;");
+    asm("cpi r16, 0x1;");
+    asm("breq test4_pass;");
+    asm("jmp fail;");
+    asm("test4_pass:\n");
+
     asm("sbc r16, r16;");
+    asm("cpi r16, 0x0;");
+    asm("breq test5_pass;");
+    asm("jmp fail;");
+    asm("test5_pass:\n");
+
     asm("sbci r16, 0x1;");
+    asm("cpi r16, 0xFF;");
+    asm("breq test6_pass;");
+    asm("jmp fail;");
+    asm("test6_pass:\n");
+
     /*sbiw*/
+
     asm("and r16, r16;");
+    asm("brne test7_pass;");
+    asm("jmp fail;");
+    asm("test7_pass:\n");
+
     asm("andi r16, 0xFF;");
     asm("or r16, r16;");
     asm("ori r16, 0xFF;");
@@ -175,4 +214,7 @@ int main(){
     */
     asm("end:");
     asm("BREAK;");
+
+    asm("fail:");
+    PORTB = 0xFF;
 }
