@@ -25,7 +25,7 @@ int main(){
     asm("sub r16, r16;");
     asm("subi r16, 0x1;");
     asm("sbc r16, r16;");
-    //asm("sbci r16, r16;");
+    asm("sbci r16, 0x1;");
     /*sbiw*/
     asm("and r16, r16;");
     asm("andi r16, 0xFF;");
