@@ -26,6 +26,7 @@ int main(){
     asm("cpi r16, 0x2;");
     asm("breq test1_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test1_pass:\n");
     PORTB=0x1;
 
@@ -33,6 +34,7 @@ int main(){
     asm("cpi r16, 0x4;");
     asm("breq test2_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test2_pass:\n");
     PORTB=0x2;
 
@@ -42,6 +44,7 @@ int main(){
     asm("cpi r16, 0x0;");
     asm("breq test3_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test3_pass:\n");
     PORTB=0x3;
 
@@ -49,6 +52,7 @@ int main(){
     asm("cpi r16, 0x1;");
     asm("breq test4_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test4_pass:\n");
     PORTB=0x4;
 
@@ -56,6 +60,7 @@ int main(){
     asm("cpi r16, 0x0;");
     asm("breq test5_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test5_pass:\n");
     PORTB=0x5;
 
@@ -63,6 +68,7 @@ int main(){
     asm("cpi r16, 0xFF;");
     asm("breq test6_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test6_pass:\n");
     PORTB=0x6;
 
@@ -71,30 +77,35 @@ int main(){
     asm("and r16, r16;");
     asm("brne test7_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test7_pass:\n");
     PORTB=0x7;
 
     asm("andi r16, 0xFF;");
     asm("brne test8_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test8_pass:\n");
     PORTB=0x8;
 
     asm("or r16, r16;");
     asm("brne test9_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("test9_pass:\n");
     PORTB=0x9;
 
     asm("ori r16, 0xFF;");
     asm("brne testA_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("testA_pass:\n");
     PORTB=0xA;
 
     asm("eor r16, 0x1F;");
     asm("brne testB_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("testB_pass:\n");
     PORTB=0xB;
 
@@ -102,6 +113,7 @@ int main(){
     asm("cpi r16, 0x0;");
     asm("breq testC_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("testC_pass:\n");
     PORTB=0xC;
 
@@ -109,15 +121,52 @@ int main(){
     asm("cpi r16, 0x0;");
     asm("breq testD_pass;");
     asm("jmp fail;");
+    asm("BREAK;");
     asm("testD_pass:\n");
     PORTB=0xD;
-    asm("jmp end;");
 
     asm("sbr r16, 0x1;");
+    asm("cpi r16, 0x1;");
+    asm("breq testE_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("testE_pass:\n");
+    PORTB=0xE;
+
     asm("cbr r16, 0x1;");
+    asm("cpi r16, 0x0;");
+    asm("breq testF_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("testF_pass:\n");
+    PORTB=0xF;
+/*
     asm("inc r16;");
+    asm("cpi r16, 0x1;");
+    asm("breq test10_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test10_pass:\n");
+    PORTB=0x10;
+
     asm("dec r16;");
+    asm("cpi r16, 0x1;");
+    asm("breq test11_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test11_pass:\n");
+    PORTB=0x11;
+*/
     asm("tst r16;");
+    asm("cpi r16, 0x0;");
+    asm("breq test12_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test12_pass:\n");
+    PORTB=0x12;
+    asm("jmp end;");
+    asm("BREAK;");
+
     asm("clr r16;");
     asm("ser r16;");
     /*
@@ -253,7 +302,6 @@ int main(){
     wdr
     */
     asm("end:");
-    PORTB = 0xFF;
     PORTC = 0xFF;
 //    PORTD = 0xFF;
 //    PORTE = 0xFF;
@@ -261,7 +309,6 @@ int main(){
     asm("BREAK;");
 
     asm("fail:");
-    PORTB = 0x00;
     PORTC = 0x00;
 //    PORTD = 0x00;
 //    PORTE = 0x00;
