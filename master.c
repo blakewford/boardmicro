@@ -20,8 +20,8 @@ along with webduino; see the file LICENSE.  If not see
 int main(){
     
     asm("start:\n");
-
     asm("ldi r16, 0x1;");
+
     asm("add r16, r16;");
     asm("cpi r16, 0x2;");
     asm("breq test1_pass;");
@@ -37,8 +37,6 @@ int main(){
     asm("BREAK;");
     asm("test2_pass:\n");
     PORTB=0x2;
-
-    /*adiw*/
 
     asm("sub r16, r16;");
     asm("cpi r16, 0x0;");
@@ -71,8 +69,6 @@ int main(){
     asm("BREAK;");
     asm("test6_pass:\n");
     PORTB=0x6;
-
-    /*sbiw*/
 
     asm("and r16, r16;");
     asm("brne test7_pass;");
@@ -164,34 +160,10 @@ int main(){
     asm("BREAK;");
     asm("test12_pass:\n");
     PORTB=0x12;
+
     asm("jmp end;");
     asm("BREAK;");
 
-    asm("clr r16;");
-    asm("ser r16;");
-    /*
-    mul
-    muls
-    mulsu
-    fmul
-    fmuls
-    fmulsu
-    des
-    */
-    asm("rjmp 0;");
-    asm("ijmp;");
-    /*
-    eijmp
-    jmp
-    */
-    asm("rcall 0x2;");
-    asm("icall;");
-    /*
-    eicall
-    call
-    */
-    asm("ret;");
-    asm("reti;");
     asm("cpse r16, r16;");
     asm("cp r16, r16;");
     asm("cpc r16, r16;");
@@ -200,34 +172,17 @@ int main(){
     asm("sbrs r16, 0x1;");
     asm("sbic 0x1F, 0x1;");
     asm("sbis 0x1F, 0x1;");
-    /*
-    brbs
-    brbc
-    */
     asm("breq end;");
     asm("brne end;");
     asm("brcs end;");
     asm("brcc end;");
-    /*
-    brsh
-    brlo
-    */
     asm("brmi end;");
     asm("brpl end;");
     asm("brge end;");
     asm("brlt end;");
     asm("brhs end;");
     asm("brhc end;");
-//    asm("brts end;");
-//    asm("brtc end;");
-//    asm("brvs end;");
-//    asm("brvc end;");
-//    asm("brie end;");
-//    asm("brid end;");
     asm("mov r16, r16;");
-    /*
-    movw
-    */
     asm("ldi r16, 0x1;");
     asm("lds r16, 0x1;");
     asm("ld r16, X;");
@@ -236,7 +191,6 @@ int main(){
     asm("ld r16, Y;");
     asm("ld r16, Y+;");
     asm("ld r16, -Y;");
-    /*ldd*/;
     asm("ld r16, Z;");
     asm("ld r16, Z+;");
     asm("ld r16, -Z;");
@@ -250,32 +204,16 @@ int main(){
     asm("st Z, r16;");
     asm("st Z+, r16;");
     asm("st -Z, r16;");
-    /*
-    std
-    lpm
-    elpm
-    spm
-    */
     asm("in r16, 0x20;");
     asm("out 0x20, r16;");
     asm("push r16;");
     asm("pop r16;");
-    /*
-    xch
-    las
-    lac
-    lat
-    */
     asm("lsl r16;");
     asm("lsr r16;");
     asm("rol r16;");
     asm("ror r16;");
     asm("asr r16;");
     asm("swap r16;");
-    /*
-    bset
-    bclr
-    */
     asm("sbi 0x1F, 0x1;");
     asm("cbi 0x1F, 0x1;");
     asm("bst r16, 0x1;");
@@ -296,11 +234,7 @@ int main(){
     asm("clt;");
     asm("seh;");
     asm("clh;");
-    /*
-    nop
-    sleep
-    wdr
-    */
+
     asm("end:");
     PORTC = 0xFF;
 //    PORTD = 0xFF;
@@ -314,4 +248,56 @@ int main(){
 //    PORTE = 0x00;
 //    PORTF = 0x00;
     asm("BREAK;");
+
+//    asm("brts end;");
+//    asm("brtc end;");
+//    asm("brvs end;");
+//    asm("brvc end;");
+//    asm("brie end;");
+//    asm("brid end;");
+    /*
+    ldd
+    std
+    lpm
+    elpm
+    spm
+    xch
+    las
+    lac
+    lat
+    bset
+    bclr
+    nop
+    sleep
+    wdr
+    */
+    //asm("clr r16;");
+    //asm("ser r16;");
+    /*
+    adiw
+    sbiw
+    mul
+    muls
+    mulsu
+    fmul
+    fmuls
+    fmulsu
+    des
+    */
+    //asm("rjmp 0;");
+    //asm("ijmp;");
+    /*
+    eijmp
+    jmp
+    */
+    //asm("rcall 0x0;");
+    //asm("icall;");
+    /*
+    eicall
+    call
+    brbs
+    brbc
+    */
+    //asm("ret;");
+    //asm("reti;");
 }
