@@ -271,16 +271,16 @@ int main(){
 
     asm("end:");
     PORTC = 0xFF;
-//    PORTD = 0xFF;
-//    PORTE = 0xFF;
-//    PORTF = 0xFF;
+    PORTD = 0xFF;
+    PORTE = 0xFF;
+    PORTF = 0xFF;
     asm("BREAK;");
 
     asm("fail:");
     PORTC = 0x00;
-//    PORTD = 0x00;
-//    PORTE = 0x00;
-//    PORTF = 0x00;
+    PORTD = 0x00;
+    PORTE = 0x00;
+    PORTF = 0x00;
     asm("BREAK;");
 
     /*

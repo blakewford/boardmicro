@@ -77,6 +77,9 @@
       var ioRegStart = 0x20;
       var portB = 0x25;
       var portC = 0x28;
+      var portD = 0x2B;
+      var portE = 0x2E;
+      var portF = 0x31;
       var pllCsr = 0x49;
       var bitsPerPort = 0x8;
       var vectorBase = flashStart+0xAC;
@@ -94,6 +97,9 @@
     
       var dataQueueB = [];
       var dataQueueC = [];
+      var dataQueueD = [];
+      var dataQueueE = [];
+      var dataQueueF = [];
       var softBreakpoints = [];
       var isPaused = true;
       var forceBreak = false;
@@ -116,6 +122,15 @@
               case 1:
                   queue = dataQueueC;
                   break;              
+              case 2:
+                  queue = dataQueueD;
+                  break;              
+              case 3:
+                  queue = dataQueueE;
+                  break;              
+              case 4:
+                  queue = dataQueueF;
+                  break;              
           }
           for(i = 0; i < bitsPerPort; i++){
               var id = "led"+parseInt(i+offset);
@@ -136,6 +151,12 @@
               dataQueueB.push(data);
           if(address == portC)
               dataQueueC.push(data);
+          if(address == portD)
+              dataQueueD.push(data);
+          if(address == portE)
+              dataQueueE.push(data);
+          if(address == portF)
+              dataQueueF.push(data);
           if(address == pllCsr)
               writeClockRegister(data);
       }
@@ -695,6 +716,15 @@
           }
           while(dataQueueC.length > 0){
             writeSpecificPort(1);
+          } 
+          while(dataQueueD.length > 0){
+            writeSpecificPort(2);
+          } 
+          while(dataQueueE.length > 0){
+            writeSpecificPort(3);
+          } 
+          while(dataQueueF.length > 0){
+            writeSpecificPort(4);
           } 
       }
       
