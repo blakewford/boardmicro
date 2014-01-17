@@ -682,7 +682,9 @@
                   break;
               default:
                   document.write("unknown 0x"+(PC-2).toString(16).toUpperCase()+" "+opcode+" "+params+"<br/>");
-          }        
+          }
+	  r[dst] = r[dst] & 0xFF;
+	  r[src] = r[src] & 0xFF;       
       }
       
       function handleBreakpoint(address){

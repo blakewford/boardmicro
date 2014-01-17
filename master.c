@@ -246,17 +246,43 @@ int main(){
     asm("test1B_pass:\n");
     PORTB=0x1B;
 
+	    asm("rol r16;");
+    asm("cpi r16, 0xFC;");
+    asm("breq test1C_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test1C_pass:\n");
+    PORTB=0x1C;
+
+	    asm("asr r16;");
+    asm("cpi r16, 0xFE;");
+    asm("breq test1D_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test1D_pass:\n");
+    PORTB=0x1D;
+
+    	asm("sbi 0x0B, 0x1;");
+    asm("in r16, 0x0B;");
+    asm("cpi r16, 0x2;");
+    asm("breq test1E_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test1E_pass:\n");
+    PORTB=0x1E;
+
+    	asm("cbi 0x0B, 0x1;");
+    asm("in r16, 0x0B;");
+    asm("cpi r16, 0x0;");
+    asm("breq test1F_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test1F_pass:\n");
+    PORTB=0x1F;
+
     asm("jmp end;");
     asm("BREAK;");
 
-    asm("lsl r16;");
-    asm("lsr r16;");
-    asm("rol r16;");
-    asm("ror r16;");
-    asm("asr r16;");
-    asm("swap r16;");
-    asm("sbi 0x1F, 0x1;");
-    asm("cbi 0x1F, 0x1;");
     asm("bst r16, 0x1;");
     asm("bld r16, 0x1;");
     asm("sec;");
@@ -291,6 +317,10 @@ int main(){
     asm("BREAK;");
 
     /*
+    asm("swap r16;");
+    asm("lsl r16;");
+    asm("lsr r16;");
+    asm("ror r16;");
     asm("st Z, r16;");
     asm("st Z+, r16;");
     asm("st -Z, r16;");
