@@ -237,11 +237,18 @@ int main(){
     asm("test1A_pass:\n");
     PORTB=0x1A;
 
+    	asm("push r16;");
+    	asm("pop r16;");
+    asm("cpi r16, 0xFE;");
+    asm("breq test1B_pass;");
+    asm("jmp fail;");
+    asm("BREAK;");
+    asm("test1B_pass:\n");
+    PORTB=0x1B;
+
     asm("jmp end;");
     asm("BREAK;");
 
-    asm("push r16;");
-    asm("pop r16;");
     asm("lsl r16;");
     asm("lsr r16;");
     asm("rol r16;");

@@ -438,7 +438,7 @@
               case 0x90:
               case 0x91:
                   if((params & 0xF) === 0xF){
-                      r[dst] = memory[SP++];
+                      r[dst] = memory[++SP];
                   }else if((params & 0xF) === 0x4 || (params & 0xF) === 0x5){
                       var resolvedValue = ((r[31] << 0x8) | r[30]);
                       var address = ((resolvedValue >> 0x1)*2)+flashStart;
