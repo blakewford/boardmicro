@@ -21,30 +21,32 @@ along with webduino; see the file LICENSE.  If not see
 char bssValue;
 char finalValue = 0xF;
 
-int main(void) {
-    
-    bssValue = finalValue;
-    //Set as output pin
-    DDRB = _BV(3);
-    //Write value
-loop:
-        PORTB = 0x0;
-        PORTB = 0x1;
-        PORTB = 0x2;
-        PORTB = 0x3;
-        PORTB = 0x4;
-        PORTB = 0x5;
-        PORTB = 0x6;
-        PORTB = 0x7;
-        PORTB = 0x8;
-        PORTB = 0x9;
-        PORTB = 0xA;
-        PORTB = 0xB;
-        PORTB = 0xC;
-        PORTB = 0xD;
-        PORTB = 0xE;
-        PORTB = bssValue;
-goto loop;
+int
+main (void)
+{
 
-    return 0;
+  bssValue = finalValue;
+  //Set as output pin
+  DDRB = _BV (3);
+  //Write value
+loop:
+  PORTB = 0x0;
+  PORTB = 0x1;
+  PORTB = 0x2;
+  PORTB = 0x3;
+  PORTB = 0x4;
+  PORTB = 0x5;
+  PORTB = 0x6;
+  PORTB = 0x7;
+  PORTB = 0x8;
+  PORTB = 0x9;
+  PORTB = 0xA;
+  PORTB = 0xB;
+  PORTB = 0xC;
+  PORTB = 0xD;
+  PORTB = 0xE;
+  PORTB = bssValue;
+  goto loop;
+
+  return 0;
 }
