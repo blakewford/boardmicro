@@ -15,819 +15,583 @@
  You should have received a copy of the GNU General Public License
  along with jAVRscript; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
-
-//AVR Constants
-var SP = 0x5F;
-var r = new Array (32);
-var calculatedOffset = 0x0;
-var SREG,
-    C,
-    Z,
-    N,
-    V,
-    S,
-    H,
-    T,
-    I;
-var dataQueueB = [];
-var dataQueueC = [];
-var dataQueueD = [];
-var dataQueueE = [];
-var dataQueueF = [];
-var softBreakpoints = [];
-var isPaused = true;
-var forceBreak = false;
-var hasDeviceSignature = false;
-
-//Device Variables
-var memory;
-var flashStart;
-var dataStart;
-var dataEnd;
-var ioRegStart;
-var portB;
-var portC;
-var portD;
-var portE;
-var portF;
-var pllCsr;
-var bitsPerPort;
-
-//Derived Device Variables
-var vectorBase;
-var usbVectorBase;
-var signatureOffset;
-var jumpTableAddress;
-var mainAddress;
-var PC;
+var SP = 95,
+    r = Array(32),
+    calculatedOffset = 0,
+    SREG, C, Z, N, V, S, H, T, I, dataQueueB = [],
+    dataQueueC = [],
+    dataQueueD = [],
+    dataQueueE = [],
+    dataQueueF = [],
+    softBreakpoints = [],
+    isPaused = !0,
+    forceBreak = !1,
+    hasDeviceSignature = !1,
+    memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
 
 function initCore() {
-    if(target === "attiny4"){
-        memory      = new Array (0x4400);
-        flashStart  = 0x4000;
-        dataStart   = 0x40;
-        dataEnd     = 0x60;
-        ioRegStart  = 0x0;
-        portB       = 0x2;
-        portC       = 0xDEAD;
-        portD       = 0xDEAD;
-        portE       = 0xDEAD;
-        portF       = 0xDEAD;
-        pllCsr      = 0xDEAD;
-        bitsPerPort = 0x4;
-    }else if(target === "atmega8"){
-        memory      = new Array (0x2000);
-        flashStart  = 0x460;
-        dataStart   = 0x60;
-        dataEnd     = 0x460;
-        ioRegStart  = 0x20;
-        portB       = 0x38;
-        portC       = 0x35;
-        portD       = 0x32;
-        portE       = 0xDEAD;
-        portF       = 0xDEAD;
-        pllCsr      = 0xDEAD;
-        bitsPerPort = 0x8;
-    }else if(target === "atmega32u4"){
-        memory      = new Array (0x8000);
-        flashStart  = 0xB00;
-        dataStart   = 0x100;
-        dataEnd     = 0xB00;
-        ioRegStart  = 0x20;
-        portB       = 0x25;
-        portC       = 0x28;
-        portD       = 0x2B;
-        portE       = 0x2E;
-        portF       = 0x31;
-        pllCsr      = 0x49;
-        bitsPerPort = 0x8;
-    }else{
-        alert("Failed! Unknown target");
-    }
-    PC               = flashStart;
-
-    vectorBase       = flashStart + 0xAC;
-    usbVectorBase    = vectorBase + 0x1AE;
-    signatureOffset  = flashStart + 0xB2;
-    jumpTableAddress = usbVectorBase + 0x40;
-    mainAddress      = usbVectorBase + 0x48;
+    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, pllCsr = 73, bitsPerPort =
+        8) : alert("Failed! Unknown target");
+    PC = flashStart;
+    vectorBase = flashStart + 172;
+    usbVectorBase = vectorBase + 430;
+    signatureOffset = flashStart + 178;
+    jumpTableAddress = usbVectorBase + 64;
+    mainAddress = usbVectorBase + 72
 }
 
-function writeClockRegister(data) {
-    if ((data & 0x02) > 0) 
-        memory[pllCsr] |= 0x1;
-    else 
-        memory[pllCsr] &= 0xFE;
-    }
+function writeClockRegister(b) {
+    memory[pllCsr] = 0 < (b & 2) ? memory[pllCsr] | 1 : memory[pllCsr] & 254
+}
 
-function writeSpecificPort(index) {
-    var queue;
-    var offset = 0x8 * index;
-    switch (index) {
+function writeSpecificPort(b) {
+    var a, d = 8 * b;
+    switch (b) {
     case 0:
-        queue = dataQueueB;
+        a = dataQueueB;
         break;
     case 1:
-        queue = dataQueueC;
+        a = dataQueueC;
         break;
     case 2:
-        queue = dataQueueD;
+        a = dataQueueD;
         break;
     case 3:
-        queue = dataQueueE;
+        a = dataQueueE;
         break;
     case 4:
-        queue = dataQueueF;
-        break;
+        a = dataQueueF
     }
-    for (i = 0; i < bitsPerPort; i++) {
-        var id = "led" + parseInt(i + offset);
-        var imgData = document.getElementById(id).getContext("2d").getImageData(0, 0, 10, 10);
-        if (imgData.data[1] > 0)  //Green color data
-            fillLED(id, "#FF0000");
-        }
-    var data = queue.shift();
-    for (i = 0; i < bitsPerPort; i++) {
-        if (parseInt(data) & (0x1 << i)) 
-            fillLED("led" + parseInt(i + offset), "#00FF00");
-        }
+    for (i = 0; i < bitsPerPort; i++) b = "led" + parseInt(i + d), 0 < document.getElementById(b).getContext("2d").getImageData(0, 0, 10, 10).data[1] && fillLED(b, "#FF0000");
+    a = a.shift();
+    for (i = 0; i < bitsPerPort; i++) parseInt(a) & 1 << i && fillLED("led" + parseInt(i + d), "#00FF00")
 }
 
-function writeMemory(address, data) {
-    memory[address] = data;
-    if (address == portB) 
-        dataQueueB.push(data);
-    if (address == portC) 
-        dataQueueC.push(data);
-    if (address == portD) 
-        dataQueueD.push(data);
-    if (address == portE) 
-        dataQueueE.push(data);
-    if (address == portF) 
-        dataQueueF.push(data);
-    if (address == pllCsr) 
-        writeClockRegister(data);
-    }
+function writeMemory(b, a) {
+    memory[b] = a;
+    b == portB && dataQueueB.push(a);
+    b == portC && dataQueueC.push(a);
+    b == portD && dataQueueD.push(a);
+    b == portE && dataQueueE.push(a);
+    b == portF && dataQueueF.push(a);
+    b == pllCsr && writeClockRegister(a)
+}
 
-function loadMemory(result) {
+function loadMemory(b) {
     initCore();
-    for (i = 0; i < memory.length; i++) 
-        writeMemory(i, 0);
-    var hexdump = result.split(/["\n"]/);
-    var i = 0;
-    while (hexdump[i]) {
-        var line = hexdump[i].substring(1);
-        var offset = parseInt(line.substring(2, 6), 16);
-        var k = 0;
-        for (j = 4; j < parseInt(line.substring(0, 2), 16) + 4; j += 2) {
-            var ndx = 2 * j;
-            var word = line.substring(ndx, ndx + 4);
-            writeMemory(flashStart + offset + k, word.substring(0, 2));
-            writeMemory(flashStart + offset + k + 1, word.substring(2));
-            k += 2;
+    for (a = 0; a < memory.length; a++) writeMemory(a, 0);
+    b = b.split(/["\n"]/);
+    for (var a = 0; b[a];) {
+        var d = b[a].substring(1),
+            f = parseInt(d.substring(2, 6), 16),
+            c = 0;
+        for (j = 4; j < parseInt(d.substring(0, 2), 16) + 4; j += 2) {
+            var e = 2 * j,
+                e = d.substring(e, e + 4);
+            writeMemory(flashStart + f + c, e.substring(0, 2));
+            writeMemory(flashStart + f + c + 1, e.substring(2));
+            c += 2
         }
-        i++;
+        a++
     }
 }
 
-function setPreEvaluationFlags(dest, src) {
-    var halfrd = dest & 0xF;
-    var halfrr = src & 0xF;
-    if ((dest + src) > 0xF) {
-        H = 1;
-    } else {
+function setPreEvaluationFlags(b, a) {
+    H = 15 < b + a ? 1 : 0
+}
+
+function setPostEvaluationFlags(b) {
+    255 < b ? (C = 1, b &= 255) : C = 0;
+    Z = 0 === b ? 1 : 0;
+    N = 128 === (128 & b) ? 1 : 0;
+    V = 127 < b ? 1 : 0;
+    S = N ^ V
+}
+
+function getBreakDistance(b, a) {
+    return (b & 3) << 5 | (a & 240) >> 3 | (a & 8) >> 3
+}
+
+function getRegister(b, a) {
+    return ioRegStart + ((a & 248) >> 3)
+}
+
+function getRegisterValue(b, a) {
+    return a & 7
+}
+
+function getIOValue(b, a) {
+    return ioRegStart + ((b & 6) >> 1 << 4 | a & 15)
+}
+
+function getJumpConstant(b, a) {
+    return (b & 15) << 8 | a
+}
+
+function getBigConstant(b, a) {
+    return (b & 15) << 4 | a & 15
+}
+
+function getSmallRegister(b, a) {
+    return ((a & 240) >> 4) + 16
+}
+
+function getConstant(b, a) {
+    return a & 192 | a & 15
+}
+
+function getUpperPair(b, a) {
+    return 2 * ((a & 48) >> 4) + 24
+}
+
+function fetch(b, a) {
+    var d = 16 * (b & 1) + ((a & 240) >> 4),
+        f = 16 * ((b & 2) >> 1) + (a & 15);
+    switch (b) {
+    case 1:
+        var c = 2 * ((a & 240) >> 4),
+            e = 2 * (a & 15);
+        r[c] = r[e];
+        r[c + 1] = r[e + 1];
+        break;
+    case 4:
+    case 5:
+    case 6:
+    case 7:
         H = 0;
-    }
-}
-
-function setPostEvaluationFlags(result) {
-    if (result > 0xFF) {
-        C      = 1;
-        result &= 0xFF;
-    } else {
-        C = 0;
-    }
-    if (result === 0x0) {
-        Z = 1;
-    } else {
-        Z = 0;
-    }
-    if ((0x80 & result) === 0x80) {
-        N = 1;
-    } else {
-        N = 0;
-    }
-    if (result > 0x7F) {
-        V = 1;
-    } else {
-        V = 0;
-    }
-
-    S = N ^ V;
-}
-
-function getBreakDistance(opcode, params) {
-    return ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
-}
-
-function getRegister(opcode, params) {
-    return ioRegStart + ((params & 0xF8) >> 0x3);
-}
-
-function getRegisterValue(opcode, params) {
-    return (params & 0x07);
-}
-
-function getIOValue(opcode, params) {
-    return ioRegStart + ((((opcode & 0x6) >> 0x1) << 0x4) | (params & 0xF));
-}
-
-function getJumpConstant(opcode, params) {
-    return ((opcode & 0xF) << 0x8) | params;
-}
-
-function getBigConstant(opcode, params) {
-    return ((opcode & 0xF) << 0x4) | (params & 0xF);
-}
-
-function getSmallRegister(opcode, params) {
-    return ((params & 0xF0) >> 0x4) + 16;
-}
-
-function getConstant(opcode, params) {
-    return (params & 0xC0) | (params & 0xF);
-}
-
-function getUpperPair(opcode, params) {
-    return (((params & 0x30) >> 0x4) * 2) + 24;
-}
-
-function fetch(opcode, params) {
-    var dst = ((opcode & 0x1) * 16) + ((params & 0xF0) >> 0x4);
-    var src = (((opcode & 0x2) >> 1) * 16) + (params & 0xF);
-    switch (opcode) {
-    case 0x01:
-        var halfDest = ((params & 0xF0) >> 0x4) * 2;
-        var halfSrc = (params & 0xF) * 2;
-        r[halfDest]     = r[halfSrc];
-        r[halfDest + 1] = r[halfSrc + 1];
+        c = Z;
+        e = r[d] - r[f] + C;
+        setPostEvaluationFlags(e);
+        Z = 0 === e ? c : 0;
         break;
-    case 0x04:
-    case 0x05:
-    case 0x06:
-    case 0x07:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+        setPreEvaluationFlags(r[d], r[f]);
+        r[d] = r[d] - r[f] - C;
+        setPostEvaluationFlags(r[d]);
+        break;
+    case 12:
+    case 13:
+    case 14:
+    case 15:
+        setPreEvaluationFlags(r[d], r[f]);
+        r[d] += r[f];
+        setPostEvaluationFlags(r[d]);
+        break;
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+        setPreEvaluationFlags(r[d],
+            r[f]);
+        setPostEvaluationFlags(r[d]);
+        break;
+    case 24:
+    case 25:
+    case 26:
+    case 27:
+        setPreEvaluationFlags(r[d], r[f]);
+        r[d] -= r[f];
+        setPostEvaluationFlags(r[d]);
+        break;
+    case 28:
+    case 29:
+    case 30:
+    case 31:
+        setPreEvaluationFlags(r[d], r[f]);
+        r[d] = r[d] + r[f] + C;
+        setPostEvaluationFlags(r[d]);
+        break;
+    case 32:
+    case 33:
+    case 34:
+    case 35:
         H = 0;
-        var prev = Z;
-        var result = r[dst] - r[src] + C;
-        setPostEvaluationFlags(result);
-        if (result === 0x0) 
-            Z = prev;
-        else 
-            Z = 0;
-        break;
-    case 0x08:
-    case 0x09:
-    case 0x0A:
-    case 0x0B:
-        setPreEvaluationFlags(r[dst], r[src]);
-        r[dst] = r[dst] - r[src] - C;
-        setPostEvaluationFlags(r[dst]);
-        break;
-    case 0x0C:
-    case 0x0D:
-    case 0x0E:
-    case 0x0F:
-        setPreEvaluationFlags(r[dst], r[src]);
-        r[dst] = r[dst] + r[src];
-        setPostEvaluationFlags(r[dst]);
-        break;
-    case 0x14:
-    case 0x15:
-    case 0x16:
-    case 0x17:
-        setPreEvaluationFlags(r[dst], r[src]);
-        setPostEvaluationFlags(r[dst]);
-        break;
-    case 0x18:
-    case 0x19:
-    case 0x1A:
-    case 0x1B:
-        setPreEvaluationFlags(r[dst], r[src]);
-        r[dst] = r[dst] - r[src];
-        setPostEvaluationFlags(r[dst]);
-        break;
-    case 0x1C:
-    case 0x1D:
-    case 0x1E:
-    case 0x1F:
-        setPreEvaluationFlags(r[dst], r[src]);
-        r[dst] = r[dst] + r[src] + C;
-        setPostEvaluationFlags(r[dst]);
-        break;
-    case 0x20:
-    case 0x21:
-    case 0x22:
-    case 0x23:
-        H      = 0;
-        r[dst] = r[dst] & r[src];
-        setPostEvaluationFlags(r[dst]);
+        r[d] &= r[f];
+        setPostEvaluationFlags(r[d]);
         C = 0;
         break;
-    case 0x24:
-    case 0x25:
-    case 0x26:
-    case 0x27:
-        r[dst] = r[dst] ^ r[src];
+    case 36:
+    case 37:
+    case 38:
+    case 39:
+        r[d] ^= r[f];
         break;
-    case 0x28:
-    case 0x29:
-    case 0x2A:
-    case 0x2B:
-        r[dst] = r[dst] | r[src];
+    case 40:
+    case 41:
+    case 42:
+    case 43:
+        r[d] |= r[f];
         break;
-    case 0x2C:
-    case 0x2D:
-    case 0x2E:
-    case 0x2F:
-        r[dst] = r[src];
+    case 44:
+    case 45:
+    case 46:
+    case 47:
+        r[d] = r[f];
         break;
-    case 0x30:
-    case 0x31:
-    case 0x32:
-    case 0x33:
-    case 0x34:
-    case 0x35:
-    case 0x36:
-    case 0x37:
-    case 0x38:
-    case 0x39:
-    case 0x3A:
-    case 0x3B:
-    case 0x3C:
-    case 0x3D:
-    case 0x3E:
-    case 0x3F:
+    case 48:
+    case 49:
+    case 50:
+    case 51:
+    case 52:
+    case 53:
+    case 54:
+    case 55:
+    case 56:
+    case 57:
+    case 58:
+    case 59:
+    case 60:
+    case 61:
+    case 62:
+    case 63:
         H = 0;
-        setPostEvaluationFlags(r[getSmallRegister(opcode, params)] - getBigConstant(opcode, params));
+        setPostEvaluationFlags(r[getSmallRegister(b, a)] - getBigConstant(b, a));
         break;
-    case 0x40:
-    case 0x41:
-    case 0x42:
-    case 0x43:
-    case 0x44:
-    case 0x45:
-    case 0x46:
-    case 0x47:
-    case 0x48:
-    case 0x49:
-    case 0x4A:
-    case 0x4B:
-    case 0x4C:
-    case 0x4D:
-    case 0x4E:
-    case 0x4F:
-        var bigConstant = getBigConstant(opcode, params);
-        var smallReg = getSmallRegister(opcode, params);
-        if (r[smallReg] > 0 ^ bigConstant > 0) 
-            r[smallReg] = r[smallReg] - bigConstant - C;
-        while (r[smallReg] < 0x0) 
-            r[smallReg] = 0x100 + r[smallReg];
-        C = Math.abs(r[smallReg]) < (bigConstant + C);
+    case 64:
+    case 65:
+    case 66:
+    case 67:
+    case 68:
+    case 69:
+    case 70:
+    case 71:
+    case 72:
+    case 73:
+    case 74:
+    case 75:
+    case 76:
+    case 77:
+    case 78:
+    case 79:
+        c = getBigConstant(b, a);
+        e = getSmallRegister(b, a);
+        for (0 < r[e] ^ 0 < c && (r[e] = r[e] - c - C); 0 > r[e];) r[e] = 256 + r[e];
+        C = Math.abs(r[e]) < c + C;
         break;
-    case 0x50:
-    case 0x51:
-    case 0x52:
-    case 0x53:
-    case 0x54:
-    case 0x55:
-    case 0x56:
-    case 0x57:
-    case 0x58:
-    case 0x59:
-    case 0x5A:
-    case 0x5B:
-    case 0x5C:
-    case 0x5D:
-    case 0x5E:
-    case 0x5F:
-        var smallReg = getSmallRegister(opcode, params);
-        r[smallReg] = r[smallReg] - getBigConstant(opcode, params);
-        C           = 0;
-        while (r[smallReg] < 0x0) {
-            r[smallReg] = 0x100 + r[smallReg];
-            C           = 1;
-        }
+    case 80:
+    case 81:
+    case 82:
+    case 83:
+    case 84:
+    case 85:
+    case 86:
+    case 87:
+    case 88:
+    case 89:
+    case 90:
+    case 91:
+    case 92:
+    case 93:
+    case 94:
+    case 95:
+        e =
+            getSmallRegister(b, a);
+        r[e] -= getBigConstant(b, a);
+        for (C = 0; 0 > r[e];) r[e] = 256 + r[e], C = 1;
         break;
-    case 0x60:
-    case 0x61:
-    case 0x62:
-    case 0x63:
-    case 0x64:
-    case 0x65:
-    case 0x66:
-    case 0x67:
-    case 0x68:
-    case 0x69:
-    case 0x6A:
-    case 0x6B:
-    case 0x6C:
-    case 0x6D:
-    case 0x6E:
-    case 0x6F:
-        var smallReg = getSmallRegister(opcode, params);
-        r[smallReg] = r[smallReg] | getBigConstant(opcode, params);
+    case 96:
+    case 97:
+    case 98:
+    case 99:
+    case 100:
+    case 101:
+    case 102:
+    case 103:
+    case 104:
+    case 105:
+    case 106:
+    case 107:
+    case 108:
+    case 109:
+    case 110:
+    case 111:
+        e = getSmallRegister(b, a);
+        r[e] |= getBigConstant(b, a);
         break;
-    case 0x70:
-    case 0x71:
-    case 0x72:
-    case 0x73:
-    case 0x74:
-    case 0x75:
-    case 0x76:
-    case 0x77:
-    case 0x78:
-    case 0x79:
-    case 0x7A:
-    case 0x7B:
-    case 0x7C:
-    case 0x7D:
-    case 0x7E:
-    case 0x7F:
+    case 112:
+    case 113:
+    case 114:
+    case 115:
+    case 116:
+    case 117:
+    case 118:
+    case 119:
+    case 120:
+    case 121:
+    case 122:
+    case 123:
+    case 124:
+    case 125:
+    case 126:
+    case 127:
         H = 0;
-        var smallReg = getSmallRegister(opcode, params);
-        r[smallReg] = r[smallReg] & getBigConstant(opcode, params);
-        setPostEvaluationFlags(r[smallReg]);
+        e = getSmallRegister(b, a);
+        r[e] &= getBigConstant(b, a);
+        setPostEvaluationFlags(r[e]);
         C = 0;
         break;
-    case 0x80:
-    case 0x81:
-        if (((params & 0x8) | 0x0) === 0x0) {
-            var base = parseInt(r[dst], 16);
-            writeMemory(parseInt(r[28], 16), base);
-            writeMemory(parseInt(r[29], 16), ++base);
-        }
+    case 128:
+    case 129:
+        0 === (a & 8 | 0) && (c = parseInt(r[d], 16), writeMemory(parseInt(r[28], 16), c), writeMemory(parseInt(r[29], 16), ++c));
         break;
-    case 0x82:
-    case 0x83:
-        if (((params & 0xF) | 0x0) === 0x0) {
-            writeMemory((r[31] << 0x8 | r[30]), r[dst]);
-        }
+    case 130:
+    case 131:
+        0 === (a & 15 | 0) && writeMemory(r[31] << 8 | r[30], r[d]);
         break;
-    case 0x90:
-    case 0x91:
-        if ((params & 0xF) === 0xF) {
-            r[dst] = memory[++SP];
-        } else if ((params & 0xF) === 0x4 || (params & 0xF) === 0x5) {
-            var resolvedValue = ((r[31] << 0x8) | r[30]);
-            var address = ((resolvedValue >> 0x1) * 2) + flashStart;
-            var highValue = parseInt(memory[address], 16);
-            var lowValue = parseInt(memory[address + 1], 16);
-            if ((resolvedValue & 0x1) === 0x0) 
-                r[dst] = highValue;
-            else 
-                r[dst] = lowValue;
-            if ((params & 0xF) === 0x5) {
-                r[30]++;
-                if (r[30] === 0x100) {
-                    r[30] = 0;
-                    r[31]++;
-                }
+    case 144:
+    case 145:
+        if (15 === (a & 15)) r[d] = memory[++SP];
+        else if (4 === (a & 15) || 5 === (a & 15)) {
+            var c = r[31] << 8 | r[30],
+                g = 2 * (c >> 1) + flashStart,
+                e = parseInt(memory[g], 16),
+                g = parseInt(memory[g + 1], 16);
+            r[d] = 0 === (c & 1) ? e : g;
+            5 === (a & 15) && (r[30]++, 256 === r[30] && (r[30] = 0, r[31]++))
+        } else r[d] = 12 === (a & 15) ? parseInt(memory[2 * ((r[27] <<
+            8 | r[26]) >> 1)], 16) : memory[parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8];
+        break;
+    case 146:
+    case 147:
+        15 === (a & 15) ? (writeMemory(SP, r[d]), SP--) : 0 === (a & 15) ? writeMemory(parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8, r[d]) : 12 === (a & 15) ? (c = parseInt(r[26]), e = parseInt(r[27]) << 8, writeMemory(e | c, r[d])) : 13 === (a & 15) && (c = parseInt(r[26]), e = parseInt(r[27]) << 8, writeMemory(e | c, r[d]), r[26]++, 256 === r[26] && (r[26] = 0, r[27]++));
+        break;
+    case 148:
+    case 149:
+        if (0 === (a & 255)) r[d] = 255 - r[d];
+        else if (5 === (a & 255)) c = r[d], e =
+            c & 128, g = c & 1, c = c >> 1 | e, setPostEvaluationFlags(c), r[d] = c, C = g, V = N ^ C;
+        else if (8 === (a & 255)) e = memory[++SP], PC = e << 8 | memory[++SP];
+        else if (9 === (a & 255)) PC = (r[31] << 8 | r[30]) + flashStart;
+        else if (12 === (a & 15) || 13 === (a & 15)) PC = flashStart + 2 * ((b & 1) << 20 | (a & 240) << 17 | (a & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16));
+        else if (14 === (a & 15) || 15 === (a & 15)) {
+            if (hasDeviceSignature && PC === jumpTableAddress + calculatedOffset) {
+                PC = mainAddress + calculatedOffset;
+                break
             }
-        } else if ((params & 0xF) === 0xC) {
-            r[dst] = parseInt(memory[((((r[27] << 0x8) | r[26]) >> 0x1) * 2)], 16);
-        } else {
-            r[dst] = memory[parseInt(memory[PC++], 16) | (parseInt(memory[PC++], 16) << 0x8)];
+            writeMemory(SP--, PC + 2 & 255);
+            writeMemory(SP--, PC + 2 >> 8);
+            PC = flashStart +
+                2 * (parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16))
         }
         break;
-    case 0x92:
-    case 0x93:
-        if ((params & 0xF) === 0xF) {
-            writeMemory(SP, r[dst]);
-            SP--;
-        } else if ((params & 0xF) === 0x0) {
-            writeMemory(parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 0x8, r[dst]);
-        } else if ((params & 0xF) === 0xC) {
-            var lower = parseInt(r[26]);
-            var upper = parseInt(r[27]) << 0x8;
-            writeMemory(upper | lower, r[dst]);
-        } else if ((params & 0xF) === 0xD) {
-            var lower = parseInt(r[26]);
-            var upper = parseInt(r[27]) << 0x8;
-            writeMemory(upper | lower, r[dst]);
-            r[26]++;
-            if (r[26] === 0x100) {
-                r[26] = 0;
-                r[27]++;
-            }
-        }
-        break;
-    case 0x94:
-    case 0x95:
-        if ((params & 0xFF) === 0x0) {
-            r[dst] = 0xFF - r[dst];
-        } else if ((params & 0xFF) === 0x5) {
-            var value = r[dst];
-            var topBit = value & 0x80;
-            var lowBit = value & 0x1;
-            value = value >> 0x1;
-            value = value | topBit;
-            setPostEvaluationFlags(value);
-            r[dst] = value;
-            C      = lowBit;
-            V      = N ^ C;
-        } else if ((params & 0xFF) === 0x08) {
-            var upper = memory[++SP];
-            PC = ((upper << 0x8) | memory[++SP]);
-        } else if ((params & 0xFF) === 0x09) {
-            PC = ((r[31] << 0x8) | r[30]) + flashStart;
-        } else if ((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D) {
-            PC = flashStart + (((opcode & 0x1) << 20 | (params & 0xF0) << 17 | (params & 0x1) << 16 | parseInt(memory[PC + 1], 16) << 0x8 | parseInt(memory[PC], 16)) * 2);
-        } else if ((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F) {
-            if (hasDeviceSignature && PC === jumpTableAddress + calculatedOffset) { //__tablejump__
-                PC = mainAddress + calculatedOffset; //Go to main
-                break;
-            }
-            writeMemory(SP--, ((PC + 2) & 0xFF));
-            writeMemory(SP--, ((PC + 2) >> 0x8));
-            PC = flashStart + (parseInt(memory[PC + 1], 16) << 0x8 | parseInt(memory[PC], 16)) * 2;
-        }
-        break;
-    case 0x96:
+    case 150:
         H = 0;
-        var constant = getConstant(opcode, params);
-        var upperPair = getUpperPair(opcode, params);
-        r[upperPair] = constant & 0xF;
-        r[upperPair + 1] = (constant & 0xF0) >> 0x4;
-        setPostEvaluationFlags(r[upperPair + 1]);
-        if (r[upperPair] === 0x0 && r[upperPair + 1] === 0x0) {
-            Z = 1;
-        } else {
-            Z = 0;
-        }
+        c = getConstant(b, a);
+        e = getUpperPair(b, a);
+        r[e] = c & 15;
+        r[e + 1] = (c & 240) >> 4;
+        setPostEvaluationFlags(r[e + 1]);
+        Z = 0 === r[e] && 0 === r[e + 1] ? 1 : 0;
         break;
-    case 0x97:
-        var constant = getConstant(opcode, params);
-        var upperPair = getUpperPair(opcode, params);
-        r[upperPair] = r[upperPair] - (constant & 0xF);
-        r[upperPair + 1] = r[upperPair + 1] - ((constant & 0xF0) >> 0x4);
+    case 151:
+        c = getConstant(b, a);
+        e = getUpperPair(b, a);
+        r[e] -= c & 15;
+        r[e + 1] -= (c & 240) >> 4;
         break;
-    case 0x98:
-        var register = getRegister(opcode, params);
-        var regVal = getRegisterValue(opcode, params);
-        if ((memory[register] & (1 << regVal)) > 0) {
-            writeMemory(register, memory[register] ^ (1 << regVal));
-        }
+    case 152:
+        c = getRegister(b, a);
+        e = getRegisterValue(b, a);
+        0 < (memory[c] & 1 << e) && writeMemory(c, memory[c] ^ 1 << e);
         break;
-    case 0x9A:
-        var register = getRegister(opcode, params);
-        writeMemory(register, memory[register] | (1 << getRegisterValue(opcode, params)));
+    case 154:
+        c = getRegister(b, a);
+        writeMemory(c, memory[c] | 1 << getRegisterValue(b, a));
         break;
-    case 0x9B:
-        if ((memory[getRegister(opcode, params)] & (1 << getRegisterValue(opcode, params))) > 0) {
-            PC += 2;
-        }
+    case 155:
+        0 < (memory[getRegister(b,
+            a)] & 1 << getRegisterValue(b, a)) && (PC += 2);
         break;
-    case 0xB0:
-    case 0xB1:
-    case 0xB2:
-    case 0xB3:
-    case 0xB4:
-    case 0xB5:
-    case 0xB6:
-    case 0xB7:
-        r[dst] = memory[getIOValue(opcode, params)];
+    case 176:
+    case 177:
+    case 178:
+    case 179:
+    case 180:
+    case 181:
+    case 182:
+    case 183:
+        r[d] = memory[getIOValue(b, a)];
         break;
-    case 0xB8:
-    case 0xB9:
-    case 0xBA:
-    case 0xBB:
-    case 0xBC:
-    case 0xBD:
-    case 0xBE:
-    case 0xBF:
-        writeMemory(getIOValue(opcode, params), r[dst]);
+    case 184:
+    case 185:
+    case 186:
+    case 187:
+    case 188:
+    case 189:
+    case 190:
+    case 191:
+        writeMemory(getIOValue(b, a), r[d]);
         break;
-    case 0xC0:
-    case 0xC1:
-    case 0xC2:
-    case 0xC3:
-    case 0xC4:
-    case 0xC5:
-    case 0xC6:
-    case 0xC7:
-    case 0xC8:
-    case 0xC9:
-    case 0xCA:
-    case 0xCB:
-    case 0xCC:
-    case 0xCD:
-    case 0xCE:
-    case 0xCF:
-        var jumpConstant = getJumpConstant(opcode, params);
-        if ((jumpConstant & 0x800) === 0x800) {
-            PC -= 4096 - ((jumpConstant ^ 0x800) * 2);
-        } else {
-            PC += jumpConstant * 2;
-        }
+    case 192:
+    case 193:
+    case 194:
+    case 195:
+    case 196:
+    case 197:
+    case 198:
+    case 199:
+    case 200:
+    case 201:
+    case 202:
+    case 203:
+    case 204:
+    case 205:
+    case 206:
+    case 207:
+        c = getJumpConstant(b, a);
+        PC = 2048 === (c & 2048) ? PC - (4096 - 2 * (c ^ 2048)) : PC + 2 * c;
         break;
-    case 0xD0:
-    case 0xD1:
-    case 0xD2:
-    case 0xD3:
-    case 0xD4:
-    case 0xD5:
-    case 0xD6:
-    case 0xD7:
-    case 0xD8:
-    case 0xD9:
-    case 0xDA:
-    case 0xDB:
-    case 0xDC:
-    case 0xDD:
-    case 0xDE:
-    case 0xDF:
-        writeMemory(SP--, (PC & 0xFF));
-        writeMemory(SP--, (PC >> 0x8));
-        var jumpConstant = getJumpConstant(opcode, params);
-        if ((jumpConstant & 0x800) === 0x800) {
-            PC -= 4096 - ((jumpConstant ^ 0x800) * 2);
-        } else {
-            PC += jumpConstant * 2;
-        }
+    case 208:
+    case 209:
+    case 210:
+    case 211:
+    case 212:
+    case 213:
+    case 214:
+    case 215:
+    case 216:
+    case 217:
+    case 218:
+    case 219:
+    case 220:
+    case 221:
+    case 222:
+    case 223:
+        writeMemory(SP--,
+            PC & 255);
+        writeMemory(SP--, PC >> 8);
+        c = getJumpConstant(b, a);
+        PC = 2048 === (c & 2048) ? PC - (4096 - 2 * (c ^ 2048)) : PC + 2 * c;
         break;
-    case 0xE0:
-    case 0xE1:
-    case 0xE2:
-    case 0xE3:
-    case 0xE4:
-    case 0xE5:
-    case 0xE6:
-    case 0xE7:
-    case 0xE8:
-    case 0xE9:
-    case 0xEA:
-    case 0xEB:
-    case 0xEC:
-    case 0xED:
-    case 0xEE:
-    case 0xEF:
-        r[getSmallRegister(opcode, params)] = getBigConstant(opcode, params);
+    case 224:
+    case 225:
+    case 226:
+    case 227:
+    case 228:
+    case 229:
+    case 230:
+    case 231:
+    case 232:
+    case 233:
+    case 234:
+    case 235:
+    case 236:
+    case 237:
+    case 238:
+    case 239:
+        r[getSmallRegister(b, a)] = getBigConstant(b, a);
         break;
-    case 0xF0:
-    case 0xF1:
-    case 0xF2:
-    case 0xF3:
-        var jump = false;
-        switch (params & 0x7) {
-        case 0x0:
-            jump = C;
+    case 240:
+    case 241:
+    case 242:
+    case 243:
+        c = !1;
+        switch (a & 7) {
+        case 0:
+            c = C;
             break;
-        case 0x1:
-            jump = Z;
-            break;
+        case 1:
+            c = Z
         }
-        if (jump) {
-            var breakDistance = getBreakDistance(opcode, params);
-            if (breakDistance > 0x40) 
-                PC -= (128 - breakDistance) * 2;
-            else 
-                PC += breakDistance * 2;
-            }
+        c && (c = getBreakDistance(b, a), PC = 64 < c ? PC - 2 * (128 - c) : PC + 2 * c);
         break;
-    case 0xF4:
-    case 0xF5:
-    case 0xF6:
-    case 0xF7:
-        var jump = false;
-        switch (params & 0x7) {
-        case 0x0:
-            jump = !C;
+    case 244:
+    case 245:
+    case 246:
+    case 247:
+        c = !1;
+        switch (a & 7) {
+        case 0:
+            c = !C;
             break;
-        case 0x1:
-            jump = !Z;
-            break;
+        case 1:
+            c = !Z
         }
-        if (jump) {
-            var breakDistance = getBreakDistance(opcode, params);
-            if (breakDistance > 0x40) 
-                PC -= (128 - breakDistance) * 2;
-            else 
-                PC += breakDistance * 2;
-            }
+        c && (c = getBreakDistance(b, a), PC = 64 < c ? PC - 2 * (128 - c) : PC + 2 * c);
         break;
-    case 0xF8:
-    case 0xF9:
-        r[dst] = T << (params & 0x7);
+    case 248:
+    case 249:
+        r[d] = T << (a & 7);
         break;
-    case 0xFC:
-    case 0xFD:
-        if ((r[dst] & (0x1 << (params & 0x7))) === 0) 
-            PC += 2;
+    case 252:
+    case 253:
+        0 === (r[d] & 1 << (a & 7)) && (PC += 2);
         break;
-    case 0xFE:
-    case 0xFF:
-        if (r[dst] & (0x1 << (params & 0x7)) > 0) 
-            PC += 2;
+    case 254:
+    case 255:
+        r[d] & 0 < 1 << (a & 7) && (PC += 2);
         break;
     default:
-        document.write("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + opcode + " " + params + "<br/>");
+        document.write("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + b + " " + a + "<br/>")
     }
-    r[dst] = r[dst] & 0xFF;
-    r[src] = r[src] & 0xFF;
+    r[d] &= 255;
+    r[f] &= 255
 }
 
-function handleBreakpoint(address) {
-    alert('Breakpoint at 0x' + address);
+function handleBreakpoint(b) {
+    alert("Breakpoint at 0x" + b)
 }
 
-function isSoftBreakpoint(address) {
-    for (i = 0; i < softBreakpoints.length; i++) {
-        if ((softBreakpoints[i] + flashStart) === address) 
-            return true;
-        }
-
-    return false;
+function isSoftBreakpoint(b) {
+    for (i = 0; i < softBreakpoints.length; i++)
+        if (softBreakpoints[i] + flashStart === b) return !0;
+    return !1
 }
 
 function loop() {
-    var params = parseInt(memory[PC], 16);
-    var opcode = parseInt(memory[++PC], 16);
+    var b = parseInt(memory[PC], 16),
+        a = parseInt(memory[++PC], 16);
     PC++;
-    var isBreak = (opcode == 0x95 && params == 0x98) || isSoftBreakpoint(PC) || forceBreak;
-    if (!isBreak && !(opcode == 0xCF && params == 0xFF)) 
-        setTimeout(loop, 10);
-    else if (isBreak) {
-        forceBreak = false;
-        isPaused   = true;
-        handleBreakpoint((PC - 2).toString(16).toUpperCase());
-    }
-    fetch(opcode, params);
-    while (dataQueueB.length > 0) {
-        writeSpecificPort(0);
-    }
-    while (dataQueueC.length > 0) {
-        writeSpecificPort(1);
-    }
-    while (dataQueueD.length > 0) {
-        writeSpecificPort(2);
-    }
-    while (dataQueueE.length > 0) {
-        writeSpecificPort(3);
-    }
-    while (dataQueueF.length > 0) {
-        writeSpecificPort(4);
-    }
+    var d = 149 == a && 152 == b || isSoftBreakpoint(PC) || forceBreak;
+    d || 207 == a && 255 == b ? d && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : setTimeout(loop, 10);
+    for (fetch(a, b); 0 < dataQueueB.length;) writeSpecificPort(0);
+    for (; 0 < dataQueueC.length;) writeSpecificPort(1);
+    for (; 0 < dataQueueD.length;) writeSpecificPort(2);
+    for (; 0 < dataQueueE.length;) writeSpecificPort(3);
+    for (; 0 < dataQueueF.length;) writeSpecificPort(4)
 }
 
 function engineInit() {
-    for (i = 0; i < r.length; i++) 
-        r[i] = 0;
-    var ctorEnd = 0x0;
-    if (parseInt(memory[flashStart], 16) === 0xC) 
-        ctorEnd = flashStart + (parseInt(memory[flashStart + 3], 16) << 0x8 | parseInt(memory[flashStart + 2], 16)) * 2;
-    if (ctorEnd > usbVectorBase) 
-        calculatedOffset = ctorEnd - usbVectorBase;
-    var id = new Array(0);
-    for (i = signatureOffset + calculatedOffset; i < signatureOffset + calculatedOffset + 32; i += 2) 
-        id.push(String.fromCharCode(parseInt(memory[i], 16)));
-    switch (id.toString().replace(/,/g, "")) {
+    for (i = 0; i < r.length; i++) r[i] = 0;
+    var b = 0;
+    12 === parseInt(memory[flashStart], 16) && (b = flashStart + 2 * (parseInt(memory[flashStart + 3], 16) << 8 | parseInt(memory[flashStart + 2], 16)));
+    b > usbVectorBase && (calculatedOffset = b - usbVectorBase);
+    b = [];
+    for (i = signatureOffset + calculatedOffset; i < signatureOffset + calculatedOffset + 32; i += 2) b.push(String.fromCharCode(parseInt(memory[i], 16)));
+    switch (b.toString().replace(/,/g, "")) {
     case "Arduino Micro   ":
-        hasDeviceSignature = true;
-        break;
-    };
+        hasDeviceSignature = !0
+    }
 }
 
 function exec() {
-    if (isPaused) {
-        isPaused = false;
-        loop();
+    isPaused && (isPaused = !1, loop())
+}
+
+function isNumber(b) {
+    return !isNaN(parseInt(b, 16))
+}
+
+function fillLED(b, a) {
+    var d = document.getElementById(b).getContext("2d");
+    d.fillStyle = a;
+    d.fillRect(0, 0, 10, 10)
+}
+
+function generateRegisterHtml(b) {
+    return '<textarea id="register' + b + '" rows="1" cols="4">0x00</textarea>'
+}
+
+function generatePortHtml(b, a) {
+    var d = 8 * b,
+        f = '<div style="display: table-row">';
+    for (i = 0; 8 > i; i++) {
+        var c = parseInt(d + i),
+            f = f + ('<div style="display: table-cell;">  <canvas id="led' + c + '" width="10" height="10"/> </div>');
+        0 < (1 << i & a) && (f += '<script>fillLED("led' + c + '", "#FF0000");\x3c/script>')
     }
-}
-
-function isNumber(n) {
-    return !isNaN(parseInt(n, 16));
-}
-
-function fillLED(led, color) {
-    var c = document.getElementById(led);
-    var ctx = c.getContext("2d");
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, 10, 10);
-}
-
-function generateRegisterHtml(index) {
-    return "<textarea id=\"register" + index + "\" rows=\"1\" cols=\"4\">0x00</textarea>";
-}
-
-function generatePortHtml(index, mask) {
-    var offset = 0x8 * index;
-    var portString = "<div style=\"display: table-row\">";
-    for (i = 0; i < 8; i++) {
-        var id = parseInt(offset + i);
-        portString += "<div style=\"display: table-cell;\">  <canvas id=\"led" + id + "\" width=\"10\" height=\"10\"/> </div>";
-        if (((0x1 << i) & mask) > 0) {
-            portString += "<script>" + "fillLED(\"led" + id + "\", \"#FF0000\");" + "</" + "script>";
-        }
-    }
-    return portString + "</div>";
-}
+    return f + "</div>"
+};
