@@ -1,11 +1,11 @@
-webduino.starlo.org
+jAVRscript
 ===================
 
 HTML5 based AVR simulator
 
 General Build Instructions:
 	make SRC=<filename> TARGET=<avr mcu>
-	defaults: blink atmega8
+	defaults: blink atmega32u4
 
 Goals:
     To make a complimentary emulation platform for Stanley Huang's Arduino Online Compiler, http://arduinodev.com/software/builder.
@@ -16,11 +16,10 @@ Theory of Operation:
     Each built webpage represents a single sketch upload.
 
 Status:
-    Currently, the goal is to get default sketch on the Arduino Online Compiler up and running for the Arduino Mega 8 target.
-    The blink.c file completes with some level of correctness, while master.c is designed to test the finished platform.
-    The default sketch for the Arduino Online Compiler loops indefinitely.
-    The ATTiny4 is also supported, though some code will need to be uncommented.
+    Currently, the default sketch on the Arduino Online Compiler is up and running for the Arduino Micro target.
+    The blink.c file is complete for all device types, while master.c is a work in progress designed to test the finished Micro platform.
     Most testing is done using the AVR GCC Toolchain.
 
 Changelog:
     ***Initial Commit
+    ***1/18/2014 Code cleanup release that can run the Arduino Blink example
