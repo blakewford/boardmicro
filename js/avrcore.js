@@ -546,7 +546,7 @@ function loop() {
         a = parseInt(memory[++PC], 16);
     PC++;
     var d = 149 == a && 152 == b || isSoftBreakpoint(PC) || forceBreak;
-    d || 207 == a && 255 == b ? d && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : setTimeout(loop, 10);
+    d || 207 == a && 255 == b ? d && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : setTimeout(loop, 0);
     for (fetch(a, b); 0 < dataQueueB.length;) writeSpecificPort(0);
     for (; 0 < dataQueueC.length;) writeSpecificPort(1);
     for (; 0 < dataQueueD.length;) writeSpecificPort(2);
