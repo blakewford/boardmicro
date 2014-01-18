@@ -230,18 +230,41 @@ function getBreakDistance(opcode, params) {
     return ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
 }
 
+function getRegister(opcode, params) {
+    return ioRegStart + ((params & 0xF8) >> 0x3);
+}
+
+function getRegisterValue(opcode, params) {
+    return (params & 0x07);
+}
+
+function getIOValue(opcode, params) {
+    return ioRegStart + ((((opcode & 0x6) >> 0x1) << 0x4) | (params & 0xF));
+}
+
+function getJumpConstant(opcode, params) {
+    return ((opcode & 0xF) << 0x8) | params;
+}
+
+function getBigConstant(opcode, params) {
+    return ((opcode & 0xF) << 0x4) | (params & 0xF);
+}
+
+function getSmallRegister(opcode, params) {
+    return ((params & 0xF0) >> 0x4) + 16;
+}
+
+function getConstant(opcode, params) {
+    return (params & 0xC0) | (params & 0xF);
+}
+
+function getUpperPair(opcode, params) {
+    return (((params & 0x30) >> 0x4) * 2) + 24;
+}
+
 function fetch(opcode, params) {
     var dst = ((opcode & 0x1) * 16) + ((params & 0xF0) >> 0x4);
     var src = (((opcode & 0x2) >> 1) * 16) + (params & 0xF);
-    var upperPair = (((params & 0x30) >> 0x4) * 2) + 24;
-    var constant = (params & 0xC0) | (params & 0xF);
-    var smallReg = ((params & 0xF0) >> 0x4) + 16;
-    var bigConstant = ((opcode & 0xF) << 0x4) | (params & 0xF);
-    var jumpConstant = ((opcode & 0xF) << 0x8) | params;
-    var io = ((((opcode & 0x6) >> 0x1) << 0x4) | (params & 0xF));
-    var regSet = (params & 0xF8) >> 0x3;
-    var regVal = (params & 0x07);
-    var register = ioRegStart + regSet;
     switch (opcode) {
     case 0x01:
         var halfDest = ((params & 0xF0) >> 0x4) * 2;
@@ -345,7 +368,7 @@ function fetch(opcode, params) {
     case 0x3E:
     case 0x3F:
         H = 0;
-        setPostEvaluationFlags(r[smallReg] - bigConstant);
+        setPostEvaluationFlags(r[getSmallRegister(opcode, params)] - getBigConstant(opcode, params));
         break;
     case 0x40:
     case 0x41:
@@ -363,6 +386,8 @@ function fetch(opcode, params) {
     case 0x4D:
     case 0x4E:
     case 0x4F:
+        var bigConstant = getBigConstant(opcode, params);
+        var smallReg = getSmallRegister(opcode, params);
         if (r[smallReg] > 0 ^ bigConstant > 0) 
             r[smallReg] = r[smallReg] - bigConstant - C;
         while (r[smallReg] < 0x0) 
@@ -385,7 +410,8 @@ function fetch(opcode, params) {
     case 0x5D:
     case 0x5E:
     case 0x5F:
-        r[smallReg] = r[smallReg] - bigConstant;
+        var smallReg = getSmallRegister(opcode, params);
+        r[smallReg] = r[smallReg] - getBigConstant(opcode, params);
         C           = 0;
         while (r[smallReg] < 0x0) {
             r[smallReg] = 0x100 + r[smallReg];
@@ -408,7 +434,8 @@ function fetch(opcode, params) {
     case 0x6D:
     case 0x6E:
     case 0x6F:
-        r[smallReg] = r[smallReg] | bigConstant;
+        var smallReg = getSmallRegister(opcode, params);
+        r[smallReg] = r[smallReg] | getBigConstant(opcode, params);
         break;
     case 0x70:
     case 0x71:
@@ -426,8 +453,9 @@ function fetch(opcode, params) {
     case 0x7D:
     case 0x7E:
     case 0x7F:
-        H           = 0;
-        r[smallReg] = r[smallReg] & bigConstant;
+        H = 0;
+        var smallReg = getSmallRegister(opcode, params);
+        r[smallReg] = r[smallReg] & getBigConstant(opcode, params);
         setPostEvaluationFlags(r[smallReg]);
         C = 0;
         break;
@@ -525,8 +553,10 @@ function fetch(opcode, params) {
         }
         break;
     case 0x96:
-        H                = 0;
-        r[upperPair]     = constant & 0xF;
+        H = 0;
+        var constant = getConstant(opcode, params);
+        var upperPair = getUpperPair(opcode, params);
+        r[upperPair] = constant & 0xF;
         r[upperPair + 1] = (constant & 0xF0) >> 0x4;
         setPostEvaluationFlags(r[upperPair + 1]);
         if (r[upperPair] === 0x0 && r[upperPair + 1] === 0x0) {
@@ -536,19 +566,24 @@ function fetch(opcode, params) {
         }
         break;
     case 0x97:
-        r[upperPair]     = r[upperPair] - (constant & 0xF);
+        var constant = getConstant(opcode, params);
+        var upperPair = getUpperPair(opcode, params);
+        r[upperPair] = r[upperPair] - (constant & 0xF);
         r[upperPair + 1] = r[upperPair + 1] - ((constant & 0xF0) >> 0x4);
         break;
     case 0x98:
+        var register = getRegister(opcode, params);
+        var regVal = getRegisterValue(opcode, params);
         if ((memory[register] & (1 << regVal)) > 0) {
             writeMemory(register, memory[register] ^ (1 << regVal));
         }
         break;
     case 0x9A:
-        writeMemory(register, memory[register] | (1 << regVal));
+        var register = getRegister(opcode, params);
+        writeMemory(register, memory[register] | (1 << getRegisterValue(opcode, params)));
         break;
     case 0x9B:
-        if ((memory[register] & (1 << regVal)) > 0) {
+        if ((memory[getRegister(opcode, params)] & (1 << getRegisterValue(opcode, params))) > 0) {
             PC += 2;
         }
         break;
@@ -560,7 +595,7 @@ function fetch(opcode, params) {
     case 0xB5:
     case 0xB6:
     case 0xB7:
-        r[dst] = memory[ioRegStart + io];
+        r[dst] = memory[getIOValue(opcode, params)];
         break;
     case 0xB8:
     case 0xB9:
@@ -570,7 +605,7 @@ function fetch(opcode, params) {
     case 0xBD:
     case 0xBE:
     case 0xBF:
-        writeMemory(ioRegStart + io, r[dst]);
+        writeMemory(getIOValue(opcode, params), r[dst]);
         break;
     case 0xC0:
     case 0xC1:
@@ -588,6 +623,7 @@ function fetch(opcode, params) {
     case 0xCD:
     case 0xCE:
     case 0xCF:
+        var jumpConstant = getJumpConstant(opcode, params);
         if ((jumpConstant & 0x800) === 0x800) {
             PC -= 4096 - ((jumpConstant ^ 0x800) * 2);
         } else {
@@ -612,6 +648,7 @@ function fetch(opcode, params) {
     case 0xDF:
         writeMemory(SP--, (PC & 0xFF));
         writeMemory(SP--, (PC >> 0x8));
+        var jumpConstant = getJumpConstant(opcode, params);
         if ((jumpConstant & 0x800) === 0x800) {
             PC -= 4096 - ((jumpConstant ^ 0x800) * 2);
         } else {
@@ -634,7 +671,7 @@ function fetch(opcode, params) {
     case 0xED:
     case 0xEE:
     case 0xEF:
-        r[smallReg] = bigConstant;
+        r[getSmallRegister(opcode, params)] = getBigConstant(opcode, params);
         break;
     case 0xF0:
     case 0xF1:
