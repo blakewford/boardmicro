@@ -16,8 +16,7 @@
 #along with webduino; see the file LICENSE.  If not see
 #<http://www.gnu.org/licenses/>.
 
-#TARGET = attiny4
-#TARGET = atmega8
+#SUPPORTED TARGETS: attiny4 atmega8 atmega32u4
 TARGET = atmega32u4
 
 SRC = blink
@@ -36,7 +35,8 @@ $(BASENAME).hex: $(BASENAME).elf
 
 .PHONY index.html: $(BASENAME).hex
 	cat header > $@
-	printf '\t  var hex = "' >> $@
+	printf 'var target = "$(TARGET)";\n' >> $@
+	printf 'var hex = "' >> $@
 	tr '\r\n' '\\n' < $(BASENAME).hex >> $@
 	printf '";\n' >> $@
 	cat js/avrcore.js >> $@

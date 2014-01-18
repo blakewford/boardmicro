@@ -62,8 +62,7 @@ var mainAddress;
 var PC;
 
 function initCore() {
-    switch (0) {
-    case 4: //ATTiny4
+    if(target === "attiny4"){
         memory      = new Array (0x4400);
         flashStart  = 0x4000;
         dataStart   = 0x40;
@@ -76,8 +75,7 @@ function initCore() {
         portF       = 0xDEAD;
         pllCsr      = 0xDEAD;
         bitsPerPort = 0x4;
-        break;
-    case 8: //ATMega8
+    }else if(target === "atmega8"){
         memory      = new Array (0x2000);
         flashStart  = 0x460;
         dataStart   = 0x60;
@@ -90,9 +88,7 @@ function initCore() {
         portF       = 0xDEAD;
         pllCsr      = 0xDEAD;
         bitsPerPort = 0x8;
-        break;
-    default:
-    case 32: //ATMega32u4
+    }else if(target === "atmega32u4"){
         memory      = new Array (0x8000);
         flashStart  = 0xB00;
         dataStart   = 0x100;
@@ -105,7 +101,8 @@ function initCore() {
         portF       = 0x31;
         pllCsr      = 0x49;
         bitsPerPort = 0x8;
-        break;
+    }else{
+        alert("Failed! Unknown target");
     }
     PC               = flashStart;
 
