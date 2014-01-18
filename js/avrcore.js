@@ -226,6 +226,10 @@ function setPostEvaluationFlags(result) {
     S = N ^ V;
 }
 
+function getBreakDistance(opcode, params) {
+    return ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
+}
+
 function fetch(opcode, params) {
     var dst = ((opcode & 0x1) * 16) + ((params & 0xF0) >> 0x4);
     var src = (((opcode & 0x2) >> 1) * 16) + (params & 0xF);
@@ -237,9 +241,7 @@ function fetch(opcode, params) {
     var io = ((((opcode & 0x6) >> 0x1) << 0x4) | (params & 0xF));
     var regSet = (params & 0xF8) >> 0x3;
     var regVal = (params & 0x07);
-    var register = ioRegStart + regSet
-    var breakDistance = ((opcode & 0x3) << 0x5) | ((params & 0xF0) >> 0x3) | ((params & 0x8) >> 0x3);
-    var long = ((opcode & 0x1) << 20 | (params & 0xF0) << 17 | (params & 0x1) << 16 | parseInt(memory[PC + 1], 16) << 0x8 | parseInt(memory[PC], 16)) * 2;
+    var register = ioRegStart + regSet;
     switch (opcode) {
     case 0x01:
         var halfDest = ((params & 0xF0) >> 0x4) * 2;
@@ -511,7 +513,7 @@ function fetch(opcode, params) {
         } else if ((params & 0xFF) === 0x09) {
             PC = ((r[31] << 0x8) | r[30]) + flashStart;
         } else if ((params & 0x0F) === 0x0C || (params & 0x0F) === 0x0D) {
-            PC = flashStart + long;
+            PC = flashStart + (((opcode & 0x1) << 20 | (params & 0xF0) << 17 | (params & 0x1) << 16 | parseInt(memory[PC + 1], 16) << 0x8 | parseInt(memory[PC], 16)) * 2);
         } else if ((params & 0x0F) === 0x0E || (params & 0x0F) === 0x0F) {
             if (hasDeviceSignature && PC === jumpTableAddress + calculatedOffset) { //__tablejump__
                 PC = mainAddress + calculatedOffset; //Go to main
@@ -648,6 +650,7 @@ function fetch(opcode, params) {
             break;
         }
         if (jump) {
+            var breakDistance = getBreakDistance(opcode, params);
             if (breakDistance > 0x40) 
                 PC -= (128 - breakDistance) * 2;
             else 
@@ -668,6 +671,7 @@ function fetch(opcode, params) {
             break;
         }
         if (jump) {
+            var breakDistance = getBreakDistance(opcode, params);
             if (breakDistance > 0x40) 
                 PC -= (128 - breakDistance) * 2;
             else 
