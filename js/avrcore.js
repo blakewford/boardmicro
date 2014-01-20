@@ -361,10 +361,12 @@ function fetch(b, a) {
     case 148:
     case 149:
         if (0 === (a & 255)) r[d] = 255 - r[d];
+        else if (3 === (a & 255)) r[d] = r[d]+1;
         else if (5 === (a & 255)) c = r[d], e =
             c & 128, g = c & 1, c = c >> 1 | e, setPostEvaluationFlags(c), r[d] = c, C = g, V = N ^ C;
         else if (8 === (a & 255)) e = memory[++SP], PC = e << 8 | memory[++SP];
         else if (9 === (a & 255)) PC = (r[31] << 8 | r[30]) + flashStart;
+        else if (10 === (a & 255)) r[d] = r[d]-1;
         else if (12 === (a & 15) || 13 === (a & 15)) PC = flashStart + 2 * ((b & 1) << 20 | (a & 240) << 17 | (a & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16));
         else if (14 === (a & 15) || 15 === (a & 15)) {
             if (hasDeviceSignature && PC === jumpTableAddress + calculatedOffset) {
