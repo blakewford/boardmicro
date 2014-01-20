@@ -20,7 +20,6 @@ along with jAVRscript; see the file LICENSE.  If not see
 
 char data = 0xFF;
 
-
 int
 main ()
 {
@@ -32,7 +31,7 @@ main ()
   asm ("add r16, r16;");
   asm ("cpi r16, 0x2;");
   asm ("breq test1_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test1_pass:\n");
   PORTB = 0x1;
@@ -41,7 +40,7 @@ main ()
   asm ("adc r16, r16;");
   asm ("cpi r16, 0x4;");
   asm ("breq test2_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test2_pass:\n");
   PORTB = 0x2;
@@ -50,7 +49,7 @@ main ()
   asm ("sub r16, r16;");
   asm ("cpi r16, 0x0;");
   asm ("breq test3_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test3_pass:\n");
   PORTB = 0x3;
@@ -59,7 +58,7 @@ main ()
   asm ("subi r16, 0xFF;");
   asm ("cpi r16, 0x1;");
   asm ("breq test4_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test4_pass:\n");
   PORTB = 0x4;
@@ -68,7 +67,7 @@ main ()
   asm ("sbc r16, r16;");
   asm ("cpi r16, 0x0;");
   asm ("breq test5_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test5_pass:\n");
   PORTB = 0x5;
@@ -77,7 +76,7 @@ main ()
   asm ("sbci r16, 0x1;");
   asm ("cpi r16, 0xFF;");
   asm ("breq test6_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test6_pass:\n");
   PORTB = 0x6;
@@ -85,7 +84,7 @@ main ()
 
   asm ("and r16, r16;");
   asm ("brne test7_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test7_pass:\n");
   PORTB = 0x7;
@@ -93,7 +92,7 @@ main ()
 
   asm ("andi r16, 0xFF;");
   asm ("brne test8_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test8_pass:\n");
   PORTB = 0x8;
@@ -101,7 +100,7 @@ main ()
 
   asm ("or r16, r16;");
   asm ("brne test9_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test9_pass:\n");
   PORTB = 0x9;
@@ -109,7 +108,7 @@ main ()
 
   asm ("ori r16, 0xFF;");
   asm ("brne testA_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("testA_pass:\n");
   PORTB = 0xA;
@@ -117,7 +116,7 @@ main ()
 
   asm ("eor r16, 0x1F;");
   asm ("brne testB_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("testB_pass:\n");
   PORTB = 0xB;
@@ -126,7 +125,7 @@ main ()
   asm ("com r16;");
   asm ("cpi r16, 0x0;");
   asm ("breq testC_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("testC_pass:\n");
   PORTB = 0xC;
@@ -135,7 +134,7 @@ main ()
   asm ("neg r16;");
   asm ("cpi r16, 0x0;");
   asm ("breq testD_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("testD_pass:\n");
   PORTB = 0xD;
@@ -144,7 +143,7 @@ main ()
   asm ("sbr r16, 0x1;");
   asm ("cpi r16, 0x1;");
   asm ("breq testE_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("testE_pass:\n");
   PORTB = 0xE;
@@ -153,7 +152,7 @@ main ()
   asm ("cbr r16, 0x1;");
   asm ("cpi r16, 0x0;");
   asm ("breq testF_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("testF_pass:\n");
   PORTB = 0xF;
@@ -162,7 +161,7 @@ main ()
   asm ("inc r16;");
   asm ("cpi r16, 0x1;");
   asm ("breq test10_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test10_pass:\n");
   PORTB = 0x10;
@@ -171,7 +170,7 @@ main ()
   asm ("dec r16;");
   asm ("cpi r16, 0x0;");
   asm ("breq test11_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test11_pass:\n");
   PORTB = 0x11;
@@ -179,7 +178,7 @@ main ()
   asm ("tst r16;");
   asm ("cpi r16, 0x0;");
   asm ("breq test12_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test12_pass:\n");
   PORTB = 0x12;
@@ -188,7 +187,7 @@ main ()
   asm ("sbrc r16, 0x1;");
   asm ("cpi r16, 0x0;");
   asm ("breq test13_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test13_pass:\n");
   PORTB = 0x13;
@@ -197,7 +196,7 @@ main ()
   asm ("mov r16, r17;");
   asm ("cpi r16, 0x1;");
   asm ("breq test14_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test14_pass:\n");
   PORTB = 0x14;
@@ -206,7 +205,7 @@ main ()
   asm ("ldi r16, 0x2;");
   asm ("cpi r16, 0x2;");
   asm ("breq test15_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test15_pass:\n");
   PORTB = 0x15;
@@ -215,7 +214,7 @@ main ()
   asm ("lds r16, 0x100;");
   asm ("cpi r16, 0xFF;");
   asm ("breq test16_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test16_pass:\n");
   PORTB = 0x16;
@@ -227,7 +226,7 @@ main ()
   asm ("lds r16, 0x100;");
   asm ("cpi r16, 0xFE;");
   asm ("breq test17_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test17_pass:\n");
   PORTB = 0x17;
@@ -239,7 +238,7 @@ main ()
   asm ("lds r16, 0x100;");
   asm ("cpi r16, 0xFE;");
   asm ("breq test18_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test18_pass:\n");
   PORTB = 0x18;
@@ -249,7 +248,7 @@ main ()
   asm ("lds r16, 0x100;");
   asm ("cpi r16, 0xFE;");
   asm ("breq test19_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test19_pass:\n");
   PORTB = 0x19;
@@ -259,7 +258,7 @@ main ()
   asm ("in r16, 0x05;");
   asm ("cpi r16, 0xFE;");
   asm ("breq test1A_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test1A_pass:\n");
   PORTB = 0x1A;
@@ -269,7 +268,7 @@ main ()
   asm ("pop r16;");
   asm ("cpi r16, 0xFE;");
   asm ("breq test1B_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test1B_pass:\n");
   PORTB = 0x1B;
@@ -278,7 +277,7 @@ main ()
   asm ("rol r16;");
   asm ("cpi r16, 0xFC;");
   asm ("breq test1C_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test1C_pass:\n");
   PORTB = 0x1C;
@@ -287,7 +286,7 @@ main ()
   asm ("asr r16;");
   asm ("cpi r16, 0xFE;");
   asm ("breq test1D_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test1D_pass:\n");
   PORTB = 0x1D;
@@ -297,7 +296,7 @@ main ()
   asm ("in r16, 0x0B;");
   asm ("cpi r16, 0x2;");
   asm ("breq test1E_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test1E_pass:\n");
   PORTB = 0x1E;
@@ -307,51 +306,184 @@ main ()
   asm ("in r16, 0x0B;");
   asm ("cpi r16, 0x0;");
   asm ("breq test1F_pass;");
-  asm ("jmp fail;");
+  asm ("rjmp fail;");
   asm ("BREAK;");
   asm ("test1F_pass:\n");
   PORTB = 0x1F;
 
+  asm ("sec;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x3;");
+  asm ("breq test20_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test20_pass:\n");
+  PORTB = 0x20;
 
-  asm ("jmp end;");
+  asm ("clc;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test21_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test21_pass:\n");
+  PORTB = 0x21;
+
+  asm ("sen;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x6;");
+  asm ("breq test22_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test22_pass:\n");
+  PORTB = 0x22;
+
+  asm ("cln;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test23_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test23_pass:\n");
+  PORTB = 0x23;
+
+  asm ("sez;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test24_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test24_pass:\n");
+  PORTB = 0x24;
+
+  asm ("clz;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x0;");
+  asm ("breq test25_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test25_pass:\n");
+  PORTB = 0x25;
+
+  asm ("sei;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x82;");
+  asm ("breq test26_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test26_pass:\n");
+  PORTB = 0x26;
+
+  asm ("cli;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test27_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test27_pass:\n");
+  PORTB = 0x27;
+
+  asm ("ses;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x12;");
+  asm ("breq test28_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test28_pass:\n");
+  PORTB = 0x28;
+
+  asm ("cls;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test29_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test29_pass:\n");
+  PORTB = 0x29;
+
+  asm ("sev;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0xA;");
+  asm ("breq test2A_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test2A_pass:\n");
+  PORTB = 0x2A;
+
+  asm ("clv;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test2B_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test2B_pass:\n");
+  PORTB = 0x2B;
+
+  asm ("set;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x42;");
+  asm ("breq test2C_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test2C_pass:\n");
+  PORTB = 0x2C;
+
+  asm ("clt;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test2D_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test2D_pass:\n");
+  PORTB = 0x2D;
+
+  asm ("seh;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x22;");
+  asm ("breq test2E_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test2E_pass:\n");
+  PORTB = 0x2E;
+
+  asm ("clh;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x2;");
+  asm ("breq test2F_pass;");
+  asm ("rjmp fail;");
+  asm ("BREAK;");
+  asm ("test2F_pass:\n");
+  PORTB = 0x2F;
+
+  asm ("rjmp end;");
   asm ("BREAK;");
 
-
-  asm ("bst r16, 0x1;");
-  asm ("bld r16, 0x1;");
-  asm ("sec;");
-  asm ("clc;");
-  asm ("sen;");
-  asm ("cln;");
-  asm ("sez;");
-  asm ("clz;");
-  asm ("sei;");
-  asm ("cli;");
-  asm ("ses;");
-  asm ("cls;");
-  asm ("sev;");
-  asm ("clv;");
-  asm ("set;");
-  asm ("clt;");
-  asm ("seh;");
-  asm ("clh;");
-
   asm ("end:");
+#ifndef attiny4
   PORTC = 0xFF;
   PORTD = 0xFF;
+#ifndef atmega8
   PORTE = 0xFF;
   PORTF = 0xFF;
+#endif
+#endif
   asm ("BREAK;");
 
 
   asm ("fail:");
+#ifndef attiny4
   PORTC = 0x00;
   PORTD = 0x00;
+#ifndef atmega8
   PORTE = 0x00;
   PORTF = 0x00;
+#endif
+#endif
   asm ("BREAK;");
 
   /*
+     asm ("bst r16, 0x1;");
+     asm ("bld r16, 0x1;");
      asm("swap r16;");
      asm("lsl r16;");
      asm("lsr r16;");

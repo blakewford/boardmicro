@@ -18,7 +18,8 @@
 var SP = 95,
     r = Array(32),
     calculatedOffset = 0,
-    SREG, C, Z, N, V, S, H, T, I, dataQueueB = [],
+    SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, 
+    dataQueueB = [],
     dataQueueC = [],
     dataQueueD = [],
     dataQueueE = [],
@@ -33,6 +34,7 @@ function initCore() {
     "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, pllCsr = 73, bitsPerPort =
         8) : alert("Failed! Unknown target");
     PC = flashStart;
+    SREG = ioRegStart+0x3F;
     vectorBase = flashStart + 172;
     usbVectorBase = vectorBase + 430;
     signatureOffset = flashStart + 178;
@@ -75,6 +77,13 @@ function writeMemory(b, a) {
     b == portE && dataQueueE.push(a);
     b == portF && dataQueueF.push(a);
     b == pllCsr && writeClockRegister(a)
+}
+
+function readMemory(address) {
+    if(address === SREG)
+        return C|Z << 1|N << 2|V << 3|S << 4|H << 5|T << 6|I << 7;
+    else
+        return memory[address];
 }
 
 function loadMemory(b) {
@@ -287,8 +296,7 @@ function fetch(b, a) {
     case 93:
     case 94:
     case 95:
-        e =
-            getSmallRegister(b, a);
+        e = getSmallRegister(b, a);
         r[e] -= getBigConstant(b, a);
         for (C = 0; 0 > r[e];) r[e] = 256 + r[e], C = 1;
         break;
@@ -364,7 +372,23 @@ function fetch(b, a) {
         else if (3 === (a & 255)) r[d] = r[d]+1;
         else if (5 === (a & 255)) c = r[d], e =
             c & 128, g = c & 1, c = c >> 1 | e, setPostEvaluationFlags(c), r[d] = c, C = g, V = N ^ C;
-        else if (8 === (a & 255)) e = memory[++SP], PC = e << 8 | memory[++SP];
+        else if (8 === (a & 255) && b === 0x94) C = 1;
+        else if (24 === (a & 255) && b === 0x94) Z = 1;
+        else if (40 === (a & 255) && b === 0x94) N = 1;
+        else if (56 === (a & 255) && b === 0x94) V = 1;
+        else if (72 === (a & 255) && b === 0x94) S = 1;
+        else if (88 === (a & 255) && b === 0x94) H = 1;
+        else if (104 === (a & 255) && b === 0x94) T = 1;
+        else if (120 === (a & 255) && b === 0x94) I = 1;
+        else if (136 === (a & 255) && b === 0x94) C = 0;
+        else if (152 === (a & 255) && b === 0x94) Z = 0;
+        else if (168 === (a & 255) && b === 0x94) N = 0;
+        else if (184 === (a & 255) && b === 0x94) V = 0;
+        else if (200 === (a & 255) && b === 0x94) S = 0;
+        else if (216 === (a & 255) && b === 0x94) H = 0;
+        else if (232 === (a & 255) && b === 0x94) T = 0;
+        else if (248 === (a & 255) && b === 0x94) I = 0;
+        else if (8 === (a & 255) && b === 0x95) e = memory[++SP], PC = e << 8 | memory[++SP];
         else if (9 === (a & 255)) PC = (r[31] << 8 | r[30]) + flashStart;
         else if (10 === (a & 255)) r[d] = r[d]-1;
         else if (12 === (a & 15) || 13 === (a & 15)) PC = flashStart + 2 * ((b & 1) << 20 | (a & 240) << 17 | (a & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16));
@@ -415,7 +439,7 @@ function fetch(b, a) {
     case 181:
     case 182:
     case 183:
-        r[d] = memory[getIOValue(b, a)];
+        r[d] = readMemory(getIOValue(b, a));
         break;
     case 184:
     case 185:

@@ -25,7 +25,7 @@ BASENAME = $(SRC)_$(TARGET)
 all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex index.html
 
 $(BASENAME).elf: $(SRC).c
-	avr-gcc $< -o $(BASENAME).elf -mmcu=$(TARGET)
+	avr-gcc $< -o $(BASENAME).elf -D$(TARGET) -mmcu=$(TARGET)
 
 $(BASENAME).dis: $(BASENAME).elf
 	avr-objdump -d $(BASENAME).elf > $(BASENAME).hex.dis
