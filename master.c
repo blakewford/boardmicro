@@ -32,6 +32,7 @@ main ()
   asm ("ldi r17, 0x1;");
   asm ("nop");
   asm ("sleep");
+  asm ("wdr;");
 
   asm ("add r16, r16;");
   asm ("cpi r16, 0x2;");
@@ -40,14 +41,12 @@ main ()
   asm ("test1_pass:\n");
   PORTB = 0x1;
 
-
   asm ("adc r16, r16;");
   asm ("cpi r16, 0x4;");
   asm ("breq test2_pass;");
   asm ("rjmp fail;");
   asm ("test2_pass:\n");
   PORTB = 0x2;
-
 
   asm ("sub r16, r16;");
   asm ("cpi r16, 0x0;");
@@ -56,14 +55,12 @@ main ()
   asm ("test3_pass:\n");
   PORTB = 0x3;
 
-
   asm ("subi r16, 0xFF;");
   asm ("cpi r16, 0x1;");
   asm ("breq test4_pass;");
   asm ("rjmp fail;");
   asm ("test4_pass:\n");
   PORTB = 0x4;
-
 
   asm ("sbc r16, r16;");
   asm ("cpi r16, 0x0;");
@@ -72,7 +69,6 @@ main ()
   asm ("test5_pass:\n");
   PORTB = 0x5;
 
-
   asm ("sbci r16, 0x1;");
   asm ("cpi r16, 0xFF;");
   asm ("breq test6_pass;");
@@ -80,20 +76,17 @@ main ()
   asm ("test6_pass:\n");
   PORTB = 0x6;
 
-
   asm ("and r16, r16;");
   asm ("brne test7_pass;");
   asm ("rjmp fail;");
   asm ("test7_pass:\n");
   PORTB = 0x7;
 
-
   asm ("andi r16, 0xFF;");
   asm ("brne test8_pass;");
   asm ("rjmp fail;");
   asm ("test8_pass:\n");
   PORTB = 0x8;
-
 
   asm ("or r16, r16;");
   asm ("brne test9_pass;");
@@ -107,13 +100,11 @@ main ()
   asm ("testA_pass:\n");
   PORTB = 0xA;
 
-
   asm ("eor r16, 0x1F;");
   asm ("brne testB_pass;");
   asm ("rjmp fail;");
   asm ("testB_pass:\n");
   PORTB = 0xB;
-
 
   asm ("com r16;");
   asm ("cpi r16, 0x0;");
@@ -122,14 +113,12 @@ main ()
   asm ("testC_pass:\n");
   PORTB = 0xC;
 
-
   asm ("neg r16;");
   asm ("cpi r16, 0x0;");
   asm ("breq testD_pass;");
   asm ("rjmp fail;");
   asm ("testD_pass:\n");
   PORTB = 0xD;
-
 
   asm ("sbr r16, 0x1;");
   asm ("cpi r16, 0x1;");
@@ -138,7 +127,6 @@ main ()
   asm ("testE_pass:\n");
   PORTB = 0xE;
 
-
   asm ("cbr r16, 0x1;");
   asm ("cpi r16, 0x0;");
   asm ("breq testF_pass;");
@@ -146,14 +134,12 @@ main ()
   asm ("testF_pass:\n");
   PORTB = 0xF;
 
-
   asm ("inc r16;");
   asm ("cpi r16, 0x1;");
   asm ("breq test10_pass;");
   asm ("rjmp fail;");
   asm ("test10_pass:\n");
   PORTB = 0x10;
-
 
   asm ("dec r16;");
   asm ("cpi r16, 0x0;");
@@ -169,7 +155,6 @@ main ()
   asm ("test12_pass:\n");
   PORTB = 0x12;
 
-
   asm ("sbrc r16, 0x1;");
   asm ("cpi r16, 0x0;");
   asm ("breq test13_pass;");
@@ -177,14 +162,12 @@ main ()
   asm ("test13_pass:\n");
   PORTB = 0x13;
 
-
   asm ("mov r16, r17;");
   asm ("cpi r16, 0x1;");
   asm ("breq test14_pass;");
   asm ("rjmp fail;");
   asm ("test14_pass:\n");
   PORTB = 0x14;
-
 
   asm ("ldi r16, 0x2;");
   asm ("cpi r16, 0x2;");
@@ -207,7 +190,6 @@ main ()
   asm ("rjmp fail;");
   asm ("test16_pass:\n");
   PORTB = 0x16;
-
 
   asm ("ldi r16, 0xFE;");
 #ifdef atmega32u4
@@ -235,7 +217,6 @@ main ()
   asm ("test17_pass:\n");
   PORTB = 0x17;
 
-
   asm ("ldi r26, 0x00;");
   asm ("ldi r27, 0x01;");
   asm ("st X, r16;");
@@ -246,7 +227,6 @@ main ()
   asm ("test18_pass:\n");
   PORTB = 0x18;
 
-
   asm ("st X+, r16;");
   asm ("lds r16, 0x100;");
   asm ("cpi r16, 0xFE;");
@@ -254,7 +234,6 @@ main ()
   asm ("rjmp fail;");
   asm ("test19_pass:\n");
   PORTB = 0x19;
-
 
   asm ("out 0x05, r16;");
   asm ("in r16, 0x05;");
@@ -264,7 +243,6 @@ main ()
   asm ("test1A_pass:\n");
   PORTB = 0x1A;
 
-
   asm ("push r16;");
   asm ("pop r16;");
   asm ("cpi r16, 0xFE;");
@@ -273,14 +251,12 @@ main ()
   asm ("test1B_pass:\n");
   PORTB = 0x1B;
 
-
   asm ("rol r16;");
   asm ("cpi r16, 0xFC;");
   asm ("breq test1C_pass;");
   asm ("rjmp fail;");
   asm ("test1C_pass:\n");
   PORTB = 0x1C;
-
 
   asm ("asr r16;");
   asm ("cpi r16, 0xFE;");
@@ -289,7 +265,6 @@ main ()
   asm ("test1D_pass:\n");
   PORTB = 0x1D;
 
-
   asm ("sbi 0x0B, 0x1;");
   asm ("in r16, 0x0B;");
   asm ("cpi r16, 0x2;");
@@ -297,7 +272,6 @@ main ()
   asm ("rjmp fail;");
   asm ("test1E_pass:\n");
   PORTB = 0x1E;
-
 
   asm ("cbi 0x0B, 0x1;");
   asm ("in r16, 0x0B;");
@@ -479,83 +453,89 @@ main ()
 #else
   asm ("rjmp .-2");
 #endif
-  /*
-     asm ("bst r16, 0x1;");
-     asm ("bld r16, 0x1;");
-     asm("swap r16;");
-     asm("lsl r16;");
-     asm("lsr r16;");
-     asm("ror r16;");
-     asm("st Z, r16;");
-     asm("st Z+, r16;");
-     asm("st -Z, r16;");
-     asm("st Y, r16;");
-     asm("st Y+, r16;");
-     asm("st -Y, r16;");
-     asm("brts end;");
-     asm("brtc end;");
-     asm("brvs end;");
-     asm("brvc end;");
-     asm("brie end;");
-     asm("brid end;");
-     asm("st -X, r16;");
-     asm("ld r16, Z;");
-     asm("ld r16, Y;");
-     asm("ld r16, X;");
-     asm("ld r16, Z+;");
-     asm("ld r16, -Z;");
-     asm("ld r16, Y+;");
-     asm("ld r16, -Y;");
-     asm("ld r16, X+;");
-     asm("ld r16, -X;");
-     asm("sbic 0x1F, 0x1;");
-     asm("sbis 0x1F, 0x1;");
-     asm("breq end;");
-     asm("brne end;");
-     asm("brcs end;");
-     asm("brcc end;");
-     asm("brmi end;");
-     asm("brpl end;");
-     asm("brge end;");
-     asm("brlt end;");
-     asm("brhs end;");
-     asm("brhc end;");
-     asm("sbrs r16, 0x1;");
-     asm("cp r16, r16;");
-     asm("cpc r16, r16;");
-     asm("cpse r16, r16;");
-     ldd
-     std
-     lpm
-     elpm
-     spm
-     xch
-     las
-     lac
-     lat
-     bset
-     bclr
-     wdr
-     adiw
-     sbiw
-     mul
-     muls
-     mulsu
-     fmul
-     fmuls
-     fmulsu
-     des
-     asm("rjmp 0;");
-     asm("ijmp;");
-     eijmp
-     jmp
-     asm("rcall 0x0;");
-     asm("icall;");
-     eicall
-     call
-     brbs
-     brbc
-     asm("ret;");
-     asm("reti;");
-   */
+
+  asm ("bst r16, 0x1;");
+  asm ("bld r16, 0x1;");
+  asm ("swap r16;");
+  asm ("lsl r16;");
+  asm ("lsr r16;");
+  asm ("ror r16;");
+  asm ("st Z, r16;");
+  asm ("st Z+, r16;");
+  asm ("st -Z, r16;");
+  asm ("st Y, r16;");
+  asm ("st Y+, r16;");
+  asm ("st -Y, r16;");
+  asm ("st -X, r16;");
+  asm ("ld r16, Z;");
+  asm ("ld r16, Y;");
+  asm ("ld r16, X;");
+  asm ("ld r16, Z+;");
+  asm ("ld r16, -Z;");
+  asm ("ld r16, Y+;");
+  asm ("ld r16, -Y;");
+  asm ("ld r16, X+;");
+  asm ("ld r16, -X;");
+  asm ("sbic 0x1F, 0x1;");
+  asm ("sbis 0x1F, 0x1;");
+  asm ("sbrs r16, 0x1;");
+  asm ("cp r16, r16;");
+  asm ("cpc r16, r16;");
+  asm ("cpse r16, r16;");
+  asm ("ijmp;");
+  asm ("rcall 0x0;");
+  asm ("icall;");
+  asm ("ret;");
+  asm ("reti;");
+  asm ("bset 0x1");
+  asm ("bclr 0x1");
+/*
+  asm ("brts end;");
+  asm ("brtc end;");
+  asm ("brvs end;");
+  asm ("brvc end;");
+  asm ("brie end;");
+  asm ("brid end;");
+  asm ("breq end;");
+  asm ("brne end;");
+  asm ("brcs end;");
+  asm ("brcc end;");
+  asm ("brmi end;");
+  asm ("brpl end;");
+  asm ("brge end;");
+  asm ("brlt end;");
+  asm ("brhs end;");
+  asm ("brhc end;");
+  asm ("brbs end;");
+  asm ("brbc end;");
+*/
+#ifndef attiny4
+  asm ("ldd r16, Z+0;");
+  asm ("std Y+0, r16;");
+  asm ("lpm;");
+  asm ("spm;");
+  asm ("adiw r30,1;");
+  asm ("sbiw r30,1;");
+  asm ("mul r16,r16;");
+  asm ("muls r16,r16;");
+  asm ("mulsu r16,r16;");
+  asm ("fmul r16,r16;");
+  asm ("fmuls r16,r16;");
+  asm ("fmulsu r16,r16;");
+#ifndef atmega8
+  asm ("call end;");
+  asm ("jmp end;");
+#endif
+#endif
+//  Unsupported by current targets
+//  asm ("des 0x1;");
+//  asm ("eijmp;");
+//  asm ("eicall;");
+//  asm ("elpm r16, Z+;");
+
+//  Unsupported by compiler???
+//  asm ("lac Z, r16;");
+//  asm ("las Z, r16;");
+//  asm ("lat Z, r16;");
+//  asm ("xch Z, r16;");
 }
