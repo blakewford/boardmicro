@@ -1,4 +1,3 @@
-
 /* Test code for jAVRscript.
 
 This file is part of jAVRscript.
@@ -31,6 +30,8 @@ main ()
 #endif
   asm ("ldi r16, 0x1;");
   asm ("ldi r17, 0x1;");
+  asm ("nop");
+  asm ("sleep");
 
   asm ("add r16, r16;");
   asm ("cpi r16, 0x2;");
@@ -99,7 +100,6 @@ main ()
   asm ("rjmp fail;");
   asm ("test9_pass:\n");
   PORTB = 0x9;
-
 
   asm ("ori r16, 0xFF;");
   asm ("brne testA_pass;");
@@ -435,7 +435,20 @@ main ()
   asm ("test2F_pass:\n");
   PORTB = 0x2F;
 
-  asm ("rjmp end;");
+  asm ("ser r16;");
+  asm ("cpi r16, 0xFF;");
+  asm ("breq test30_pass;");
+  asm ("rjmp fail;");
+  asm ("test30_pass:\n");
+  PORTB = 0x30;
+
+  asm ("clr r16;");
+  asm ("cpi r16, 0x0;");
+  asm ("breq test31_pass;");
+  asm ("rjmp fail;");
+  asm ("test31_pass:\n");
+//Some error with 0x31???
+  PORTB = 0x32;
 
   asm ("end:");
 #ifndef attiny4
@@ -522,11 +535,7 @@ main ()
      lat
      bset
      bclr
-     nop
-     sleep
      wdr
-     asm("clr r16;");
-     asm("ser r16;");
      adiw
      sbiw
      mul

@@ -157,6 +157,8 @@ function fetch(b, a) {
     var d = 16 * (b & 1) + ((a & 240) >> 4),
         f = 16 * ((b & 2) >> 1) + (a & 15);
     switch (b) {
+    case 0:
+        break;
     case 1:
         var c = 2 * ((a & 240) >> 4),
             e = 2 * (a & 15);
@@ -389,6 +391,7 @@ function fetch(b, a) {
         else if (232 === (a & 255) && b === 0x94) T = 0;
         else if (248 === (a & 255) && b === 0x94) I = 0;
         else if (8 === (a & 255) && b === 0x95) e = memory[++SP], PC = e << 8 | memory[++SP];
+        else if (136 === (a & 255) && b === 0x95) break;
         else if (9 === (a & 255)) PC = (r[31] << 8 | r[30]) + flashStart;
         else if (10 === (a & 255)) r[d] = r[d]-1;
         else if (12 === (a & 15) || 13 === (a & 15)) PC = flashStart + 2 * ((b & 1) << 20 | (a & 240) << 17 | (a & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16));
@@ -508,7 +511,10 @@ function fetch(b, a) {
     case 237:
     case 238:
     case 239:
-        r[getSmallRegister(b, a)] = getBigConstant(b, a);
+        if(b & 0xF === 0xF && a & 0xF === 0xF)
+            r[getSmallRegister(b, a)] = 0xFF;
+        else  
+            r[getSmallRegister(b, a)] = getBigConstant(b, a);
         break;
     case 240:
     case 241:
