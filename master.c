@@ -1,5 +1,4 @@
 /* Test code for jAVRscript.
-
 This file is part of jAVRscript.
 
 jAVRscript is free software; you can redistribute it and/or modify it under
@@ -421,8 +420,75 @@ main ()
   asm ("breq test31_pass;");
   asm ("rjmp fail;");
   asm ("test31_pass:\n");
-//Some error with 0x31???
+  PORTB = 0x31;
+
+  asm ("set;");
+  asm ("brts test32_pass;");
+  asm ("rjmp fail;");
+  asm ("test32_pass:\n");
   PORTB = 0x32;
+
+  asm ("clt;");
+  asm ("brtc test33_pass;");
+  asm ("rjmp fail;");
+  asm ("test33_pass:\n");
+  PORTB = 0x33;
+
+  asm ("sev;");
+  asm ("brvs test34_pass;");
+  asm ("rjmp fail;");
+  asm ("test34_pass:\n");
+  PORTB = 0x34;
+
+  asm ("clv;");
+  asm ("brvc test35_pass;");
+  asm ("rjmp fail;");
+  asm ("test35_pass:\n");
+  PORTB = 0x35;
+
+  asm ("sec;");
+  asm ("brcs test36_pass;");
+  asm ("rjmp fail;");
+  asm ("test36_pass:\n");
+  PORTB = 0x36;
+
+  asm ("clc;");
+  asm ("brcc test37_pass;");
+  asm ("rjmp fail;");
+  asm ("test37_pass:\n");
+  PORTB = 0x37;
+
+  asm ("seh;");
+  asm ("brhs test38_pass;");
+  asm ("rjmp fail;");
+  asm ("test38_pass:\n");
+  PORTB = 0x38;
+
+  asm ("clh;");
+  asm ("brhc test39_pass;");
+  asm ("rjmp fail;");
+  asm ("test39_pass:\n");
+  PORTB = 0x39;
+
+  asm ("bset 0x0");
+  asm ("brbs 0x0, test3A_pass;");
+  asm ("rjmp fail;");
+  asm ("test3A_pass:\n");
+  PORTB = 0x3A;
+
+  asm ("bclr 0x0");
+  asm ("brbc 0x0, test3B_pass;");
+  asm ("rjmp fail;");
+  asm ("test3B_pass:\n");
+  PORTB = 0x3B;
+
+  asm ("rcall test3C_pass;");
+#ifndef attiny4
+#ifndef atmega8
+  asm ("call test3D_pass;");
+  asm ("jmp end;");
+#endif
+#endif
 
   asm ("end:");
 #ifndef attiny4
@@ -454,6 +520,14 @@ main ()
   asm ("rjmp .-2");
 #endif
 
+  asm ("test3C_pass:\n");
+  PORTB = 0x3C;
+  asm ("ret;");
+
+  asm ("test3D_pass:\n");
+  PORTB = 0x3D;
+  asm ("ret;");
+
   asm ("bst r16, 0x1;");
   asm ("bld r16, 0x1;");
   asm ("swap r16;");
@@ -483,32 +557,17 @@ main ()
   asm ("cpc r16, r16;");
   asm ("cpse r16, r16;");
   asm ("ijmp;");
-  asm ("rcall 0x0;");
   asm ("icall;");
-  asm ("ret;");
   asm ("reti;");
-  asm ("bset 0x1");
-  asm ("bclr 0x1");
-/*
-  asm ("brts end;");
-  asm ("brtc end;");
-  asm ("brvs end;");
-  asm ("brvc end;");
-  asm ("brie end;");
-  asm ("brid end;");
-  asm ("breq end;");
-  asm ("brne end;");
-  asm ("brcs end;");
-  asm ("brcc end;");
-  asm ("brmi end;");
-  asm ("brpl end;");
-  asm ("brge end;");
-  asm ("brlt end;");
-  asm ("brhs end;");
-  asm ("brhc end;");
-  asm ("brbs end;");
-  asm ("brbc end;");
-*/
+
+  asm ("brlo branch;");
+  asm ("brsh branch;");
+  asm ("brid branch;");
+  asm ("brmi branch;");
+  asm ("brpl branch;");
+  asm ("brge branch;");
+  asm ("brlt branch;");
+  asm ("branch:");
 #ifndef attiny4
   asm ("ldd r16, Z+0;");
   asm ("std Y+0, r16;");
@@ -522,10 +581,6 @@ main ()
   asm ("fmul r16,r16;");
   asm ("fmuls r16,r16;");
   asm ("fmulsu r16,r16;");
-#ifndef atmega8
-  asm ("call end;");
-  asm ("jmp end;");
-#endif
 #endif
 //  Unsupported by current targets
 //  asm ("des 0x1;");

@@ -527,7 +527,17 @@ function fetch(b, a) {
             c = C;
             break;
         case 1:
-            c = Z
+            c = Z;
+            break;
+        case 3:
+            c = V;
+            break;
+        case 5:
+            c = H;
+            break;
+        case 6:
+            c = T;
+            break;
         }
         c && (c = getBreakDistance(b, a), PC = 64 < c ? PC - 2 * (128 - c) : PC + 2 * c);
         break;
@@ -541,7 +551,17 @@ function fetch(b, a) {
             c = !C;
             break;
         case 1:
-            c = !Z
+            c = !Z;
+            break;
+        case 3:
+            c = !V;
+            break;
+        case 5:
+            c = !H;
+            break;
+        case 6:
+            c = !T;
+            break;
         }
         c && (c = getBreakDistance(b, a), PC = 64 < c ? PC - 2 * (128 - c) : PC + 2 * c);
         break;
