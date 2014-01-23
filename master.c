@@ -486,6 +486,15 @@ main ()
 #ifndef attiny4
 #ifndef atmega8
   asm ("call test3D_pass;");
+#endif
+#endif
+  short address = (short)&&test3E_pass;
+  asm ("mov r30, %0"::"r"(address >> 0x8));
+  asm ("mov r31, %0"::"r"(address & 0xFF));
+//  asm ("icall");
+
+#ifndef attiny4
+#ifndef atmega8
   asm ("jmp end;");
 #endif
 #endif
@@ -528,6 +537,11 @@ main ()
   PORTB = 0x3D;
   asm ("ret;");
 
+test3E_pass:
+  asm ("test3E_pass:\n");
+  PORTB = 0x3E;
+  asm ("ret;");
+
   asm ("bst r16, 0x1;");
   asm ("bld r16, 0x1;");
   asm ("swap r16;");
@@ -557,7 +571,6 @@ main ()
   asm ("cpc r16, r16;");
   asm ("cpse r16, r16;");
   asm ("ijmp;");
-  asm ("icall;");
   asm ("reti;");
 
   asm ("brlo branch;");
