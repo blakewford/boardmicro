@@ -371,9 +371,14 @@ function fetch(b, a) {
     case 148:
     case 149:
         if (0 === (a & 255)) r[d] = 255 - r[d];
+        else if (2 === (a & 255)) r[d] = r[d] << 4 | r[d] >> 4;
         else if (3 === (a & 255)) r[d] = r[d]+1;
         else if (5 === (a & 255)) c = r[d], e =
             c & 128, g = c & 1, c = c >> 1 | e, setPostEvaluationFlags(c), r[d] = c, C = g, V = N ^ C;
+        else if (6 === (a & 255)){
+            C = (r[d] & 0x1);
+            r[d] = r[d] >> 1;
+        }
         else if (8 === (a & 255) && b === 0x94) C = 1;
         else if (24 === (a & 255) && b === 0x94) Z = 1;
         else if (40 === (a & 255) && b === 0x94) N = 1;
@@ -514,11 +519,8 @@ function fetch(b, a) {
     case 236:
     case 237:
     case 238:
-    case 239:
-        if(b & 0xF === 0xF && a & 0xF === 0xF)
-            r[getSmallRegister(b, a)] = 0xFF;
-        else  
-            r[getSmallRegister(b, a)] = getBigConstant(b, a);
+    case 239:  
+        r[getSmallRegister(b, a)] = getBigConstant(b, a);
         break;
     case 240:
     case 241:

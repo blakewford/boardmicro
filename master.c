@@ -504,6 +504,17 @@ main ()
 #endif
   asm ("icall");
 
+  asm ("ldi r16, 0xFE");
+  asm ("swap r16;");
+  asm ("cpi r16, 0xEF;");
+  asm ("brne fail;");
+  PORTB = 0x3F;
+
+  asm ("lsr r16");
+  asm ("cpi r16, 0x77;");
+  asm ("brne fail;");
+  PORTB = 0x40;
+
 #ifndef attiny4
 #ifndef atmega8
   asm ("jmp end;");
@@ -555,9 +566,6 @@ test3E_pass:
 
   asm ("bst r16, 0x1;");
   asm ("bld r16, 0x1;");
-  asm ("swap r16;");
-  asm ("lsl r16;");
-  asm ("lsr r16;");
   asm ("ror r16;");
   asm ("st Z, r16;");
   asm ("st Z+, r16;");
@@ -584,14 +592,6 @@ test3E_pass:
   asm ("ijmp;");
   asm ("reti;");
 
-  asm ("brlo branch;");
-  asm ("brsh branch;");
-  asm ("brid branch;");
-  asm ("brmi branch;");
-  asm ("brpl branch;");
-  asm ("brge branch;");
-  asm ("brlt branch;");
-  asm ("branch:");
 #ifndef attiny4
   asm ("ldd r16, Z+0;");
   asm ("std Y+0, r16;");
@@ -606,6 +606,18 @@ test3E_pass:
   asm ("fmuls r16,r16;");
   asm ("fmulsu r16,r16;");
 #endif
+
+// Tested binary equivalent
+  asm ("lsl r16;");
+  asm ("brlo branch;");
+  asm ("brsh branch;");
+  asm ("brid branch;");
+  asm ("brmi branch;");
+  asm ("brpl branch;");
+  asm ("brge branch;");
+  asm ("brlt branch;");
+  asm ("branch:");
+
 //  Unsupported by current targets
 //  asm ("des 0x1;");
 //  asm ("eijmp;");
