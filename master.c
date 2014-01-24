@@ -17,6 +17,7 @@ along with jAVRscript; see the file LICENSE.  If not see
 #include <avr/io.h>
 
 char data = 0xFF;
+short address;
 
 int
 main ()
@@ -488,10 +489,20 @@ main ()
   asm ("call test3D_pass;");
 #endif
 #endif
-  short address = (short)&&test3E_pass;
-  asm ("mov r30, %0"::"r"(address >> 0x8));
-  asm ("mov r31, %0"::"r"(address & 0xFF));
-//  asm ("icall");
+  address = (short)&&test3E_pass;
+#ifdef atmega32u4
+  asm ("lds r30, 0x102;");
+  asm ("lds r31, 0x103;");
+#endif
+#ifdef atmega8
+  asm ("lds r30, 0x62;");
+  asm ("lds r31, 0x63;");
+#endif
+#ifdef attiny4
+  asm ("lds r30, 0x42;");
+  asm ("lds r31, 0x43;");
+#endif
+  asm ("icall");
 
 #ifndef attiny4
 #ifndef atmega8

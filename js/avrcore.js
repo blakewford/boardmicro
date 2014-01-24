@@ -396,7 +396,7 @@ function fetch(b, a) {
         else if (9 === (a & 255)){
             writeMemory(SP--, PC & 255);
             writeMemory(SP--, PC >> 8);
-            PC = (r[31] << 8 | r[30]) + flashStart;
+            PC = (2*(r[31] << 8 | r[30])) + flashStart;
         }
         else if (10 === (a & 255)) r[d] = r[d]-1;
         else if (12 === (a & 15) || 13 === (a & 15)) PC = flashStart + 2 * ((b & 1) << 20 | (a & 240) << 17 | (a & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16));
