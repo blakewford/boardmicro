@@ -19,6 +19,8 @@ along with jAVRscript; see the file LICENSE.  If not see
 char data = 0xFF;
 short address;
 
+void overflow();
+
 int
 main ()
 {
@@ -524,6 +526,8 @@ main ()
   asm ("breq fail;");
   PORTB = 0x42;
 
+  overflow();
+
 #ifndef attiny4
 #ifndef atmega8
   asm ("jmp end;");
@@ -576,13 +580,6 @@ test3E_pass:
   asm ("bst r16, 0x1;");
   asm ("bld r16, 0x1;");
   asm ("ror r16;");
-  asm ("st Z, r16;");
-  asm ("st Z+, r16;");
-  asm ("st -Z, r16;");
-  asm ("st Y, r16;");
-  asm ("st Y+, r16;");
-  asm ("st -Y, r16;");
-  asm ("st -X, r16;");
   asm ("ld r16, Z;");
   asm ("ld r16, Y;");
   asm ("ld r16, X;");
@@ -601,7 +598,9 @@ test3E_pass:
 
 #ifndef attiny4
   asm ("ldd r16, Z+0;");
+  asm ("ldd r16, Y+0;");
   asm ("std Y+0, r16;");
+  asm ("std Z+0, r16;");
   asm ("lpm;");
   asm ("spm;");
   asm ("adiw r30,1;");
@@ -613,6 +612,8 @@ test3E_pass:
   asm ("fmuls r16,r16;");
   asm ("fmulsu r16,r16;");
 #endif
+// Tested by coincidence
+  asm ("st Z, r16;");
 
 // Tested binary equivalent
   asm ("lsl r16;");
@@ -636,4 +637,60 @@ test3E_pass:
 //  asm ("las Z, r16;");
 //  asm ("lat Z, r16;");
 //  asm ("xch Z, r16;");
+}
+
+void overflow(){
+  asm ("ldi r30, 0x00;");
+  asm ("ldi r31, 0x01;");
+  asm ("st Z+, r16;");
+  asm ("lds r16, 0x100;");
+  asm ("cpi r16, 0x77;");
+  asm ("breq test43_pass;");
+  asm ("rjmp fail;");
+  asm ("test43_pass:\n");
+  PORTB = 0x43;
+
+  asm ("inc r16");
+  asm ("ldi r30, 0x01;");
+  asm ("ldi r31, 0x01;");
+  asm ("st -Z, r16;");
+  asm ("lds r16, 0x100;");
+  asm ("cpi r16, 0x78;");
+  asm ("breq test44_pass;");
+  asm ("rjmp fail;");
+  asm ("test44_pass:\n");
+  PORTB = 0x44;
+
+  asm ("inc r16");
+  asm ("ldi r28, 0x00;");
+  asm ("ldi r29, 0x01;");
+  asm ("st Y, r16;");
+  asm ("lds r16, 0x100;");
+  asm ("cpi r16, 0x79;");
+  asm ("breq test45_pass;");
+  asm ("rjmp fail;");
+  asm ("test45_pass:\n");
+  PORTB = 0x45;
+
+  asm ("inc r16");
+  asm ("st Y+, r16;");
+  asm ("inc r16");
+  asm ("st -Y, r16;");
+  asm ("lds r16, 0x100;");
+  asm ("cpi r16, 0x7B;");
+  asm ("breq test46_pass;");
+  asm ("rjmp fail;");
+  asm ("test46_pass:\n");
+  PORTB = 0x46;
+
+  asm ("inc r16");
+  asm ("ldi r28, 0x01;");
+  asm ("ldi r29, 0x01;");
+  asm ("st -X, r16;");
+  asm ("lds r16, 0x100;");
+  asm ("cpi r16, 0x7C;");
+  asm ("breq test47_pass;");
+  asm ("rjmp fail;");
+  asm ("test47_pass:\n");
+  PORTB = 0x47;
 }

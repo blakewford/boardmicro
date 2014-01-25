@@ -348,6 +348,9 @@ function fetch(b, a) {
         break;
     case 130:
     case 131:
+        if(8 === (a & 15)){
+            writeMemory((r[29] << 8 | r[28]),r[d]);
+        }
         0 === (a & 15 | 0) && writeMemory(r[31] << 8 | r[30], r[d]);
         break;
     case 144:
@@ -365,6 +368,46 @@ function fetch(b, a) {
         break;
     case 146:
     case 147:
+        if(1 === (a & 15)){
+           writeMemory(r[31] << 8 | r[30], r[d]);
+           r[30] = r[30]+1;
+           if(r[30] == 0x100){
+               r[30] = 0;
+               r[31] = r[31]+1;
+           }
+        }
+        if(2 === (a & 15)){
+           r[30] = r[30]-1;
+           if(r[30] < 0){
+               r[30] = 0xFF;
+               r[31] = r[31]-1;
+           }
+           writeMemory(r[31] << 8 | r[30], r[d]);
+        }
+        if(9 === (a & 15)){
+           writeMemory(r[29] << 8 | r[28], r[d]);
+           r[28] = r[28]+1;
+           if(r[28] == 0x100){
+               r[28] = 0;
+               r[29] = r[29]+1;
+           }
+        }
+        if(10 === (a & 15)){
+           r[28] = r[28]-1;
+           if(r[28] < 0){
+               r[28] = 0xFF;
+               r[29] = r[29]-1;
+           }
+           writeMemory(r[29] << 8 | r[28], r[d]);
+        }
+        if(14 === (a & 15)){
+           r[26] = r[26]-1;
+           if(r[26] < 0){
+               r[26] = 0xFF;
+               r[27] = r[27]-1;
+           }
+           writeMemory(r[27] << 8 | r[26], r[d]);
+        }
         15 === (a & 15) ? (writeMemory(SP, r[d]), SP--) : 0 === (a & 15) ? writeMemory(parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8, r[d]) : 12 === (a & 15) ? (c = parseInt(r[26]), e = parseInt(r[27]) << 8, writeMemory(e | c, r[d])) : 13 === (a & 15) && (c = parseInt(r[26]), e = parseInt(r[27]) << 8, writeMemory(e | c, r[d]), r[26]++, 256 === r[26] && (r[26] = 0, r[27]++));
         break;
     case 148:
