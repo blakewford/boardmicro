@@ -195,9 +195,8 @@ function fetch(b, a) {
     case 21:
     case 22:
     case 23:
-        setPreEvaluationFlags(r[d],
-            r[f]);
-        setPostEvaluationFlags(r[d]);
+        setPreEvaluationFlags(r[d], r[f]);
+        setPostEvaluationFlags(r[d] - r[f]);
         break;
     case 24:
     case 25:

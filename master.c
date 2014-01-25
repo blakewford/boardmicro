@@ -515,6 +515,15 @@ main ()
   asm ("brne fail;");
   PORTB = 0x40;
 
+  asm ("cp r16, r16;");
+  asm ("brne fail;");
+  PORTB = 0x41;
+
+  asm ("sec");
+  asm ("cpc r16, r16;");
+  asm ("breq fail;");
+  PORTB = 0x42;
+
 #ifndef attiny4
 #ifndef atmega8
   asm ("jmp end;");
@@ -586,8 +595,6 @@ test3E_pass:
   asm ("sbic 0x1F, 0x1;");
   asm ("sbis 0x1F, 0x1;");
   asm ("sbrs r16, 0x1;");
-  asm ("cp r16, r16;");
-  asm ("cpc r16, r16;");
   asm ("cpse r16, r16;");
   asm ("ijmp;");
   asm ("reti;");
