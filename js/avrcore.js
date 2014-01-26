@@ -346,6 +346,8 @@ function fetch(b, a) {
     case 129:
         if(0 === (a & 15)){
             r[d] = readMemory(r[31] << 8 | r[30]);
+        }else if(8 === (a & 15)){
+            r[d] = readMemory(r[29] << 8 | r[28]);        
         }else{
             0 === (a & 8 | 0) && (c = parseInt(r[d], 16), writeMemory(parseInt(r[28], 16), c), writeMemory(parseInt(r[29], 16), ++c));
         }
