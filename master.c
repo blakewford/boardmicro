@@ -580,15 +580,6 @@ test3E_pass:
   asm ("bst r16, 0x1;");
   asm ("bld r16, 0x1;");
   asm ("ror r16;");
-  asm ("ld r16, Z;");
-  asm ("ld r16, Y;");
-  asm ("ld r16, X;");
-  asm ("ld r16, Z+;");
-  asm ("ld r16, -Z;");
-  asm ("ld r16, Y+;");
-  asm ("ld r16, -Y;");
-  asm ("ld r16, X+;");
-  asm ("ld r16, -X;");
   asm ("sbic 0x1F, 0x1;");
   asm ("sbis 0x1F, 0x1;");
   asm ("sbrs r16, 0x1;");
@@ -684,8 +675,8 @@ void overflow(){
   PORTB = 0x46;
 
   asm ("inc r16");
-  asm ("ldi r28, 0x01;");
-  asm ("ldi r29, 0x01;");
+  asm ("ldi r26, 0x01;");
+  asm ("ldi r27, 0x01;");
   asm ("st -X, r16;");
   asm ("lds r16, 0x100;");
   asm ("cpi r16, 0x7C;");
@@ -693,4 +684,52 @@ void overflow(){
   asm ("rjmp fail;");
   asm ("test47_pass:\n");
   PORTB = 0x47;
+
+  asm ("inc r16");
+  asm ("ldi r26, 0x0;");
+  asm ("ldi r27, 0x1;");
+  asm ("ld r16, X;");
+  asm ("cpi r16, 0x7C;");
+  asm ("breq test48_pass;");
+  asm ("rjmp fail;");
+  asm ("test48_pass:\n");
+  PORTB = 0x48;
+
+  asm ("inc r16");
+  asm ("ldi r26, 0x0;");
+  asm ("ldi r27, 0x1;");
+  asm ("ld r16, X+;");
+  asm ("inc r16");
+  asm ("ld r16, -X;");
+  asm ("cpi r16, 0x7C;");
+  asm ("breq test49_pass;");
+  asm ("rjmp fail;");
+  asm ("test49_pass:\n");
+  PORTB = 0x49;
+
+  asm ("inc r16");
+  asm ("ldi r30, 0x0;");
+  asm ("ldi r31, 0x1;");
+  asm ("ld r16, Z;");
+  asm ("cpi r16, 0x7C;");
+  asm ("breq test4A_pass;");
+  asm ("rjmp fail;");
+  asm ("test4A_pass:\n");
+  PORTB = 0x4A;
+
+  asm ("inc r16");
+  asm ("ldi r30, 0x0;");
+  asm ("ldi r31, 0x1;");
+  asm ("ld r16, Z+;");
+  asm ("inc r16");
+  asm ("ld r16, -Z;");
+  asm ("cpi r16, 0x7C;");
+  asm ("breq test4B_pass;");
+  asm ("rjmp fail;");
+  asm ("test4B_pass:\n");
+  PORTB = 0x4B;
+
+  asm ("ld r16, Y;");
+  asm ("ld r16, Y+;");
+  asm ("ld r16, -Y;");
 }

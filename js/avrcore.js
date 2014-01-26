@@ -344,7 +344,11 @@ function fetch(b, a) {
         break;
     case 128:
     case 129:
-        0 === (a & 8 | 0) && (c = parseInt(r[d], 16), writeMemory(parseInt(r[28], 16), c), writeMemory(parseInt(r[29], 16), ++c));
+        if(0 === (a & 15)){
+            r[d] = readMemory(r[31] << 8 | r[30]);
+        }else{
+            0 === (a & 8 | 0) && (c = parseInt(r[d], 16), writeMemory(parseInt(r[28], 16), c), writeMemory(parseInt(r[29], 16), ++c));
+        }
         break;
     case 130:
     case 131:
@@ -363,8 +367,36 @@ function fetch(b, a) {
                 g = parseInt(memory[g + 1], 16);
             r[d] = 0 === (c & 1) ? e : g;
             5 === (a & 15) && (r[30]++, 256 === r[30] && (r[30] = 0, r[31]++))
-        } else r[d] = 12 === (a & 15) ? parseInt(memory[2 * ((r[27] <<
-            8 | r[26]) >> 1)], 16) : memory[parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8];
+        }else if(1 === (a & 15)){
+            r[d] = readMemory(r[31] << 8 | r[30]);
+            r[30] = r[30]+1;
+            if(r[30] == 0x100){
+                r[30] = 0;
+                r[31] = r[31]+1;
+            }
+        }else if(2 === (a & 15)){
+            r[30] = r[30]-1;
+            if(r[30] < 0){
+                r[30] = 0;
+                r[31] = r[31]-1;
+            }
+            r[d] = readMemory(r[31] << 8 | r[30]);
+        }else if(13 === (a & 15)){
+            r[d] = readMemory(r[27] << 8 | r[26]);
+            r[26] = r[26]+1;
+            if(r[26] == 0x100){
+                r[26] = 0;
+                r[27] = r[27]+1;
+            }
+        }else if(14 === (a & 15)){
+            r[26] = r[26]-1;
+            if(r[26] < 0){
+                r[26] = 0;
+                r[27] = r[27]-1;
+            }
+            r[d] = readMemory(r[27] << 8 | r[26]);
+        } 
+        else r[d] = 12 === (a & 15) ? readMemory(r[27] << 8 | r[26]) : memory[parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8];
         break;
     case 146:
     case 147:
