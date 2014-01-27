@@ -577,16 +577,6 @@ test3E_pass:
   PORTB = 0x3E;
   asm ("ret;");
 
-  asm ("bst r16, 0x1;");
-  asm ("bld r16, 0x1;");
-  asm ("ror r16;");
-  asm ("sbic 0x1F, 0x1;");
-  asm ("sbis 0x1F, 0x1;");
-  asm ("sbrs r16, 0x1;");
-  asm ("cpse r16, r16;");
-  asm ("ijmp;");
-  asm ("reti;");
-
 #ifndef attiny4
   asm ("ldd r16, Z+0;");
   asm ("ldd r16, Y+0;");
@@ -750,4 +740,22 @@ void overflow(){
   asm ("rjmp fail;");
   asm ("test4D_pass:\n");
   PORTB = 0x4D;
+
+  asm ("ldi r16, 0x7C;");
+  asm ("ror r16;");
+  asm ("cpi r16, 0x3E;");
+  asm ("breq test4E_pass;");
+  asm ("rjmp fail;");
+  asm ("test4E_pass:\n");
+  PORTB = 0x4E;
+/*
+  asm ("bst r16, 0x1;");
+  asm ("bld r16, 0x1;");
+  asm ("sbic 0x1F, 0x1;");
+  asm ("sbis 0x1F, 0x1;");
+  asm ("sbrs r16, 0x1;");
+  asm ("cpse r16, r16;");
+  asm ("ijmp;");
+  asm ("reti;");
+*/
 }

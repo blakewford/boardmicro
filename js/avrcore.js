@@ -367,6 +367,14 @@ function fetch(b, a) {
     case 148:
     case 149:
         if (0 === (a & 15)) r[c] = 255 - r[c];
+        if (7 === (a & 15)){
+            var lsb = r[c] & 0x1;
+            r[c] = r[c] >> 1;
+            if(C){
+                r[c] = r[c] | (1 << 7);
+            }
+            C = lsb;
+        }
         else if (2 === (a & 255)) r[c] = r[c] << 4 | r[c] >> 4;
         else if (3 === (a & 255)) r[c] += 1;
         else if (5 === (a & 255)) d = r[c], g = d & 1, d = d >> 1 | d & 128, setPostEvaluationFlags(d), r[c] = d, C = g, V = N ^ C;
