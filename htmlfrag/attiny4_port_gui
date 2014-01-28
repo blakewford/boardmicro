@@ -1,0 +1,7 @@
+    PORT B
+    <div style="width: 25%; display: table;">
+        <script>
+        document.write(generatePortHtml(0, 0xF));
+        </script>
+        <br/>
+    </div>

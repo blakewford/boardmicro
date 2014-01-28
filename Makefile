@@ -20,11 +20,12 @@
 TARGET = atmega32u4
 
 SRC = blink
+SRC_DIR = src/
 BASENAME = $(SRC)_$(TARGET)
 
-all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex index.html
+all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).html bench.html
 
-$(BASENAME).elf: $(SRC).c
+$(BASENAME).elf: $(SRC_DIR)$(SRC).c
 	avr-gcc $< -o $(BASENAME).elf -D$(TARGET) -mmcu=$(TARGET)
 
 $(BASENAME).dis: $(BASENAME).elf
@@ -33,14 +34,30 @@ $(BASENAME).dis: $(BASENAME).elf
 $(BASENAME).hex: $(BASENAME).elf
 	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex
 
-.PHONY index.html: $(BASENAME).hex
-	cat header > $@
+.PHONY $(BASENAME).html: $(BASENAME).hex
+	cat htmlfrag/license > $@
+	echo '<html>' >> $@
+	cat htmlfrag/generic_platform_header >> $@
 	printf 'var target = "$(TARGET)";\n' >> $@
 	printf 'var hex = "' >> $@
 	tr '\r\n' '\\n' < $(BASENAME).hex >> $@
 	printf '";\n' >> $@
 	cat js/avrcore.js >> $@
-	cat footer >> $@
+	cat htmlfrag/generic_platform_body >> $@
+	cat htmlfrag/$(TARGET)_port_gui >> $@
+	echo '</html>' >> $@
+
+bench.html:
+	cat htmlfrag/license > $(TARGET)_$@
+	echo '<html>' >> $(TARGET)_$@
+	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $(TARGET)_$@;
+	echo '<script>' >> $(TARGET)_$@
+	cat js/avrcore.js >> $(TARGET)_$@
+	echo '</script>' >> $(TARGET)_$@
+	cat htmlfrag/bench_platform_header >> $(TARGET)_$@
+	cat htmlfrag/$(TARGET)_port_gui >> $(TARGET)_$@
+	cat htmlfrag/bench_platform_footer >> $(TARGET)_$@
+	echo '</html>' >> $(TARGET)_$@
 
 clean: 
-	-@rm *.elf *.dis *.hex index.html
+	-@rm *.elf *.dis *.hex *.html

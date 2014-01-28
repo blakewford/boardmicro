@@ -1,63 +1,3 @@
-<!--Test bench code for jAVRscript.
-    
-    This file is part of jAVRscript.
-    
-    jAVRscript is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License as published by the Free
-    Software Foundation; either version 3, or (at your option) any later
-    version.
-    
-    jAVRscript is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-    for more details.
-    
-    You should have received a copy of the GNU General Public License
-    along with jAVRscript; see the file LICENSE.  If not see
-    <http://www.gnu.org/licenses/>-->
-<html>  
-    <script type="text/javascript">var target = "atmega32u4";</script>
-    <script type="text/javascript" src="js/avrcore.js"></script>
-    <div>
-    Intel Hex File <input type="file" id="hexfile"/>
-    Disassembly File <input name="debug" type="file" id="debugfile"/>
-    <br/>
-    <span class="loadMemory">
-      <button>Load Memory</button>
-    </span>
-    <button onClick="exec()">Continue</button>
-    <br/>
-    <script>
-      for(j = 0; j < 4; j++){
-        for(i = 0; i < 8; i++)
-            document.write(generateRegisterHtml((j*8)+i));
-        document.write("<br/>")
-      }
-    </script>
-    </div>
-    <br/>
-    PORT B - PORT F
-    <div style="width: 25%; display: table;">
-        <script>
-        document.write(generatePortHtml(0, 0xFF));
-        </script>
-        <br/>
-        <script>
-        document.write(generatePortHtml(1, 0xFF));
-        </script>
-        <br/>
-        <script>
-        document.write(generatePortHtml(2, 0xFF));
-        </script>
-        <br/>
-        <script>
-        document.write(generatePortHtml(3, 0xFF));
-        </script>
-        <br/>
-        <script>
-        document.write(generatePortHtml(4, 0xFF));
-        </script>
-    </div>
     <br/>
     <select id = "breakpoints"></select>
     <button onClick="setBreakpoint()">Set Breakpoint</button>
@@ -171,4 +111,3 @@
         reader.readAsBinaryString(file.slice(0, file.size));
       }, false);
     </script>
-</html>

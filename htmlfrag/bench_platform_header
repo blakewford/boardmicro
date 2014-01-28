@@ -1,0 +1,18 @@
+    <div>
+    Intel Hex File <input type="file" id="hexfile"/>
+    Disassembly File <input name="debug" type="file" id="debugfile"/>
+    <br/>
+    <span class="loadMemory">
+      <button>Load Memory</button>
+    </span>
+    <button onClick="exec()">Continue</button>
+    <br/>
+    <script>
+      for(j = 0; j < 4; j++){
+        for(i = 0; i < 8; i++)
+            document.write(generateRegisterHtml((j*8)+i));
+        document.write("<br/>")
+      }
+    </script>
+    </div>
+    <br/>

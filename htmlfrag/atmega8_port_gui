@@ -1,0 +1,15 @@
+    PORT B - PORT D
+    <div style="width: 25%; display: table;">
+        <script>
+        document.write(generatePortHtml(0, 0xFF));
+        </script>
+        <br/>
+        <script>
+        document.write(generatePortHtml(1, 0x7F));
+        </script>
+        <br/>
+        <script>
+        document.write(generatePortHtml(2, 0xFF));
+        </script>
+        <br/>
+    </div>

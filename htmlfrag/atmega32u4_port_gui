@@ -1,9 +1,4 @@
-
-
-      loadMemory(hex);
-      engineInit();
-      exec();
-    </script>
+    PORT B - PORT F
     <div style="width: 25%; display: table;">
         <script>
         document.write(generatePortHtml(0, 0xFF));
@@ -25,4 +20,3 @@
         document.write(generatePortHtml(4, 0xF3));
         </script>
     </div>
-</html>
