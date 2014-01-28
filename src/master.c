@@ -748,9 +748,26 @@ void overflow(){
   asm ("rjmp fail;");
   asm ("test4E_pass:\n");
   PORTB = 0x4E;
+
+  asm ("clt");
+  asm ("inc r16");
+  asm ("bst r16, 0x0;");
+  asm ("in r16, 0x3F;");
+  asm ("cpi r16, 0x42;");
+  asm ("breq test4F_pass;");
+  asm ("rjmp fail;");
+  asm ("test4F_pass:\n");
+  PORTB = 0x4F;
+
+  asm ("clr r16;");
+  asm ("bld r16, 0x0;");
+  asm ("cpi r16, 0x1;");
+  asm ("breq test50_pass;");
+  asm ("rjmp fail;");
+  asm ("test50_pass:\n");
+  PORTB = 0x50;
+
 /*
-  asm ("bst r16, 0x1;");
-  asm ("bld r16, 0x1;");
   asm ("sbic 0x1F, 0x1;");
   asm ("sbis 0x1F, 0x1;");
   asm ("sbrs r16, 0x1;");

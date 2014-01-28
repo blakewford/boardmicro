@@ -564,7 +564,11 @@ function fetch(b, a) {
         break;
     case 248:
     case 249:
-        r[c] = T << (a & 7);
+        r[c] = r[c] | (T << (a & 7));
+        break;
+    case 250:
+    case 251:
+        T = (r[c] & (0x1 << getRegisterValue(b, a))) > 0;
         break;
     case 252:
     case 253:
