@@ -638,16 +638,23 @@ function engineInit() {
 function exec() {
     isPaused && (isPaused = !1, loop())
 }
+
 function isNumber(b) {
     return !isNaN(parseInt(b, 16))
 }
+
 function setPin(b, a) {
     var d = document.getElementById(b).getContext("2d");
     d.fillStyle = a;
     d.fillRect(0, 0, 10, 10)
 }
+
 function generateRegisterHtml(b) {
     return '<textarea id="register' + b + '" rows="1" cols="4">0x00</textarea>'
+}
+
+function generateFillerHtml() {
+    return '<div style=\"display: table-cell;\"><canvas width=\"10\" height=\"10\"/></div>';
 }
 
 function generatePortHtml(b, a) {
