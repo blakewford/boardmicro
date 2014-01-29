@@ -1,3 +1,4 @@
+
 /* Test code for jAVRscript.
 This file is part of jAVRscript.
 
@@ -607,6 +608,9 @@ test3E_pass:
   asm ("brlt branch;");
   asm ("branch:");
 
+// No viable test method
+  asm ("reti;");
+
 //  Unsupported by current targets
 //  asm ("des 0x1;");
 //  asm ("eijmp;");
@@ -767,12 +771,72 @@ void overflow(){
   asm ("test50_pass:\n");
   PORTB = 0x50;
 
-/*
-  asm ("sbic 0x1F, 0x1;");
-  asm ("sbis 0x1F, 0x1;");
-  asm ("sbrs r16, 0x1;");
+  asm ("sbi 0x0B, 0x4;");
+  asm ("sbis 0x0B, 0x4;");
+#ifndef attiny4
+#ifndef atmega8
+  asm ("jmp fail;");
+#endif
+#endif
+#ifndef atmega32u4
+  asm ("rjmp fail;");
+#endif
+  asm ("test51_pass:\n");
+  PORTB = 0x51;
+
+  asm ("cbi 0x0B, 0x4;");
+  asm ("sbic 0x0B, 0x4;");
+#ifndef attiny4
+#ifndef atmega8
+  asm ("jmp fail;");
+#endif
+#endif
+#ifndef atmega32u4
+  asm ("rjmp fail;");
+#endif
+  asm ("test52_pass:\n");
+  PORTB = 0x52;
+
+  asm ("ldi r16, 0x1;");
+  asm ("sbrs r16, 0x0;");
+#ifndef attiny4
+#ifndef atmega8
+  asm ("jmp fail;");
+#endif
+#endif
+#ifndef atmega32u4
+  asm ("rjmp fail;");
+#endif
+  asm ("test53_pass:\n");
+  PORTB = 0x53;
+
   asm ("cpse r16, r16;");
+#ifndef attiny4
+#ifndef atmega8
+  asm ("jmp fail;");
+#endif
+#endif
+#ifndef atmega32u4
+  asm ("rjmp fail;");
+#endif
+  asm ("test54_pass:\n");
+  PORTB = 0x54;
+
+  address = (short)&&result;
+#ifdef atmega32u4
+  asm ("lds r30, 0x102;");
+  asm ("lds r31, 0x103;");
+#endif
+#ifdef atmega8
+  asm ("lds r30, 0x62;");
+  asm ("lds r31, 0x63;");
+#endif
+#ifdef attiny4
+  asm ("lds r30, 0x42;");
+  asm ("lds r31, 0x43;");
+#endif
   asm ("ijmp;");
-  asm ("reti;");
-*/
+
+result:
+  PORTB = 0x55;
 }
