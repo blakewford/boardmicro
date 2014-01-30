@@ -15,7 +15,9 @@ for more details.
 You should have received a copy of the GNU General Public License
 along with jAVRscript; see the file LICENSE.  If not see
 <http://www.gnu.org/licenses/>.  */
+#include <avr/boot.h>
 
+#define SIGRD 5
 #define led 13
 #define syncDelay 5000
 #define bitDelay 1000
@@ -25,11 +27,9 @@ uint8_t id = 0xFF;
 void
 setup ()
 {
-  asm ("ldi r30, 0xC0;");
-  asm ("ldi r31, 0x3F;");
-  asm ("ld r16, Z;");
-  asm ("sts 0x100, r16;");
 
+ id = boot_signature_byte_get(0);
+ id = id >> 4 | id << 4;
  pinMode (led, OUTPUT);
  DDRD = _BV(5);
 }
@@ -42,7 +42,7 @@ loop ()
   digitalWrite (led, LOW);
   delay (bitDelay);
 
-  for (int i = 7; i >= 0; i--)
+  for (int i = 0; i < 8; i++)
     {
       digitalWrite (led, HIGH);
       if (((1 << i) & id))

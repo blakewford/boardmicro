@@ -841,4 +841,21 @@ overflow ()
 
 result:
   PORTB = 0x55;
+
+#ifdef attiny4
+  asm ("ldi r30, 0xC0");
+  asm ("ldi r31, 0x3F");
+  asm ("ld r16, Z");
+#else
+  asm ("ldi r30, 0x00");
+  asm ("ldi r31, 0x01");
+  asm ("ldi r16, 0x21"); 
+  asm ("sts 0x57, r16");
+  asm ("ld r16, Z");
+#endif
+  asm ("cpi r16, 0xBF;");
+  asm ("breq test56_pass;");
+  asm ("rjmp fail;");
+  asm ("test56_pass:\n");
+  PORTB = 0x56;
 }
