@@ -16,41 +16,42 @@ You should have received a copy of the GNU General Public License
 along with jAVRscript; see the file LICENSE.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-#include <avr/io.h>
+#define led 13
+#define syncDelay 5000
+#define bitDelay 1000
 
-char bssValue;
-char finalValue = 0xF;
+uint8_t id = 0xFF;
 
-int
-main (void)
+void
+setup ()
 {
-#ifdef attiny4
-  //__do_copy_data
-  asm ("ldi r16, 0xF");
-  asm ("sts 0x40, r16 ");
-#endif
-  bssValue = finalValue;
-  //Set as output pin
-  DDRB = _BV (3);
-  //Write value
-loop:
-  PORTB = 0x0;
-  PORTB = 0x1;
-  PORTB = 0x2;
-  PORTB = 0x3;
-  PORTB = 0x4;
-  PORTB = 0x5;
-  PORTB = 0x6;
-  PORTB = 0x7;
-  PORTB = 0x8;
-  PORTB = 0x9;
-  PORTB = 0xA;
-  PORTB = 0xB;
-  PORTB = 0xC;
-  PORTB = 0xD;
-  PORTB = 0xE;
-  PORTB = bssValue;
-  goto loop;
+  asm ("ldi r30, 0xC0;");
+  asm ("ldi r31, 0x3F;");
+  asm ("ld r16, Z;");
+  asm ("sts 0x100, r16;");
 
-  return 0;
+ pinMode (led, OUTPUT);
+ DDRD = _BV(5);
+}
+
+void
+loop ()
+{
+  digitalWrite (led, HIGH);
+  delay (syncDelay);
+  digitalWrite (led, LOW);
+  delay (bitDelay);
+
+  for (int i = 7; i >= 0; i--)
+    {
+      digitalWrite (led, HIGH);
+      if (((1 << i) & id))
+	 PORTD = 0x20;
+      else
+	 PORTD = 0x00;
+      delay (bitDelay);
+      digitalWrite (led, LOW);
+      delay (bitDelay);
+    }
+    PORTD = 0x00;
 }

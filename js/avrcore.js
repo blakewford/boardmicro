@@ -46,7 +46,13 @@ function initCore() {
     signatureOffset = flashStart + 178;
     jumpTableAddress = usbVectorBase + 64;
     mainAddress = usbVectorBase + 72
+    for (a = 0; a < memory.length; a++) writeMemory(a, 0);
+    memory[0x3FC0] = 0x0C;
+    memory[0x3FC1] = 0x0F;
+    memory[0x3FC2] = 0xFE;
+    memory[0x3FC3] = 0xE0;
 }
+
 function writeClockRegister(b) {
     memory[pllCsr] = 0 < (b & 2) ? memory[pllCsr] | 1 : memory[pllCsr] & 254
 }
@@ -89,7 +95,6 @@ function readMemory(b) {
 
 function loadMemory(b) {
     initCore();
-    for (a = 0; a < memory.length; a++) writeMemory(a, 0);
     b = b.split(/["\n"]/);
     for (var a = 0; b[a];) {
         var d = b[a].substring(1),

@@ -20,10 +20,10 @@ along with jAVRscript; see the file LICENSE.  If not see
 char data = 0xFF;
 short address;
 
-void overflow();
+void overflow ();
 
 int
-main ()
+main (void)
 {
   asm ("start:\n");
 #ifdef attiny4
@@ -492,7 +492,7 @@ main ()
   asm ("call test3D_pass;");
 #endif
 #endif
-  address = (short)&&test3E_pass;
+  address = (short) &&test3E_pass;
 #ifdef atmega32u4
   asm ("lds r30, 0x102;");
   asm ("lds r31, 0x103;");
@@ -527,7 +527,7 @@ main ()
   asm ("breq fail;");
   PORTB = 0x42;
 
-  overflow();
+  overflow ();
 
 #ifndef attiny4
 #ifndef atmega8
@@ -624,7 +624,9 @@ test3E_pass:
 //  asm ("xch Z, r16;");
 }
 
-void overflow(){
+void
+overflow ()
+{
   asm ("ldi r30, 0x00;");
   asm ("ldi r31, 0x01;");
   asm ("st Z+, r16;");
@@ -822,7 +824,7 @@ void overflow(){
   asm ("test54_pass:\n");
   PORTB = 0x54;
 
-  address = (short)&&result;
+  address = (short) &&result;
 #ifdef atmega32u4
   asm ("lds r30, 0x102;");
   asm ("lds r31, 0x103;");
