@@ -46,7 +46,7 @@
 # $Id$
 
 PORT = /dev/tty.usbserial*
-TARGET = signature
+TARGET = platformBasedDelay
 ARDUINO = /usr/local/lib/targets/arduino
 SRC = $(ARDUINO)/buffer.c $(ARDUINO)/pins_arduino.c \
   $(ARDUINO)/Serial.c $(ARDUINO)/uart.c $(ARDUINO)/wiring.c

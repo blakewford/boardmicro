@@ -15,6 +15,7 @@ for more details.
 You should have received a copy of the GNU General Public License
 along with jAVRscript; see the file LICENSE.  If not see
 <http://www.gnu.org/licenses/>.  */
+#include <WProgram.h>
 #include <avr/boot.h>
 
 #define SIGRD 5
