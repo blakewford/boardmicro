@@ -1,17 +1,14 @@
-char platform = 0x1E;
-int led = 13;
+#include <avr/boot.h>
 
-void platformBasedDelay(int milliseconds) {
-  asm ("ldi r30, 0x00");
-  asm ("ldi r31, 0x01");
-  asm ("ldi r16, 0x21"); 
-  asm ("sts 0x57, r16");
-  asm ("ld r16, Z");
-  if(platform == 0xBF)
-    delay(milliseconds/180);
+#define SIGRD 5
+
+int led = 13;
+ 
+void platformBasedDelay(unsigned long milliseconds) {
+  if(boot_signature_byte_get(0) == 0xBF)
+    delay(milliseconds >> 8);
   else
     delay(milliseconds);
-    
 }
 
 void setup() {

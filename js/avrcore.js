@@ -61,7 +61,7 @@ function writeClockRegister(b) {
 
 function writeControlRegister(b) {
     if(b === 0x21)
-      writeMemory(r[31] << 8 | r[30], simulationManufacturerID);
+      writeMemory((r[31] << 8 | r[30])+flashStart, simulationManufacturerID.toString(16));
     memory[spmCr] = b;
 }
 
