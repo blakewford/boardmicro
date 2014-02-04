@@ -160,6 +160,10 @@ function getUpperPair(b, a) {
     return 2 * ((a & 48) >> 4) + 24
 }
 
+function getDisplacement(b, a){
+   return (((b & 0x20) >> 5) << 4) | (((b & 0x0C) >> 2) << 3) | (a & 7);
+}
+
 function fetch(b, a) {
     var d = 16 * (b & 1) + ((a & 240) >> 4),
         f = 16 * ((b & 2) >> 1) + (a & 15);
@@ -357,12 +361,58 @@ function fetch(b, a) {
         break;
     case 128:
     case 129:
-        0 === (a & 15) ? r[d] = readMemory(r[31] << 8 | r[30]) : 8 === (a & 15) ? r[d] = readMemory(r[29] << 8 | r[28]) : 0 === (a & 8 | 0) && (c = parseInt(r[d], 16), writeMemory(parseInt(r[28], 16), c), writeMemory(parseInt(r[29], 16), ++c));
+        if((a & 15) > 8){
+            r[d] = readMemory((r[29] << 8 | r[28])+getDisplacement(b, a));
+            break;
+        }
+        if((a & 15) < 8 && (a & 15) > 0){
+            r[d] = readMemory((r[31] << 8 | r[30])+getDisplacement(b, a));
+            break;
+        }
+        0 === (a & 15) ? r[d] = readMemory(r[31] << 8 | r[30]) : r[d] = readMemory(r[29] << 8 | r[28]);
         break;
     case 130:
     case 131:
+        if((a & 15) > 8){
+            writeMemory((r[29] << 8 | r[28])+getDisplacement(b, a), r[d]);
+            break;
+        }
+        if((a & 15) < 8 && (a & 15) > 0){
+            writeMemory((r[31] << 8 | r[30])+getDisplacement(b, a), r[d]);
+            break;
+        }
         8 === (a & 15) && writeMemory(r[29] << 8 | r[28], r[d]);
-        0 === (a & 15 | 0) && writeMemory(r[31] << 8 | r[30], r[d]);
+        0 === (a & 15) && writeMemory(r[31] << 8 | r[30], r[d]);
+        break;
+    case 132:
+    case 133:
+    case 136:
+    case 137:
+    case 140:
+    case 141:
+        if((a & 15) > 8){
+            r[d] = readMemory((r[29] << 8 | r[28])+getDisplacement(b, a));
+            break;
+        }
+        if((a & 15) < 8 && (a & 15) > 0){
+            r[d] = readMemory((r[31] << 8 | r[30])+getDisplacement(b, a));
+            break;
+        }
+        break;
+    case 134:
+    case 135:
+    case 138:
+    case 139:
+    case 142:
+    case 143:
+        if((a & 15) > 8){
+            writeMemory((r[29] << 8 | r[28])+getDisplacement(b, a), r[d]);
+            break;
+        }
+        if((a & 15) < 8 && (a & 15) > 0){
+            writeMemory((r[31] << 8 | r[30])+getDisplacement(b, a), r[d]);
+            break;
+        }
         break;
     case 144:
     case 145:

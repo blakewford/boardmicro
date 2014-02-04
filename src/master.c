@@ -579,10 +579,6 @@ test3E_pass:
   asm ("ret;");
 
 #ifndef attiny4
-  asm ("ldd r16, Z+0;");
-  asm ("ldd r16, Y+0;");
-  asm ("std Y+0, r16;");
-  asm ("std Z+0, r16;");
   asm ("lpm;");
   asm ("spm;");
   asm ("adiw r30,1;");
@@ -858,4 +854,40 @@ result:
   asm ("rjmp fail;");
   asm ("test56_pass:\n");
   PORTB = 0x56;
+
+#ifndef attiny4
+  asm ("ldi r28, 0xFC");
+  asm ("ldi r29, 0x00");
+  asm ("ldd r16, Y+4;");
+  asm ("cpi r16, 0x7C;");
+  asm ("breq test57_pass;");
+  asm ("rjmp fail;");
+  asm ("test57_pass:\n");
+  PORTB = 0x57;
+
+  asm ("ldi r30, 0xFC");
+  asm ("ldi r31, 0x00");
+  asm ("ldd r16, Z+4;");
+  asm ("cpi r16, 0x7C;");
+  asm ("breq test58_pass;");
+  asm ("rjmp fail;");
+  asm ("test58_pass:\n");
+  PORTB = 0x58;
+
+  asm ("inc r16;");
+  asm ("std Y+4, r16;");
+  asm ("cpi r16, 0x7D;");
+  asm ("breq test59_pass;");
+  asm ("rjmp fail;");
+  asm ("test59_pass:\n");
+  PORTB = 0x59;
+
+  asm ("std Z+4, r16;");
+  asm ("cpi r16, 0x7D;");
+  asm ("breq test5A_pass;");
+  asm ("rjmp fail;");
+  asm ("test5A_pass:\n");
+  PORTB = 0x5A;
+
+#endif
 }

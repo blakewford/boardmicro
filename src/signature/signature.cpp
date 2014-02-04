@@ -25,6 +25,13 @@ along with jAVRscript; see the file LICENSE.  If not see
 
 uint8_t id = 0xFF;
 
+void platformBasedDelay(unsigned long milliseconds) {
+  if(boot_signature_byte_get(0) == 0xBF)
+    delay(milliseconds >> 8);
+  else
+    delay(milliseconds);
+}
+
 void
 setup ()
 {
@@ -39,9 +46,9 @@ void
 loop ()
 {
   digitalWrite (led, HIGH);
-  delay (syncDelay);
+  platformBasedDelay (syncDelay);
   digitalWrite (led, LOW);
-  delay (bitDelay);
+  platformBasedDelay (bitDelay);
 
   for (int i = 0; i < 8; i++)
     {
@@ -50,9 +57,9 @@ loop ()
 	 PORTD = 0x20;
       else
 	 PORTD = 0x00;
-      delay (bitDelay);
+      platformBasedDelay (bitDelay);
       digitalWrite (led, LOW);
-      delay (bitDelay);
+      platformBasedDelay (bitDelay);
     }
     PORTD = 0x00;
 }
