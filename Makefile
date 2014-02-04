@@ -21,12 +21,19 @@ TARGET = atmega32u4
 
 SRC = blink
 SRC_DIR = src/
+LIB_DIR = src/lib
 BASENAME = $(SRC)_$(TARGET)
 
 all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).html bench.html
 
-$(BASENAME).elf: $(SRC_DIR)$(SRC).c
-	avr-gcc $< -o $(BASENAME).elf -D$(TARGET) -mmcu=$(TARGET)
+libplatform.a: platform.o
+	avr-ar rcs $@ $<
+
+platform.o: $(LIB_DIR)/platform.c
+	avr-gcc -I$(LIB_DIR) -c $< -o $@ -mmcu=$(TARGET)
+
+$(BASENAME).elf: $(SRC_DIR)$(SRC).c libplatform.a
+	avr-gcc -I$(LIB_DIR) $< -o $(BASENAME).elf -D$(TARGET) -L. -lplatform -mmcu=$(TARGET)
 
 $(BASENAME).dis: $(BASENAME).elf
 	avr-objdump -d $(BASENAME).elf > $(BASENAME).hex.dis
@@ -60,4 +67,4 @@ bench.html:
 	echo '</html>' >> $(TARGET)_$@
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html
+	-@rm *.elf *.dis *.hex *.html *.o *.a
