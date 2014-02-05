@@ -51,7 +51,7 @@ $(BASENAME).hex: $(BASENAME).elf
 	printf '";\n' >> $@
 	cat js/avrcore.js >> $@
 	cat htmlfrag/generic_platform_body >> $@
-	cat htmlfrag/$(TARGET)_port_gui >> $@
+	cat htmlfrag/$(TARGET)_pinout_gui >> $@
 	echo '</html>' >> $@
 
 bench.html:

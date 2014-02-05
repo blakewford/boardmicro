@@ -1,0 +1,238 @@
+    <div style="width: 10%; display: table;">
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin14" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin13" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin14", "FF0000");
+                setPin("pin13", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin16" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin12" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin16", "FF0000");
+                setPin("pin12", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin17" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin11" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin17", "FF0000");
+                setPin("pin11", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin18" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin10" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin18", "FF0000");
+                setPin("pin10", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin19" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin9" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin19", "FF0000");
+                setPin("pin9", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin20" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin8" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin20", "FF0000");
+                setPin("pin8", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="VCC" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="GND" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("GND", "999966");
+                setPin("VCC", "999966");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="GND2" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="AREF" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("GND2", "999966");
+                setPin("AREF", "999966");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin6" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="AVCC" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin6", "FF0000");
+                setPin("AVCC", "999966");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin7" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin5" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin7", "FF0000");
+                setPin("pin5", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin21" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin4" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin21", "FF0000");
+                setPin("pin4", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin22" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin3" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin22", "FF0000");
+                setPin("pin3", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin23" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin2" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin23", "FF0000");
+                setPin("pin2", "FF0000");
+            </script>
+        </div>
+        <br/>
+        <div style="display: table-row">
+            <div style="display: table-cell;">  
+                <canvas id="pin0" width="10" height="10"/>
+            </div>
+            <script>
+                for(i = 0; i < 2; i++)
+                    document.write(generateFillerHtml());
+            </script>
+            <div style="display: table-cell;">  
+                <canvas id="pin1" width="10" height="10"/>
+            </div>
+            <script>
+                setPin("pin0", "FF0000");
+                setPin("pin1", "FF0000");
+            </script>
+        </div>

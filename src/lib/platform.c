@@ -7,21 +7,24 @@
     #define SIGRD 5
 #endif
 
-#ifndef attiny4
-    #define F_CPU 16000000
-#else
-    #define F_CPU 12000000
-#endif
-
-#define CYCLES_PER_SECOND F_CPU/1000
+#define CPU_CLK 8000000
+#define CYCLES_PER_MS CPU_CLK/1000
 
 void delay(unsigned long milliseconds){
+#ifndef attiny4
     int i,j = 0;
     for(i; i < milliseconds; i++){
-        for(j; j < CYCLES_PER_SECOND; j++){
+        for(j; j < CYCLES_PER_MS; j++){
             asm volatile ("nop");
         }
     }
+#else
+    milliseconds*=CYCLES_PER_MS;
+    while(milliseconds > 0){
+        asm volatile ("nop");
+        milliseconds--;
+    }
+#endif
 }
 
 void platformBasedDelay(unsigned long milliseconds) {
