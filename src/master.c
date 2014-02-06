@@ -578,20 +578,9 @@ test3E_pass:
   PORTB = 0x3E;
   asm ("ret;");
 
-#ifndef attiny4
-  asm ("lpm;");
-  asm ("spm;");
-  asm ("adiw r30,1;");
-  asm ("sbiw r30,1;");
-  asm ("mul r16,r16;");
-  asm ("muls r16,r16;");
-  asm ("mulsu r16,r16;");
-  asm ("fmul r16,r16;");
-  asm ("fmuls r16,r16;");
-  asm ("fmulsu r16,r16;");
-#endif
 // Tested by coincidence
-  asm ("st Z, r16;");
+//  asm ("st Z, r16;");
+//  asm ("lpm;");
 
 // Tested binary equivalent
   asm ("lsl r16;");
@@ -888,6 +877,39 @@ result:
   asm ("rjmp fail;");
   asm ("test5A_pass:\n");
   PORTB = 0x5A;
+
+  asm ("ldi r30, 0xFF");
+  asm ("ldi r31, 0x00");
+  asm ("ldi r16, 0x00");
+  asm ("adiw r30, 1;");
+  asm ("cpse r30, r16;");
+  asm ("rjmp fail;");
+  asm ("inc r16");
+  asm ("cpi r31, 0x01;");
+  asm ("breq test5B_pass;");
+  asm ("rjmp fail;");
+  asm ("test5B_pass:\n");
+  PORTB = 0x5B;
+
+  asm ("ldi r30, 0x00");
+  asm ("ldi r31, 0x01");
+  asm ("ldi r16, 0xFF");
+  asm ("sbiw r30, 1;");
+  asm ("cpse r30, r16;");
+  asm ("rjmp fail;");
+  asm ("cpi r31, 0x00;");
+  asm ("breq test5C_pass;");
+  asm ("rjmp fail;");
+  asm ("test5C_pass:\n");
+  PORTB = 0x5C;
+
+//  asm ("spm;");
+//  asm ("mul r16,r16;");
+//  asm ("muls r16,r16;");
+//  asm ("mulsu r16,r16;");
+//  asm ("fmul r16,r16;");
+//  asm ("fmuls r16,r16;");
+//  asm ("fmulsu r16,r16;");
 
 #endif
 }

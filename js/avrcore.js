@@ -480,16 +480,20 @@ function fetch(b, a) {
         H = 0;
         c = getConstant(b, a);
         e = getUpperPair(b, a);
-        r[e] = c & 15;
-        r[e + 1] = (c & 240) >> 4;
-        setPostEvaluationFlags(r[e + 1]);
-        Z = 0 === r[e] && 0 === r[e + 1] ? 1 : 0;
+        var value = (r[e+1] << 8 | r[e]);
+        value += c;
+        r[e] = value & 255;
+        r[e+1] = value >> 8;
+        setPostEvaluationFlags(value > 0xFFFF);
         break;
     case 151:
+        H = 0;
         c = getConstant(b, a);
         e = getUpperPair(b, a);
-        r[e] -= c & 15;
-        r[e + 1] -= (c & 240) >> 4;
+        var value = (r[e+1] << 8 | r[e]);
+        value -= c;
+        r[e] = value & 255;
+        r[e+1] = value >> 8;
         break;
     case 152:
         c = getRegister(b, a);
@@ -509,6 +513,36 @@ function fetch(b, a) {
         12 <= c && 148 == e | 149 == e && (PC += 2);
         16 <= c | 0 == c && 144 == e | 145 == e && (PC += 2);
         16 <= c | 0 == c && 146 == e | 147 == e && (PC += 2);
+        break;
+    case 160:
+    case 161:
+    case 164:
+    case 165:
+    case 168:
+    case 169:
+    case 172:
+    case 173:
+        if((a & 15) > 8){
+            r[d] = readMemory((r[29] << 8 | r[28])+getDisplacement(b, a));
+        }
+        if((a & 15) < 8 && (a & 15) > 0){
+            r[d] = readMemory((r[31] << 8 | r[30])+getDisplacement(b, a));
+        }
+        break;
+    case 162:
+    case 163:
+    case 166:
+    case 167:
+    case 170:
+    case 171:
+    case 174:
+    case 175:
+        if((a & 15) > 8){
+            writeMemory((r[29] << 8 | r[28])+getDisplacement(b, a), r[d]);
+        }
+        if((a & 15) < 8 && (a & 15) > 0){
+            writeMemory((r[31] << 8 | r[30])+getDisplacement(b, a), r[d]);
+        }
         break;
     case 176:
     case 177:
