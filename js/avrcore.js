@@ -183,8 +183,9 @@ function fetch(b, a) {
         break;
     case 2:
     case 3:
-        var smallReg = getSmallDestinationRegister(b, a);
-        r[smallReg] = (r[smallReg]*r[getSmallSourceRegister(b, a)]) & 255;
+        var result = (r[getSmallDestinationRegister(b, a)]*r[getSmallSourceRegister(b, a)]);
+        r[0] = result & 255;
+        r[1] = (result & 65280) >> 8;
         break;
     case 4:
     case 5:
@@ -528,7 +529,9 @@ function fetch(b, a) {
     case 157:
     case 158:
     case 159:
-        r[d] = (r[d]*r[f]) & 255;
+        var result = r[d]*r[f];
+        r[0] = result & 255;
+        r[1] = (result & 65280) >> 8;
         break;
     case 160:
     case 161:

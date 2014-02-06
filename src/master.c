@@ -905,6 +905,7 @@ result:
 
   asm ("ldi r16, 0x8");
   asm ("mul r16,r16;");
+  asm ("mov r16, r0;");
   asm ("cpi r16, 0x40;");
   asm ("breq test5D_pass;");
   asm ("rjmp fail;");
@@ -913,6 +914,7 @@ result:
 
   asm ("ldi r16, 0x8");
   asm ("muls r16,r16;");
+  asm ("mov r16, r0;");
   asm ("cpi r16, 0x40;");
   asm ("breq test5E_pass;");
   asm ("rjmp fail;");
@@ -921,6 +923,7 @@ result:
 
   asm ("ldi r16, 0x8");
   asm ("mulsu r16,r16;");
+  asm ("mov r16, r0;");
   asm ("cpi r16, 0x40;");
   asm ("breq test5F_pass;");
   asm ("rjmp fail;");
