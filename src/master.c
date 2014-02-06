@@ -930,9 +930,32 @@ result:
   asm ("test5F_pass:\n");
   PORTB = 0x5F;
 
-//  asm ("fmul r16,r16;");
-//  asm ("fmuls r16,r16;");
-//  asm ("fmulsu r16,r16;");
+  asm ("ldi r16, 0x8");
+  asm ("fmul r16,r16;");
+  asm ("mov r16, r0;");
+  asm ("cpi r16, 0x20;");
+  asm ("breq test60_pass;");
+  asm ("rjmp fail;");
+  asm ("test60_pass:\n");
+  PORTB = 0x60;
+
+  asm ("ldi r16, 0x8");
+  asm ("fmuls r16,r16;");
+  asm ("mov r16, r0;");
+  asm ("cpi r16, 0x20;");
+  asm ("breq test61_pass;");
+  asm ("rjmp fail;");
+  asm ("test61_pass:\n");
+  PORTB = 0x61;
+
+  asm ("ldi r16, 0x8");
+  asm ("fmulsu r16,r16;");
+  asm ("mov r16, r0;");
+  asm ("cpi r16, 0x20;");
+  asm ("breq test62_pass;");
+  asm ("rjmp fail;");
+  asm ("test62_pass:\n");
+  PORTB = 0x62;
 
 //  asm ("spm;");
 #endif

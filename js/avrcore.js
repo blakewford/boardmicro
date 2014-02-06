@@ -183,7 +183,18 @@ function fetch(b, a) {
         break;
     case 2:
     case 3:
-        var result = (r[getSmallDestinationRegister(b, a)]*r[getSmallSourceRegister(b, a)]);
+        var dstReg = getSmallDestinationRegister(b, a);
+        var srcReg = getSmallSourceRegister(b, a);
+        var floatingPoint = false;
+        if(b === 3){
+            floatingPoint = ((dstReg >= 24) || (srcReg >= 24));
+            dstReg &= 23;
+            srcReg &= 23;
+        }
+        var result = (r[dstReg]*r[srcReg]);
+        if(floatingPoint){
+            result = result >> 1;
+        }
         r[0] = result & 255;
         r[1] = (result & 65280) >> 8;
         break;
