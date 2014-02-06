@@ -149,8 +149,13 @@ function getJumpConstant(b, a) {
 function getBigConstant(b, a) {
     return (b & 15) << 4 | a & 15
 }
-function getSmallRegister(b, a) {
+
+function getSmallDestinationRegister(b, a) {
     return ((a & 240) >> 4) + 16
+}
+
+function getSmallSourceRegister(b, a) {
+    return (a & 15) + 16
 }
 
 function getConstant(b, a) {
@@ -175,6 +180,11 @@ function fetch(b, a) {
             e = 2 * (a & 15);
         r[c] = r[e];
         r[c + 1] = r[e + 1];
+        break;
+    case 2:
+    case 3:
+        var smallReg = getSmallDestinationRegister(b, a);
+        r[smallReg] = (r[smallReg]*r[getSmallSourceRegister(b, a)]) & 255;
         break;
     case 4:
     case 5:
@@ -275,7 +285,7 @@ function fetch(b, a) {
     case 62:
     case 63:
         H = 0;
-        setPostEvaluationFlags(r[getSmallRegister(b, a)] - getBigConstant(b, a));
+        setPostEvaluationFlags(r[getSmallDestinationRegister(b, a)] - getBigConstant(b, a));
         break;
     case 64:
     case 65:
@@ -294,7 +304,7 @@ function fetch(b, a) {
     case 78:
     case 79:
         c = getBigConstant(b, a);
-        e = getSmallRegister(b, a);
+        e = getSmallDestinationRegister(b, a);
         for (0 < r[e] ^ 0 < c && (r[e] = r[e] - c - C); 0 > r[e];) r[e] = 256 + r[e];
         C = Math.abs(r[e]) < c + C;
         break;
@@ -314,7 +324,7 @@ function fetch(b, a) {
     case 93:
     case 94:
     case 95:
-        e = getSmallRegister(b, a);
+        e = getSmallDestinationRegister(b, a);
         r[e] -= getBigConstant(b, a);
         for (C = 0; 0 > r[e];) r[e] = 256 + r[e], C = 1;
         break;
@@ -334,7 +344,7 @@ function fetch(b, a) {
     case 109:
     case 110:
     case 111:
-        e = getSmallRegister(b, a);
+        e = getSmallDestinationRegister(b, a);
         r[e] |= getBigConstant(b, a);
         break;
     case 112:
@@ -354,7 +364,7 @@ function fetch(b, a) {
     case 126:
     case 127:
         H = 0;
-        e = getSmallRegister(b, a);
+        e = getSmallDestinationRegister(b, a);
         r[e] &= getBigConstant(b, a);
         setPostEvaluationFlags(r[e]);
         C = 0;
@@ -514,6 +524,12 @@ function fetch(b, a) {
         16 <= c | 0 == c && 144 == e | 145 == e && (PC += 2);
         16 <= c | 0 == c && 146 == e | 147 == e && (PC += 2);
         break;
+    case 156:
+    case 157:
+    case 158:
+    case 159:
+        r[d] = (r[d]*r[f]) & 255;
+        break;
     case 160:
     case 161:
     case 164:
@@ -620,7 +636,7 @@ function fetch(b, a) {
     case 237:
     case 238:
     case 239:
-        r[getSmallRegister(b, a)] = getBigConstant(b, a);
+        r[getSmallDestinationRegister(b, a)] = getBigConstant(b, a);
         break;
     case 240:
     case 241:

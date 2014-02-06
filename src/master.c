@@ -903,13 +903,34 @@ result:
   asm ("test5C_pass:\n");
   PORTB = 0x5C;
 
-//  asm ("spm;");
-//  asm ("mul r16,r16;");
-//  asm ("muls r16,r16;");
-//  asm ("mulsu r16,r16;");
+  asm ("ldi r16, 0x8");
+  asm ("mul r16,r16;");
+  asm ("cpi r16, 0x40;");
+  asm ("breq test5D_pass;");
+  asm ("rjmp fail;");
+  asm ("test5D_pass:\n");
+  PORTB = 0x5D;
+
+  asm ("ldi r16, 0x8");
+  asm ("muls r16,r16;");
+  asm ("cpi r16, 0x40;");
+  asm ("breq test5E_pass;");
+  asm ("rjmp fail;");
+  asm ("test5E_pass:\n");
+  PORTB = 0x5E;
+
+  asm ("ldi r16, 0x8");
+  asm ("mulsu r16,r16;");
+  asm ("cpi r16, 0x40;");
+  asm ("breq test5F_pass;");
+  asm ("rjmp fail;");
+  asm ("test5F_pass:\n");
+  PORTB = 0x5F;
+
 //  asm ("fmul r16,r16;");
 //  asm ("fmuls r16,r16;");
 //  asm ("fmulsu r16,r16;");
 
+//  asm ("spm;");
 #endif
 }
