@@ -48,6 +48,7 @@ function initCore() {
     jumpTableAddress = usbVectorBase + 64;
     mainAddress = usbVectorBase + 72
     for (a = 0; a < memory.length; a++) writeMemory(a, 0);
+    memory[0xC8] = 0x30;
     if("attiny4" === target){
         memory[0x3FC0] = simulationManufacturerID;
         memory[0x3FC1] = 0x8F;
@@ -516,6 +517,7 @@ function fetch(b, a) {
         value -= c;
         r[e] = value & 255;
         r[e+1] = value >> 8;
+        setPostEvaluationFlags(value);
         break;
     case 152:
         c = getRegister(b, a);
