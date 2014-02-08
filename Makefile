@@ -52,6 +52,7 @@ $(BASENAME).hex: $(BASENAME).elf
 	cat js/avrcore.js >> $@
 	cat htmlfrag/generic_platform_body >> $@
 	cat htmlfrag/$(TARGET)_pinout_gui >> $@
+	cat htmlfrag/generic_uart_gui >> $@
 	echo '</html>' >> $@
 
 bench.html:
@@ -63,6 +64,7 @@ bench.html:
 	echo '</script>' >> $(TARGET)_$@
 	cat htmlfrag/bench_platform_header >> $(TARGET)_$@
 	cat htmlfrag/$(TARGET)_port_gui >> $(TARGET)_$@
+	cat htmlfrag/generic_uart_gui >> $(TARGET)_$@
 	cat htmlfrag/bench_platform_footer >> $(TARGET)_$@
 	echo '</html>' >> $(TARGET)_$@
 

@@ -36,10 +36,10 @@ var SP = 95,
     forceBreak = !1,
     hasDeviceSignature = !1,
     simulationManufacturerID = 0xBF,
-    memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
+    udr, ucsr, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
 
 function initCore() {
-    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
+    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, udr = ucsr = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, udr = 44, ucsr = 43, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, udr = 206, ucsr = 200, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
@@ -48,7 +48,7 @@ function initCore() {
     jumpTableAddress = usbVectorBase + 64;
     mainAddress = usbVectorBase + 72
     for (a = 0; a < memory.length; a++) writeMemory(a, 0);
-    memory[0xC8] = 0x30;
+    memory[ucsr] = 0x20;
     if("attiny4" === target){
         memory[0x3FC0] = simulationManufacturerID;
         memory[0x3FC1] = 0x8F;
@@ -64,6 +64,16 @@ function writeControlRegister(b) {
     if(b === 0x21)
       writeMemory((r[31] << 8 | r[30])+flashStart, simulationManufacturerID.toString(16));
     memory[spmCr] = b;
+}
+
+function writeUARTDataRegister(b) {
+    try{
+        var uart = document.getElementById("uart");
+        if(uart.value.length == 32)
+            uart.value = "";
+        uart.value += String.fromCharCode(b);
+    }catch(e){}
+    memory[udr] = b;
 }
 
 function writeSpecificPort(b) {
@@ -98,6 +108,7 @@ function writeMemory(b, a) {
     b == portF && dataQueueF.push(a);
     b == pllCsr && writeClockRegister(a);
     b == spmCr && writeControlRegister(a);
+    b == udr && writeUARTDataRegister(a);
 }
 
 function readMemory(b) {

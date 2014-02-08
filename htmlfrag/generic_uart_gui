@@ -1,0 +1,2 @@
+    <br/>
+    <textarea id="uart" name="outputtext" rows="1" cols="32"></textarea>
