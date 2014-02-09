@@ -21,10 +21,12 @@
     #define UCSRC UCSR1C
     #define USBS USBS1
     #define UCSZ0 UCSZ10
-
     #define UCSRA UCSR1A
     #define UDRE UDRE1
     #define UDR UDR1
+#endif
+#ifdef attiny4
+    #define UDR _SFR_MEM8(0x41FF)
 #endif
 
 void delay(unsigned long milliseconds){
@@ -63,9 +65,9 @@ void write(unsigned char data)
     /* Wait for empty transmit buffer */
     while ( !( UCSRA & (1<<UDRE)) )
         ;
+#endif
     /* Put data into buffer, sends the data */
     UDR = data;
-#endif
 }
 
 void platformBasedDelay(unsigned long milliseconds) {
