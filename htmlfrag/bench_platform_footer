@@ -1,7 +1,11 @@
     <br/>
+    <textarea id="memoryAddress" name="outputtext" rows="1" cols="5">0x</textarea>
+    <font style="font-weight:bold; padding-left:5em">^</font>
+    <button onClick="memoryDump();">Memory Dump</button>
+    <br/>
     <select id = "breakpoints"></select>
     <button onClick="setBreakpoint()">Set Breakpoint</button>
-    <button onClick="forceBreak = true; exec();">Step</button>
+    <button onClick="forceBreak = true; exec();">Step/Break</button>
     <button onClick="softBreakpoints = [];">Clear Breakpoints</button>    
     <br/>
     <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>

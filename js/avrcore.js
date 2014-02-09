@@ -36,6 +36,7 @@ var SP = 95,
     forceBreak = !1,
     hasDeviceSignature = !1,
     simulationManufacturerID = 0xBF,
+    uartBufferLength = 32,
     udr, ucsr, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
 
 function initCore() {
@@ -69,7 +70,7 @@ function writeControlRegister(b) {
 function writeUARTDataRegister(b) {
     try{
         var uart = document.getElementById("uart");
-        if(uart.value.length == 32)
+        if(uart.value.length == uartBufferLength-1)
             uart.value = "";
         uart.value += String.fromCharCode(b);
     }catch(e){}
@@ -779,6 +780,24 @@ function engineInit() {
 
 function exec() {
     isPaused && (isPaused = !1, loop())
+}
+
+function memoryDump() {
+    document.getElementById("uart").value = "";
+    for(i = 0; i < 10; i++){
+        var address = null;
+        try{
+            address = parseInt(document.getElementById('memoryAddress').value.substring(2), 16);
+        }catch(e){
+        }finally{
+            if(!isNumber(address))
+                address = PC;
+            byteValue = memory[address-5+i].toString(16);
+        }
+        writeUARTDataRegister(byteValue.substring(0, 1).charCodeAt(0));
+        writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
+        writeUARTDataRegister(0x20);
+    }
 }
 
 function isNumber(b) {
