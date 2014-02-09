@@ -12,6 +12,21 @@
 #define CPU_CLK 8000000
 #define CYCLES_PER_MS CPU_CLK/1000
 
+#ifdef atmega32u4
+    #define UBRRH UBRR1H
+    #define UBRRL UBRR1L
+    #define UCSRB UCSR1B
+    #define RXEN RXEN1
+    #define TXEN TXEN1
+    #define UCSRC UCSR1C
+    #define USBS USBS1
+    #define UCSZ0 UCSZ10
+
+    #define UCSRA UCSR1A
+    #define UDRE UDRE1
+    #define UDR UDR1
+#endif
+
 void delay(unsigned long milliseconds){
 #ifndef attiny4
     long i,j = 0;
@@ -31,25 +46,25 @@ void delay(unsigned long milliseconds){
 
 void serial_init()
 {
-#ifdef atmega32u4
+#ifndef attiny4
     /* Set baud rate */
-    UBRR1H = (unsigned char)(BAUD>>8);
-    UBRR1L = (unsigned char)BAUD;
+    UBRRH = (unsigned char)(BAUD>>8);
+    UBRRL = (unsigned char)BAUD;
     /* Enable receiver and transmitter */
-    UCSR1B = (1<<RXEN1)|(1<<TXEN1);
+    UCSRB = (1<<RXEN)|(1<<TXEN);
     /* Set frame format: 8data, 2stop bit */
-    UCSR1C = (1<<USBS1)|(3<<UCSZ10);
+    UCSRC = (1<<USBS)|(3<<UCSZ0);
 #endif
 }
 
 void write(unsigned char data)
 {
-#ifdef atmega32u4
+#ifndef attiny4
     /* Wait for empty transmit buffer */
-    while ( !( UCSR1A & (1<<UDRE1)) )
+    while ( !( UCSRA & (1<<UDRE)) )
         ;
     /* Put data into buffer, sends the data */
-    UDR1 = data;
+    UDR = data;
 #endif
 }
 
