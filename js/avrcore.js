@@ -792,8 +792,10 @@ function memoryDump() {
             address = parseInt(document.getElementById('memoryAddress').value.substring(2), 16);
         }catch(e){
         }finally{
-            if(!isNumber(address))
+            if(!isNumber(address)){
+                document.getElementById('memoryAddress').value = "0x"+PC.toString(16);
                 address = PC;
+            }
             byteValue = readMemory(address-5+i).toString(16);
         }
         if(byteValue.length == 1)
