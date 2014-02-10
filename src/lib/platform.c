@@ -1,16 +1,13 @@
+#include <avr/io.h>
+#include <platform.h>
+
 #ifndef attiny4
     #include <avr/boot.h>
 #endif
-#include <avr/io.h>
-#include <platform.h>
 
 #ifdef atmega8
     #define SIGRD 5
 #endif
-
-#define BAUD 9600
-#define CPU_CLK 8000000
-#define CYCLES_PER_MS CPU_CLK/1000
 
 #ifdef atmega32u4
     #define UBRRH UBRR1H
@@ -29,6 +26,10 @@
     #define UDR _SFR_MEM8(0x41FF)
 #endif
 
+#define BAUD 9600
+#define CPU_CLK 8000000
+#define CYCLES_PER_MS CPU_CLK/1000
+
 void delay(unsigned long milliseconds){
     long i,j = 0;
     for(i; i < milliseconds; i++){
@@ -38,7 +39,18 @@ void delay(unsigned long milliseconds){
     }
 }
 
-void serial_init()
+void platformBasedDelay(unsigned long milliseconds) {
+#ifndef attiny4
+  if(boot_signature_byte_get(0) == 0xBF)
+#else
+  if(*((char*)0x3FC0) == 0xBF)
+#endif
+    delay(milliseconds >> 8);
+  else
+    delay(milliseconds);
+}
+
+void platformBasedSerialBegin()
 {
 #ifndef attiny4
     /* Set baud rate */
@@ -51,7 +63,7 @@ void serial_init()
 #endif
 }
 
-void write(unsigned char data)
+void platformBasedSerialWrite(unsigned char data)
 {
 #ifndef attiny4
     /* Wait for empty transmit buffer */
@@ -60,15 +72,4 @@ void write(unsigned char data)
 #endif
     /* Put data into buffer, sends the data */
     UDR = data;
-}
-
-void platformBasedDelay(unsigned long milliseconds) {
-#ifndef attiny4
-  if(boot_signature_byte_get(0) == 0xBF)
-#else
-  if(*((char*)0x3FC0) == 0xBF)
-#endif
-    delay(milliseconds >> 8);
-  else
-    delay(milliseconds);
 }

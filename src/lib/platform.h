@@ -1,2 +1,3 @@
 void platformBasedDelay(unsigned long milliseconds);
-void write(unsigned char data);
+void platformBasedSerialBegin();
+void platformBasedSerialWrite(unsigned char data);
