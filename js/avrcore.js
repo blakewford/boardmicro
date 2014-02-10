@@ -16,6 +16,8 @@
  along with jAVRscript; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 var SP = 95,
+    SPH = 0x3E,
+    SPL = 0x3D,
     r = Array(32),
     calculatedOffset = 0,
     SREG, C = 0,
@@ -113,7 +115,7 @@ function writeMemory(b, a) {
 }
 
 function readMemory(b) {
-    return b === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : memory[b]
+    return b === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : b === SPH ? SP >> 8 : b === SPL ? SP & 0xFF: memory[b]
 }
 
 function loadMemory(b) {
@@ -792,10 +794,13 @@ function memoryDump() {
         }finally{
             if(!isNumber(address))
                 address = PC;
-            byteValue = memory[address-5+i].toString(16);
+            byteValue = readMemory(address-5+i).toString(16);
         }
+        if(byteValue.length == 1)
+            writeUARTDataRegister(0x30);
         writeUARTDataRegister(byteValue.substring(0, 1).charCodeAt(0));
-        writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
+        if(byteValue.length > 1)
+            writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
         writeUARTDataRegister(0x20);
     }
 }

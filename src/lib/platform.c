@@ -30,20 +30,12 @@
 #endif
 
 void delay(unsigned long milliseconds){
-#ifndef attiny4
     long i,j = 0;
     for(i; i < milliseconds; i++){
         for(j; j < CYCLES_PER_MS; j++){
             asm volatile ("nop");
         }
     }
-#else
-    milliseconds*=CYCLES_PER_MS;
-    while(milliseconds > 0){
-        asm volatile ("nop");
-        milliseconds--;
-    }
-#endif
 }
 
 void serial_init()
