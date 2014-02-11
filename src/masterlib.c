@@ -6,7 +6,7 @@ char test = 0x20;
 int
 main ()
 {
-    platformBasedSerialBegin(test++);
+    platformBasedSerialBegin();
 loop:
     PORTB = 0xFF;
     platformBasedDelay(1000);
