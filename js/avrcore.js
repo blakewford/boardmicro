@@ -39,10 +39,10 @@ var SP = 95,
     hasDeviceSignature = !1,
     simulationManufacturerID = 0xBF,
     uartBufferLength = 32,
-    udr, ucsr, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
+    udr, ucsra, ucsrb, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
 
 function initCore() {
-    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, udr = 0x41FF, ucsr = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, udr = 44, ucsr = 43, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, udr = 206, ucsr = 200, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
+    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, udr = 0x41FF, ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, udr = 44, ucsra = 43, ucsrb = 44, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, udr = 206, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
@@ -51,7 +51,7 @@ function initCore() {
     jumpTableAddress = usbVectorBase + 64;
     mainAddress = usbVectorBase + 72
     for (a = 0; a < memory.length; a++) writeMemory(a, 0);
-    memory[ucsr] = 0x20;
+    memory[ucsra] = 0x20;
     if("attiny4" === target){
         memory[0x3FC0] = simulationManufacturerID;
         memory[0x3FC1] = 0x8F;
@@ -77,6 +77,12 @@ function writeUARTDataRegister(b) {
         uart.value += String.fromCharCode(b);
     }catch(e){}
     memory[udr] = b;
+}
+
+function callUARTInterrupt(){
+   writeMemory(SP--, PC >> 8);
+   writeMemory(SP--, PC & 0xFF);
+   PC = 0x68+flashStart;
 }
 
 function writeSpecificPort(b) {
@@ -112,6 +118,7 @@ function writeMemory(b, a) {
     b == pllCsr && writeClockRegister(a);
     b == spmCr && writeControlRegister(a);
     b == udr && writeUARTDataRegister(a);
+    b == ucsra && (a & 0x40) && callUARTInterrupt();
 }
 
 function readMemory(b) {
@@ -512,6 +519,9 @@ function fetch(b, a) {
             writeMemory(SP--, PC + 2 >> 8);
             PC = flashStart + 2 * (parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16))
         }
+        else if (24 === (a & 255) && 149 === b){
+            PC = readMemory(++SP) | (readMemory(++SP) << 8);
+        };
         break;
     case 150:
         H = 0;
