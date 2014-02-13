@@ -271,7 +271,7 @@ main (void)
 
   asm ("sbi 0x0B, 0x1;");
   asm ("in r16, 0x0B;");
-  asm ("cpi r16, 0x2;");
+  asm ("cpi r16, 0x22;");
   asm ("breq test1E_pass;");
   asm ("rjmp fail;");
   asm ("test1E_pass:\n");
@@ -279,7 +279,7 @@ main (void)
 
   asm ("cbi 0x0B, 0x1;");
   asm ("in r16, 0x0B;");
-  asm ("cpi r16, 0x0;");
+  asm ("cpi r16, 0x20;");
   asm ("breq test1F_pass;");
   asm ("rjmp fail;");
   asm ("test1F_pass:\n");
