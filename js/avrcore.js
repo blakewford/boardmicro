@@ -16,8 +16,8 @@
  along with jAVRscript; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 var SP = 95,
-    SPH = 0x3E,
-    SPL = 0x3D,
+    SPH = 62,
+    SPL = 61,
     r = Array(32),
     calculatedOffset = 0,
     SREG, C = 0,
@@ -37,270 +37,252 @@ var SP = 95,
     isPaused = !0,
     forceBreak = !1,
     hasDeviceSignature = !1,
-    simulationManufacturerID = 0xBF,
+    simulationManufacturerID = 191,
     uartBufferLength = 32,
     udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
 
 function initCore() {
-    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, udr = 0x41FF, udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, udr = 44, udri = 0x18, ucsra = 43, ucsrb = 42, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, udr = 206, udri = 0x68, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
+    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, udr = 16895, udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, udr = 44, udri = 24, ucsra = 43, ucsrb = 42, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
     usbVectorBase = vectorBase + 430;
     signatureOffset = flashStart + 176;
     jumpTableAddress = usbVectorBase + 64;
-    mainAddress = usbVectorBase + 72
+    mainAddress = usbVectorBase + 72;
     for (a = 0; a < memory.length; a++) writeMemory(a, 0);
-    memory[ucsra] = 0x20;
-    if("attiny4" === target){
-        memory[0x3FC0] = simulationManufacturerID;
-        memory[0x3FC1] = 0x8F;
-        memory[0x3FC2] = 0x0A;
-    }
+    memory[ucsra] = 32;
+    "attiny4" === target && (memory[16320] = simulationManufacturerID, memory[16321] = 143, memory[16322] = 10)
 }
 
-function writeClockRegister(b) {
-    memory[pllCsr] = 0 < (b & 2) ? memory[pllCsr] | 1 : memory[pllCsr] & 254
+function writeClockRegister(c) {
+    memory[pllCsr] = 0 < (c & 2) ? memory[pllCsr] | 1 : memory[pllCsr] & 254
+}
+function writeControlRegister(c) {
+    33 === c && writeMemory((r[31] << 8 | r[30]) + flashStart, simulationManufacturerID.toString(16));
+    memory[spmCr] = c
+}
+function writeUARTDataRegister(c) {
+    try {
+        var b = document.getElementById("uart");
+        b.value.length == uartBufferLength - 1 && (b.value = "");
+        b.value += String.fromCharCode(c)
+    } catch (e) {}
+    memory[udr] = c
 }
 
-function writeControlRegister(b) {
-    if(b === 0x21)
-      writeMemory((r[31] << 8 | r[30])+flashStart, simulationManufacturerID.toString(16));
-    memory[spmCr] = b;
+function callUARTInterrupt() {
+    writeMemory(SP--, PC >> 8);
+    writeMemory(SP--, PC & 255);
+    PC = udri + flashStart
 }
 
-function writeUARTDataRegister(b) {
-    try{
-        var uart = document.getElementById("uart");
-        if(uart.value.length == uartBufferLength-1)
-            uart.value = "";
-        uart.value += String.fromCharCode(b);
-    }catch(e){}
-    memory[udr] = b;
-}
-
-function callUARTInterrupt(){
-   writeMemory(SP--, PC >> 8);
-   writeMemory(SP--, PC & 0xFF);
-   PC = udri+flashStart;
-}
-
-function writeSpecificPort(b) {
-    var a, d = 8 * b;
-    switch (b) {
+function writeSpecificPort(c) {
+    var b, e = 8 * c;
+    switch (c) {
     case 0:
-        a = dataQueueB;
+        b = dataQueueB;
         break;
     case 1:
-        a = dataQueueC;
+        b = dataQueueC;
         break;
     case 2:
-        a = dataQueueD;
+        b = dataQueueD;
         break;
     case 3:
-        a = dataQueueE;
+        b = dataQueueE;
         break;
     case 4:
-        a = dataQueueF
+        b = dataQueueF
     }
-    for (i = 0; i < bitsPerPort; i++) b = "pin" + parseInt(i + d), 0 < document.getElementById(b).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(b, "#FF0000");
-    a = a.shift();
-    for (i = 0; i < bitsPerPort; i++) parseInt(a) & 1 << i && setPin("pin" + parseInt(i + d), "#00FF00")
+    for (i = 0; i < bitsPerPort; i++) c = "pin" + parseInt(i + e), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
+    b = b.shift();
+    for (i = 0; i < bitsPerPort; i++) parseInt(b) & 1 << i && setPin("pin" + parseInt(i + e), "#00FF00")
 }
 
-function writeMemory(b, a) {
-    memory[b] = a;
-    b == portB && dataQueueB.push(a);
-    b == portC && dataQueueC.push(a);
-    b == portD && dataQueueD.push(a);
-    b == portE && dataQueueE.push(a);
-    b == portF && dataQueueF.push(a);
-    b == pllCsr && writeClockRegister(a);
-    b == spmCr && writeControlRegister(a);
-    b == udr && writeUARTDataRegister(a);
-    b == ucsra && (a & 0x40) && callUARTInterrupt();
+function writeMemory(c, b) {
+    memory[c] = b;
+    c == portB && dataQueueB.push(b);
+    c == portC && dataQueueC.push(b);
+    c == portD && dataQueueD.push(b);
+    c == portE && dataQueueE.push(b);
+    c == portF && dataQueueF.push(b);
+    c == pllCsr && writeClockRegister(b);
+    c == spmCr && writeControlRegister(b);
+    c == udr && writeUARTDataRegister(b);
+    c == ucsra && b & 64 && callUARTInterrupt()
+}
+function readMemory(c) {
+    return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : memory[c]
 }
 
-function readMemory(b) {
-    return b === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : b === SPH ? SP >> 8 : b === SPL ? SP & 0xFF: memory[b]
-}
-
-function loadMemory(b) {
+function loadMemory(c) {
     initCore();
-    b = b.split(/["\n"]/);
-    for (var a = 0; b[a];) {
-        var d = b[a].substring(1),
-            f = parseInt(d.substring(2, 6), 16),
-            c = 0;
-        for (j = 4; j < parseInt(d.substring(0, 2), 16) + 4; j += 2) {
-            var e = 2 * j,
-                e = d.substring(e, e + 4);
-            writeMemory(flashStart + f + c, e.substring(0, 2));
-            writeMemory(flashStart + f + c + 1, e.substring(2));
-            c += 2
+    c = c.split(/["\n"]/);
+    for (var b = 0; c[b];) {
+        var e = c[b].substring(1),
+            g = parseInt(e.substring(2, 6), 16),
+            d = 0;
+        for (j = 4; j < parseInt(e.substring(0, 2), 16) + 4; j += 2) {
+            var f = 2 * j,
+                f = e.substring(f, f + 4);
+            writeMemory(flashStart + g + d, f.substring(0, 2));
+            writeMemory(flashStart + g + d + 1, f.substring(2));
+            d += 2
         }
-        a++
+        b++
     }
 }
-function setPreEvaluationFlags(b, a) {
-    H = 15 < b + a ? 1 : 0
+function setPreEvaluationFlags(c, b) {
+    H = 15 < c + b ? 1 : 0
 }
-
-function setPostEvaluationFlags(b) {
-    255 < b ? (C = 1, b &= 255) : C = 0;
-    Z = 0 === b ? 1 : 0;
-    N = 128 === (128 & b) ? 1 : 0;
-    V = 127 < b ? 1 : 0;
+function setPostEvaluationFlags(c) {
+    255 < c ? (C = 1, c &= 255) : C = 0;
+    Z = 0 === c ? 1 : 0;
+    N = 128 === (128 & c) ? 1 : 0;
+    V = 127 < c ? 1 : 0;
     S = N ^ V
 }
-function getBreakDistance(b, a) {
-    return (b & 3) << 5 | (a & 240) >> 3 | (a & 8) >> 3
+
+function getBreakDistance(c, b) {
+    return (c & 3) << 5 | (b & 240) >> 3 | (b & 8) >> 3
 }
-function getRegister(b, a) {
-    return ioRegStart + ((a & 248) >> 3)
+function getRegister(c, b) {
+    return ioRegStart + ((b & 248) >> 3)
 }
-function getRegisterValue(b, a) {
-    return a & 7
+function getRegisterValue(c, b) {
+    return b & 7
 }
-function getIOValue(b, a) {
-    return ioRegStart + ((b & 6) >> 1 << 4 | a & 15)
+function getIOValue(c, b) {
+    return ioRegStart + ((c & 6) >> 1 << 4 | b & 15)
 }
-function getJumpConstant(b, a) {
-    return (b & 15) << 8 | a
+function getJumpConstant(c, b) {
+    return (c & 15) << 8 | b
 }
-function getBigConstant(b, a) {
-    return (b & 15) << 4 | a & 15
+function getBigConstant(c, b) {
+    return (c & 15) << 4 | b & 15
+}
+function getSmallDestinationRegister(c, b) {
+    return ((b & 240) >> 4) + 16
+}
+function getSmallSourceRegister(c, b) {
+    return (b & 15) + 16
+}
+function getConstant(c, b) {
+    return b & 192 | b & 15
 }
 
-function getSmallDestinationRegister(b, a) {
-    return ((a & 240) >> 4) + 16
+function getUpperPair(c, b) {
+    return 2 * ((b & 48) >> 4) + 24
+}
+function getDisplacement(c, b) {
+    return (c & 32) >> 5 << 4 | (c & 12) >> 2 << 3 | b & 7
 }
 
-function getSmallSourceRegister(b, a) {
-    return (a & 15) + 16
-}
-
-function getConstant(b, a) {
-    return a & 192 | a & 15
-}
-function getUpperPair(b, a) {
-    return 2 * ((a & 48) >> 4) + 24
-}
-
-function getDisplacement(b, a){
-   return (((b & 0x20) >> 5) << 4) | (((b & 0x0C) >> 2) << 3) | (a & 7);
-}
-
-function fetch(b, a) {
-    var d = 16 * (b & 1) + ((a & 240) >> 4),
-        f = 16 * ((b & 2) >> 1) + (a & 15);
-    switch (b) {
+function fetch(c, b) {
+    var e = 16 * (c & 1) + ((b & 240) >> 4),
+        g = 16 * ((c & 2) >> 1) + (b & 15);
+    switch (c) {
     case 0:
         break;
     case 1:
-        var c = 2 * ((a & 240) >> 4),
-            e = 2 * (a & 15);
-        r[c] = r[e];
-        r[c + 1] = r[e + 1];
+        var d = 2 * ((b & 240) >> 4),
+            f = 2 * (b & 15);
+        r[d] = r[f];
+        r[d + 1] = r[f + 1];
         break;
     case 2:
     case 3:
-        var dstReg = getSmallDestinationRegister(b, a);
-        var srcReg = getSmallSourceRegister(b, a);
-        var floatingPoint = false;
-        if(b === 3){
-            floatingPoint = ((dstReg >= 24) || (srcReg >= 24));
-            dstReg &= 23;
-            srcReg &= 23;
-        }
-        var result = (r[dstReg]*r[srcReg]);
-        if(floatingPoint){
-            result = result >> 1;
-        }
-        r[0] = result & 255;
-        r[1] = (result & 65280) >> 8;
+        var f = getSmallDestinationRegister(c, b),
+            h = getSmallSourceRegister(c, b),
+            d = !1;
+        3 === c && (d = 24 <= f || 24 <= h, f &= 23, h &= 23);
+        f = r[f] * r[h];
+        d && (f >>= 1);
+        r[0] = f & 255;
+        r[1] = (f & 65280) >> 8;
         break;
     case 4:
     case 5:
     case 6:
     case 7:
         H = 0;
-        c = Z;
-        e = r[d] - r[f] + C;
-        setPostEvaluationFlags(e);
-        Z = 0 === e ? c : 0;
+        d = Z;
+        f = r[e] - r[g] + C;
+        setPostEvaluationFlags(f);
+        Z = 0 === f ? d : 0;
         break;
     case 8:
     case 9:
     case 10:
     case 11:
-        setPreEvaluationFlags(r[d], r[f]);
-        r[d] = r[d] - r[f] - C;
-        setPostEvaluationFlags(r[d]);
+        setPreEvaluationFlags(r[e], r[g]);
+        r[e] = r[e] - r[g] - C;
+        setPostEvaluationFlags(r[e]);
         break;
     case 12:
     case 13:
     case 14:
     case 15:
-        setPreEvaluationFlags(r[d], r[f]);
-        r[d] += r[f];
-        setPostEvaluationFlags(r[d]);
+        setPreEvaluationFlags(r[e], r[g]);
+        r[e] += r[g];
+        setPostEvaluationFlags(r[e]);
         break;
     case 16:
     case 17:
     case 18:
     case 19:
-        r[d] === r[f] && (PC += 2, c = parseInt(memory[PC - 2], 16), e = parseInt(memory[PC - 1], 16), 12 <= c && 148 == e | 149 == e && (PC += 2), 16 <= c | 0 == c && 144 == e | 145 == e && (PC += 2), 16 <= c | 0 == c && 146 == e | 147 == e && (PC += 2));
+        r[e] === r[g] && (PC += 2, d = parseInt(memory[PC - 2], 16), f = parseInt(memory[PC - 1], 16), 12 <= d && 148 == f | 149 == f && (PC += 2), 16 <= d | 0 == d && 144 == f | 145 == f && (PC += 2), 16 <= d | 0 == d && 146 == f | 147 == f && (PC += 2));
         break;
     case 20:
     case 21:
     case 22:
     case 23:
-        setPreEvaluationFlags(r[d], r[f]);
-        setPostEvaluationFlags(r[d] - r[f]);
+        setPreEvaluationFlags(r[e], r[g]);
+        setPostEvaluationFlags(r[e] - r[g]);
         break;
     case 24:
     case 25:
     case 26:
     case 27:
-        setPreEvaluationFlags(r[d], r[f]);
-        r[d] -= r[f];
-        setPostEvaluationFlags(r[d]);
+        setPreEvaluationFlags(r[e], r[g]);
+        r[e] -= r[g];
+        setPostEvaluationFlags(r[e]);
         break;
     case 28:
     case 29:
     case 30:
     case 31:
-        setPreEvaluationFlags(r[d], r[f]);
-        r[d] = r[d] + r[f] + C;
-        setPostEvaluationFlags(r[d]);
+        setPreEvaluationFlags(r[e], r[g]);
+        r[e] = r[e] + r[g] + C;
+        setPostEvaluationFlags(r[e]);
         break;
     case 32:
     case 33:
     case 34:
     case 35:
         H = 0;
-        r[d] &= r[f];
-        setPostEvaluationFlags(r[d]);
+        r[e] &= r[g];
+        setPostEvaluationFlags(r[e]);
         C = 0;
         break;
     case 36:
     case 37:
     case 38:
     case 39:
-        r[d] ^= r[f];
+        r[e] ^= r[g];
         break;
     case 40:
     case 41:
     case 42:
     case 43:
-        r[d] |= r[f];
+        r[e] |= r[g];
         break;
     case 44:
     case 45:
     case 46:
     case 47:
-        r[d] = r[f];
+        r[e] = r[g];
         break;
     case 48:
     case 49:
@@ -319,7 +301,7 @@ function fetch(b, a) {
     case 62:
     case 63:
         H = 0;
-        setPostEvaluationFlags(r[getSmallDestinationRegister(b, a)] - getBigConstant(b, a));
+        setPostEvaluationFlags(r[getSmallDestinationRegister(c, b)] - getBigConstant(c, b));
         break;
     case 64:
     case 65:
@@ -337,10 +319,10 @@ function fetch(b, a) {
     case 77:
     case 78:
     case 79:
-        c = getBigConstant(b, a);
-        e = getSmallDestinationRegister(b, a);
-        for (0 < r[e] ^ 0 < c && (r[e] = r[e] - c - C); 0 > r[e];) r[e] = 256 + r[e];
-        C = Math.abs(r[e]) < c + C;
+        d = getBigConstant(c, b);
+        f = getSmallDestinationRegister(c, b);
+        for (0 < r[f] ^ 0 < d && (r[f] = r[f] - d - C); 0 > r[f];) r[f] = 256 + r[f];
+        C = Math.abs(r[f]) < d + C;
         break;
     case 80:
     case 81:
@@ -358,9 +340,9 @@ function fetch(b, a) {
     case 93:
     case 94:
     case 95:
-        e = getSmallDestinationRegister(b, a);
-        r[e] -= getBigConstant(b, a);
-        for (C = 0; 0 > r[e];) r[e] = 256 + r[e], C = 1;
+        f = getSmallDestinationRegister(c, b);
+        r[f] -= getBigConstant(c, b);
+        for (C = 0; 0 > r[f];) r[f] = 256 + r[f], C = 1;
         break;
     case 96:
     case 97:
@@ -378,8 +360,8 @@ function fetch(b, a) {
     case 109:
     case 110:
     case 111:
-        e = getSmallDestinationRegister(b, a);
-        r[e] |= getBigConstant(b, a);
+        f = getSmallDestinationRegister(c, b);
+        r[f] |= getBigConstant(c, b);
         break;
     case 112:
     case 113:
@@ -398,35 +380,35 @@ function fetch(b, a) {
     case 126:
     case 127:
         H = 0;
-        e = getSmallDestinationRegister(b, a);
-        r[e] &= getBigConstant(b, a);
-        setPostEvaluationFlags(r[e]);
+        f = getSmallDestinationRegister(c, b);
+        r[f] &= getBigConstant(c, b);
+        setPostEvaluationFlags(r[f]);
         C = 0;
         break;
     case 128:
     case 129:
-        if((a & 15) > 8){
-            r[d] = readMemory((r[29] << 8 | r[28])+getDisplacement(b, a));
-            break;
+        if (8 < (b & 15)) {
+            r[e] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b));
+            break
         }
-        if((a & 15) < 8 && (a & 15) > 0){
-            r[d] = readMemory((r[31] << 8 | r[30])+getDisplacement(b, a));
-            break;
+        if (8 > (b & 15) && 0 < (b & 15)) {
+            r[e] = readMemory((r[31] << 8 | r[30]) + getDisplacement(c, b));
+            break
         }
-        0 === (a & 15) ? r[d] = readMemory(r[31] << 8 | r[30]) : r[d] = readMemory(r[29] << 8 | r[28]);
+        0 === (b & 15) ? r[e] = readMemory(r[31] << 8 | r[30]) : r[e] = readMemory(r[29] << 8 | r[28]);
         break;
     case 130:
     case 131:
-        if((a & 15) > 8){
-            writeMemory((r[29] << 8 | r[28])+getDisplacement(b, a), r[d]);
-            break;
+        if (8 < (b & 15)) {
+            writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[e]);
+            break
         }
-        if((a & 15) < 8 && (a & 15) > 0){
-            writeMemory((r[31] << 8 | r[30])+getDisplacement(b, a), r[d]);
-            break;
+        if (8 > (b & 15) && 0 < (b & 15)) {
+            writeMemory((r[31] << 8 | r[30]) + getDisplacement(c, b), r[e]);
+            break
         }
-        8 === (a & 15) && writeMemory(r[29] << 8 | r[28], r[d]);
-        0 === (a & 15) && writeMemory(r[31] << 8 | r[30], r[d]);
+        8 === (b & 15) && writeMemory(r[29] << 8 | r[28], r[e]);
+        0 === (b & 15) && writeMemory(r[31] << 8 | r[30], r[e]);
         break;
     case 132:
     case 133:
@@ -434,13 +416,13 @@ function fetch(b, a) {
     case 137:
     case 140:
     case 141:
-        if((a & 15) > 8){
-            r[d] = readMemory((r[29] << 8 | r[28])+getDisplacement(b, a));
-            break;
+        if (8 < (b & 15)) {
+            r[e] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b));
+            break
         }
-        if((a & 15) < 8 && (a & 15) > 0){
-            r[d] = readMemory((r[31] << 8 | r[30])+getDisplacement(b, a));
-            break;
+        if (8 > (b & 15) && 0 < (b & 15)) {
+            r[e] = readMemory((r[31] << 8 | r[30]) + getDisplacement(c, b));
+            break
         }
         break;
     case 134:
@@ -449,122 +431,104 @@ function fetch(b, a) {
     case 139:
     case 142:
     case 143:
-        if((a & 15) > 8){
-            writeMemory((r[29] << 8 | r[28])+getDisplacement(b, a), r[d]);
-            break;
+        if (8 < (b & 15)) {
+            writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[e]);
+            break
         }
-        if((a & 15) < 8 && (a & 15) > 0){
-            writeMemory((r[31] << 8 | r[30])+getDisplacement(b, a), r[d]);
-            break;
+        if (8 > (b & 15) && 0 < (b & 15)) {
+            writeMemory((r[31] << 8 | r[30]) + getDisplacement(c, b), r[e]);
+            break
         }
         break;
     case 144:
     case 145:
-        if (15 === (a & 15)) r[d] = memory[++SP];
-        else if (4 === (a & 15) || 5 === (a & 15)) {
-            var c = r[31] << 8 | r[30],
-                g = 2 * (c >> 1) + flashStart,
-                e = parseInt(memory[g], 16),
-                g = parseInt(memory[g + 1], 16);
-            r[d] = 0 === (c & 1) ? e : g;
-            5 === (a & 15) && (r[30]++, 256 === r[30] && (r[30] = 0, r[31]++))
-        } else 1 === (a & 15) ? (r[d] = readMemory(r[31] << 8 | r[30]), r[30] += 1, 256 == r[30] && (r[30] = 0, r[31] += 1)) : 2 === (a & 15) ? (r[30] -= 1, 0 > r[30] && (r[30] = 0, r[31] -= 1), r[d] = readMemory(r[31] << 8 | r[30])) : 13 === (a & 15) ? (r[d] = readMemory(r[27] << 8 | r[26]), r[26] += 1, 256 == r[26] && (r[26] = 0, r[27] += 1)) : 14 === (a & 15) ? (r[26] -= 1, 0 > r[26] && (r[26] = 0, r[27] -= 1), r[d] = readMemory(r[27] << 8 | r[26])) : r[d] = 12 === (a & 15) ? readMemory(r[27] << 8 | r[26]) : memory[parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8];
+        15 === (b & 15) ? r[e] = memory[++SP] : 4 === (b & 15) || 5 === (b & 15) ? (d = r[31] << 8 | r[30], h = 2 * (d >> 1) + flashStart, f = parseInt(memory[h], 16), h = parseInt(memory[h + 1], 16), r[e] = 0 === (d & 1) ? f : h, 5 === (b & 15) && (r[30]++, 256 === r[30] && (r[30] = 0, r[31]++))) : 1 === (b & 15) ? (r[e] = readMemory(r[31] << 8 | r[30]), r[30] += 1, 256 == r[30] && (r[30] = 0, r[31] += 1)) : 2 === (b & 15) ? (r[30] -= 1, 0 > r[30] && (r[30] = 0, r[31] -= 1), r[e] = readMemory(r[31] << 8 | r[30])) : 13 === (b & 15) ? (r[e] = readMemory(r[27] << 8 | r[26]), r[26] += 1, 256 == r[26] && (r[26] = 0, r[27] += 1)) : 14 === (b & 15) ? (r[26] -= 1, 0 > r[26] && (r[26] = 0, r[27] -= 1), r[e] = readMemory(r[27] << 8 | r[26])) : r[e] = 12 === (b & 15) ? readMemory(r[27] << 8 | r[26]) : memory[parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8];
         break;
     case 146:
     case 147:
-        1 === (a & 15) && (writeMemory(r[31] << 8 | r[30], r[d]), r[30] += 1, 256 == r[30] && (r[30] = 0, r[31] += 1));
-        2 === (a & 15) && (r[30] -= 1, 0 > r[30] && (r[30] = 255, r[31] -= 1), writeMemory(r[31] << 8 | r[30], r[d]));
-        9 === (a & 15) && (writeMemory(r[29] << 8 | r[28], r[d]), r[28] += 1, 256 == r[28] && (r[28] = 0, r[29] += 1));
-        10 === (a & 15) && (r[28] -= 1, 0 > r[28] && (r[28] = 255, r[29] -= 1), writeMemory(r[29] << 8 | r[28], r[d]));
-        14 === (a & 15) && (r[26] -= 1, 0 > r[26] && (r[26] = 255, r[27] -= 1), writeMemory(r[27] << 8 | r[26], r[d]));
-        15 === (a & 15) ? (writeMemory(SP, r[d]), SP--) : 0 === (a & 15) ? writeMemory(parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8, r[d]) : 12 === (a & 15) ? (c = parseInt(r[26]), e = parseInt(r[27]) << 8, writeMemory(e | c, r[d])) : 13 === (a & 15) && (c = parseInt(r[26]), e = parseInt(r[27]) << 8, writeMemory(e | c, r[d]), r[26]++, 256 === r[26] && (r[26] = 0, r[27]++));
+        1 === (b & 15) && (writeMemory(r[31] << 8 | r[30], r[e]), r[30] += 1, 256 == r[30] && (r[30] = 0, r[31] += 1));
+        2 === (b & 15) && (r[30] -= 1, 0 > r[30] && (r[30] = 255, r[31] -= 1), writeMemory(r[31] << 8 | r[30], r[e]));
+        9 === (b & 15) && (writeMemory(r[29] << 8 | r[28], r[e]), r[28] += 1, 256 == r[28] && (r[28] = 0, r[29] += 1));
+        10 === (b & 15) && (r[28] -= 1, 0 > r[28] && (r[28] = 255, r[29] -= 1), writeMemory(r[29] << 8 | r[28], r[e]));
+        14 === (b & 15) && (r[26] -= 1, 0 > r[26] && (r[26] = 255, r[27] -= 1), writeMemory(r[27] << 8 | r[26], r[e]));
+        15 === (b & 15) ? (writeMemory(SP, r[e]), SP--) : 0 === (b & 15) ? writeMemory(parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8, r[e]) : 12 === (b & 15) ? (d = parseInt(r[26]), f = parseInt(r[27]) << 8, writeMemory(f | d, r[e])) : 13 === (b & 15) && (d = parseInt(r[26]), f = parseInt(r[27]) << 8, writeMemory(f | d, r[e]), r[26]++, 256 === r[26] && (r[26] = 0, r[27]++));
         break;
     case 148:
     case 149:
-        0 === (a & 15) && (r[d] = 255 - r[d]);
-        if (7 === (a & 15)) c = r[d] & 1, r[d] >>= 1, C && (r[d] |= 128), C = c;
-        else if (2 === (a & 255)) r[d] = r[d] << 4 | r[d] >> 4;
-        else if (3 === (a & 255)) r[d] += 1;
-        else if (5 === (a & 255)) c = r[d], g = c & 1, c = c >> 1 | c & 128, setPostEvaluationFlags(c), r[d] = c, C = g, V = N ^ C;
-        else if (6 === (a & 255)) C = r[d] & 1, r[d] >>= 1;
-        else if (8 === (a & 255) && 148 === b) C = 1;
-        else if (9 === (a & 255) && 148 === b) PC = 2 * (r[31] << 8 | r[30]) + flashStart;
-        else if (24 === (a & 255) && 148 === b) Z = 1;
-        else if (40 === (a & 255) && 148 === b) N = 1;
-        else if (56 === (a & 255) && 148 === b) V = 1;
-        else if (72 === (a & 255) && 148 === b) S = 1;
-        else if (88 === (a & 255) && 148 === b) H = 1;
-        else if (104 === (a & 255) && 148 === b) T = 1;
-        else if (120 === (a & 255) && 148 === b) I = 1;
-        else if (136 === (a & 255) && 148 === b) C = 0;
-        else if (152 === (a & 255) && 148 === b) Z = 0;
-        else if (168 === (a & 255) && 148 === b) N = 0;
-        else if (184 === (a & 255) && 148 === b) V = 0;
-        else if (200 === (a & 255) && 148 === b) S = 0;
-        else if (216 === (a & 255) && 148 === b) H = 0;
-        else if (232 === (a & 255) && 148 === b) T = 0;
-        else if (248 === (a & 255) && 148 === b) I = 0;
-        else if (8 === (a & 255) && 149 === b) e = memory[++SP], PC = e << 8 | memory[++SP];
-        else if (136 === (a & 255) && 149 === b) break;
-        else if (168 === (a & 255) && 149 === b) break;
-        else if (9 === (a & 255)) writeMemory(SP--, PC & 255), writeMemory(SP--, PC >> 8), PC = 2 * (r[31] << 8 | r[30]) + flashStart;
-        else if (10 === (a & 255)) r[d] -= 1;
-        else if (12 === (a & 15) || 13 === (a & 15)) PC = flashStart + 2 * ((b & 1) << 20 | (a & 240) << 17 | (a & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16));
-        else if (14 === (a & 15) || 15 === (a & 15)) {
-            writeMemory(SP--, PC + 2 & 255);
-            writeMemory(SP--, PC + 2 >> 8);
-            PC = flashStart + 2 * (parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16))
-        }
-        else if (24 === (a & 255) && 149 === b){
-            PC = readMemory(++SP) | (readMemory(++SP) << 8);
-        };
+        0 === (b & 15) && (r[e] = 255 - r[e]);
+        if (7 === (b & 15)) d = r[e] & 1, r[e] >>= 1, C && (r[e] |= 128), C = d;
+        else if (2 === (b & 255)) r[e] = r[e] << 4 | r[e] >> 4;
+        else if (3 === (b & 255)) r[e] += 1;
+        else if (5 === (b & 255)) d = r[e], h = d & 1, d = d >> 1 | d & 128, setPostEvaluationFlags(d), r[e] = d, C = h, V = N ^ C;
+        else if (6 === (b & 255)) C = r[e] & 1, r[e] >>= 1;
+        else if (8 === (b & 255) && 148 === c) C = 1;
+        else if (9 === (b & 255) && 148 === c) PC = 2 * (r[31] << 8 | r[30]) + flashStart;
+        else if (24 === (b & 255) && 148 === c) Z = 1;
+        else if (40 === (b & 255) && 148 === c) N = 1;
+        else if (56 === (b & 255) && 148 === c) V = 1;
+        else if (72 === (b & 255) && 148 === c) S = 1;
+        else if (88 === (b & 255) && 148 === c) H = 1;
+        else if (104 === (b & 255) && 148 === c) T = 1;
+        else if (120 === (b & 255) && 148 === c) I = 1;
+        else if (136 === (b & 255) && 148 === c) C = 0;
+        else if (152 === (b & 255) && 148 === c) Z = 0;
+        else if (168 === (b & 255) && 148 === c) N = 0;
+        else if (184 === (b & 255) && 148 === c) V = 0;
+        else if (200 === (b & 255) && 148 === c) S = 0;
+        else if (216 === (b & 255) && 148 === c) H = 0;
+        else if (232 === (b & 255) && 148 === c) T = 0;
+        else if (248 === (b & 255) && 148 === c) I = 0;
+        else if (8 === (b & 255) && 149 === c) f = memory[++SP], PC = f << 8 | memory[++SP];
+        else if (136 === (b & 255) && 149 === c) break;
+        else if (168 === (b & 255) && 149 === c) break;
+        else 9 === (b & 255) ? (writeMemory(SP--, PC & 255), writeMemory(SP--, PC >> 8), PC = 2 * (r[31] << 8 | r[30]) + flashStart) : 10 === (b & 255) ? r[e] -= 1 : 12 === (b & 15) || 13 === (b & 15) ? PC = flashStart + 2 * ((c & 1) << 20 | (b & 240) << 17 | (b & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16)) : 14 === (b & 15) || 15 === (b & 15) ? (writeMemory(SP--, PC + 2 & 255), writeMemory(SP--, PC + 2 >> 8), PC = flashStart + 2 * (parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16))) : 24 === (b & 255) && 149 === c && (PC = readMemory(++SP) | readMemory(++SP) << 8);
         break;
     case 150:
         H = 0;
-        c = getConstant(b, a);
-        e = getUpperPair(b, a);
-        var value = (r[e+1] << 8 | r[e]);
-        value += c;
-        r[e] = value & 255;
-        r[e+1] = value >> 8;
-        setPostEvaluationFlags(value > 0xFFFF);
+        d = getConstant(c, b);
+        f = getUpperPair(c, b);
+        h = r[f + 1] << 8 | r[f];
+        h += d;
+        r[f] = h & 255;
+        r[f + 1] = h >> 8;
+        setPostEvaluationFlags(65535 < h);
         break;
     case 151:
         H = 0;
-        c = getConstant(b, a);
-        e = getUpperPair(b, a);
-        var value = (r[e+1] << 8 | r[e]);
-        value -= c;
-        r[e] = value & 255;
-        r[e+1] = value >> 8;
-        setPostEvaluationFlags(value);
+        d = getConstant(c, b);
+        f = getUpperPair(c, b);
+        h = r[f + 1] << 8 | r[f];
+        h -= d;
+        r[f] = h & 255;
+        r[f + 1] = h >> 8;
+        setPostEvaluationFlags(h);
         break;
     case 152:
-        c = getRegister(b, a);
-        e = getRegisterValue(b, a);
-        0 < (memory[c] & 1 << e) && writeMemory(c, memory[c] ^ 1 << e);
+        d = getRegister(c, b);
+        f = getRegisterValue(c, b);
+        0 < (memory[d] & 1 << f) && writeMemory(d, memory[d] ^ 1 << f);
         break;
     case 153:
-        0 == (memory[getRegister(b, a)] & 1 << getRegisterValue(b, a)) && (PC += 2), c = parseInt(memory[PC - 2], 16), e = parseInt(memory[PC - 1], 16), 12 <= c && 148 == e | 149 == e && (PC += 2), 16 <= c | 0 == c && 144 == e | 145 == e && (PC += 2), 16 <= c | 0 == c && 146 == e | 147 == e && (PC += 2);
+        0 == (memory[getRegister(c, b)] & 1 << getRegisterValue(c, b)) && (PC += 2), d = parseInt(memory[PC - 2], 16), f = parseInt(memory[PC - 1], 16), 12 <= d && 148 == f | 149 == f && (PC += 2), 16 <= d | 0 == d && 144 == f | 145 == f && (PC += 2), 16 <= d | 0 == d && 146 == f | 147 == f && (PC += 2);
     case 154:
-        c = getRegister(b, a);
-        writeMemory(c, memory[c] | 1 << getRegisterValue(b, a));
+        d = getRegister(c, b);
+        writeMemory(d, memory[d] | 1 << getRegisterValue(c, b));
         break;
     case 155:
-        0 < (memory[getRegister(b, a)] & 1 << getRegisterValue(b, a)) && (PC += 2);
-        c = parseInt(memory[PC - 2], 16);
-        e = parseInt(memory[PC - 1], 16);
-        12 <= c && 148 == e | 149 == e && (PC += 2);
-        16 <= c | 0 == c && 144 == e | 145 == e && (PC += 2);
-        16 <= c | 0 == c && 146 == e | 147 == e && (PC += 2);
+        0 < (memory[getRegister(c, b)] & 1 << getRegisterValue(c, b)) && (PC += 2);
+        d = parseInt(memory[PC - 2], 16);
+        f = parseInt(memory[PC - 1], 16);
+        12 <= d && 148 == f | 149 == f && (PC += 2);
+        16 <= d | 0 == d && 144 == f | 145 == f && (PC += 2);
+        16 <= d | 0 == d && 146 == f | 147 == f && (PC += 2);
         break;
     case 156:
     case 157:
     case 158:
     case 159:
-        var result = r[d]*r[f];
-        r[0] = result & 255;
-        r[1] = (result & 65280) >> 8;
+        f = r[e] * r[g];
+        r[0] = f & 255;
+        r[1] = (f & 65280) >> 8;
         break;
     case 160:
     case 161:
@@ -574,12 +538,8 @@ function fetch(b, a) {
     case 169:
     case 172:
     case 173:
-        if((a & 15) > 8){
-            r[d] = readMemory((r[29] << 8 | r[28])+getDisplacement(b, a));
-        }
-        if((a & 15) < 8 && (a & 15) > 0){
-            r[d] = readMemory((r[31] << 8 | r[30])+getDisplacement(b, a));
-        }
+        8 < (b & 15) && (r[e] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b)));
+        8 > (b & 15) && 0 < (b & 15) && (r[e] = readMemory((r[31] << 8 | r[30]) + getDisplacement(c, b)));
         break;
     case 162:
     case 163:
@@ -589,12 +549,8 @@ function fetch(b, a) {
     case 171:
     case 174:
     case 175:
-        if((a & 15) > 8){
-            writeMemory((r[29] << 8 | r[28])+getDisplacement(b, a), r[d]);
-        }
-        if((a & 15) < 8 && (a & 15) > 0){
-            writeMemory((r[31] << 8 | r[30])+getDisplacement(b, a), r[d]);
-        }
+        8 < (b & 15) && writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[e]);
+        8 > (b & 15) && 0 < (b & 15) && writeMemory((r[31] << 8 | r[30]) + getDisplacement(c, b), r[e]);
         break;
     case 176:
     case 177:
@@ -604,7 +560,7 @@ function fetch(b, a) {
     case 181:
     case 182:
     case 183:
-        r[d] = readMemory(getIOValue(b, a));
+        r[e] = readMemory(getIOValue(c, b));
         break;
     case 184:
     case 185:
@@ -614,7 +570,7 @@ function fetch(b, a) {
     case 189:
     case 190:
     case 191:
-        writeMemory(getIOValue(b, a), r[d]);
+        writeMemory(getIOValue(c, b), r[e]);
         break;
     case 192:
     case 193:
@@ -632,8 +588,8 @@ function fetch(b, a) {
     case 205:
     case 206:
     case 207:
-        c = getJumpConstant(b, a);
-        PC = 2048 === (c & 2048) ? PC - (4096 - 2 * (c ^ 2048)) : PC + 2 * c;
+        d = getJumpConstant(c, b);
+        PC = 2048 === (d & 2048) ? PC - (4096 - 2 * (d ^ 2048)) : PC + 2 * d;
         break;
     case 208:
     case 209:
@@ -653,8 +609,8 @@ function fetch(b, a) {
     case 223:
         writeMemory(SP--, PC & 255);
         writeMemory(SP--, PC >> 8);
-        c = getJumpConstant(b, a);
-        PC = 2048 === (c & 2048) ? PC - (4096 - 2 * (c ^ 2048)) : PC + 2 * c;
+        d = getJumpConstant(c, b);
+        PC = 2048 === (d & 2048) ? PC - (4096 - 2 * (d ^ 2048)) : PC + 2 * d;
         break;
     case 224:
     case 225:
@@ -672,101 +628,101 @@ function fetch(b, a) {
     case 237:
     case 238:
     case 239:
-        r[getSmallDestinationRegister(b, a)] = getBigConstant(b, a);
+        r[getSmallDestinationRegister(c, b)] = getBigConstant(c, b);
         break;
     case 240:
     case 241:
     case 242:
     case 243:
-        c = !1;
-        switch (a & 7) {
+        d = !1;
+        switch (b & 7) {
         case 0:
-            c = C;
+            d = C;
             break;
         case 1:
-            c = Z;
+            d = Z;
             break;
         case 3:
-            c = V;
+            d = V;
             break;
         case 5:
-            c = H;
+            d = H;
             break;
         case 6:
-            c = T
+            d = T
         }
-        c && (c = getBreakDistance(b, a), PC = 64 < c ? PC - 2 * (128 - c) : PC + 2 * c);
+        d && (d = getBreakDistance(c, b), PC = 64 < d ? PC - 2 * (128 - d) : PC + 2 * d);
         break;
     case 244:
     case 245:
     case 246:
     case 247:
-        c = !1;
-        switch (a & 7) {
+        d = !1;
+        switch (b & 7) {
         case 0:
-            c = !C;
+            d = !C;
             break;
         case 1:
-            c = !Z;
+            d = !Z;
             break;
         case 3:
-            c = !V;
+            d = !V;
             break;
         case 5:
-            c = !H;
+            d = !H;
             break;
         case 6:
-            c = !T
+            d = !T
         }
-        c && (c = getBreakDistance(b, a), PC = 64 < c ? PC - 2 * (128 - c) : PC + 2 * c);
+        d && (d = getBreakDistance(c, b), PC = 64 < d ? PC - 2 * (128 - d) : PC + 2 * d);
         break;
     case 248:
     case 249:
-        r[d] |= T << (a & 7);
+        r[e] |= T << (b & 7);
         break;
     case 250:
     case 251:
-        T = 0 < (r[d] & 1 << getRegisterValue(b, a));
+        T = 0 < (r[e] & 1 << getRegisterValue(c, b));
         break;
     case 252:
     case 253:
-        0 === (r[d] & 1 << (a & 7)) && (PC += 2);
-        c = parseInt(memory[PC - 2], 16);
-        e = parseInt(memory[PC - 1], 16);
-        12 <= c && 148 == e | 149 == e && (PC += 2);
-        16 <= c | 0 == c && 144 == e | 145 == e && (PC += 2);
-        16 <= c | 0 == c && 146 == e | 147 == e && (PC += 2);
+        0 === (r[e] & 1 << (b & 7)) && (PC += 2);
+        d = parseInt(memory[PC - 2], 16);
+        f = parseInt(memory[PC - 1], 16);
+        12 <= d && 148 == f | 149 == f && (PC += 2);
+        16 <= d | 0 == d && 144 == f | 145 == f && (PC += 2);
+        16 <= d | 0 == d && 146 == f | 147 == f && (PC += 2);
         break;
     case 254:
     case 255:
-        r[d] & 0 < 1 << (a & 7) && (PC += 2);
-        c = parseInt(memory[PC - 2], 16);
-        e = parseInt(memory[PC - 1], 16);
-        12 <= c && 148 == e | 149 == e && (PC += 2);
-        16 <= c | 0 == c && 144 == e | 145 == e && (PC += 2);
-        16 <= c | 0 == c && 146 == e | 147 == e && (PC += 2);
+        r[e] & 0 < 1 << (b & 7) && (PC += 2);
+        d = parseInt(memory[PC - 2], 16);
+        f = parseInt(memory[PC - 1], 16);
+        12 <= d && 148 == f | 149 == f && (PC += 2);
+        16 <= d | 0 == d && 144 == f | 145 == f && (PC += 2);
+        16 <= d | 0 == d && 146 == f | 147 == f && (PC += 2);
         break;
     default:
-        document.write("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + b + " " + a + "<br/>")
+        document.write("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b + "<br/>")
     }
-    r[d] &= 255;
-    r[f] &= 255
+    r[e] &= 255;
+    r[g] &= 255
 }
-function handleBreakpoint(b) {
-    alert("Breakpoint at 0x" + b)
+function handleBreakpoint(c) {
+    alert("Breakpoint at 0x" + c)
 }
-function isSoftBreakpoint(b) {
-    for (i = 0; i < softBreakpoints.length; i++) if (softBreakpoints[i] + flashStart === b) return !0;
+function isSoftBreakpoint(c) {
+    for (i = 0; i < softBreakpoints.length; i++) if (softBreakpoints[i] + flashStart === c) return !0;
     return !1
 }
 
 function loop() {
-    var b = parseInt(memory[PC], 16),
-        a = parseInt(memory[++PC], 16);
+    var c = parseInt(memory[PC], 16),
+        b = parseInt(memory[++PC], 16);
     PC++;
-    var d = 149 == a && 152 == b || isSoftBreakpoint(PC) || forceBreak;
-    d || 207 == a && 255 == b ? d && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : setTimeout(loop, 0);
-    for (fetch(a, b); 0 < dataQueueB.length;) writeSpecificPort(0);
+    var e = 149 == b && 152 == c || isSoftBreakpoint(PC) || forceBreak;
+    e || 207 == b && 255 == c ? e && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : setTimeout(loop, 0);
+    for (fetch(b, c); 0 < dataQueueB.length;) writeSpecificPort(0);
     for (; 0 < dataQueueC.length;) writeSpecificPort(1);
     for (; 0 < dataQueueD.length;) writeSpecificPort(2);
     for (; 0 < dataQueueE.length;) writeSpecificPort(3);
@@ -775,12 +731,12 @@ function loop() {
 
 function engineInit() {
     for (i = 0; i < r.length; i++) r[i] = 0;
-    var b = 0;
-    12 === parseInt(memory[flashStart], 16) && (b = flashStart + 2 * (parseInt(memory[flashStart + 3], 16) << 8 | parseInt(memory[flashStart + 2], 16)));
-    b > usbVectorBase && (calculatedOffset = b - usbVectorBase);
-    b = [];
-    for (i = signatureOffset + calculatedOffset; i < signatureOffset + calculatedOffset + 32; i += 2) b.push(String.fromCharCode(parseInt(memory[i], 16)));
-    switch (b.toString().replace(/,/g, "")) {
+    var c = 0;
+    12 === parseInt(memory[flashStart], 16) && (c = flashStart + 2 * (parseInt(memory[flashStart + 3], 16) << 8 | parseInt(memory[flashStart + 2], 16)));
+    c > usbVectorBase && (calculatedOffset = c - usbVectorBase);
+    c = [];
+    for (i = signatureOffset + calculatedOffset; i < signatureOffset + calculatedOffset + 32; i += 2) c.push(String.fromCharCode(parseInt(memory[i], 16)));
+    switch (c.toString().replace(/,/g, "")) {
     case "Arduino Micro   ":
         hasDeviceSignature = !0
     }
@@ -792,52 +748,41 @@ function exec() {
 
 function memoryDump() {
     document.getElementById("uart").value = "";
-    for(i = 0; i < 10; i++){
-        var address = null;
-        try{
-            address = parseInt(document.getElementById('memoryAddress').value.substring(2), 16);
-        }catch(e){
-        }finally{
-            if(!isNumber(address)){
-                document.getElementById('memoryAddress').value = "0x"+PC.toString(16);
-                address = PC;
-            }
-            byteValue = readMemory(address-5+i).toString(16);
+    for (i = 0; 10 > i; i++) {
+        var c = null;
+        try {
+            c = parseInt(document.getElementById("memoryAddress").value.substring(2), 16)
+        } catch (b) {} finally {
+            isNumber(c) || (document.getElementById("memoryAddress").value = "0x" + PC.toString(16), c = PC), byteValue = readMemory(c - 5 + i).toString(16)
         }
-        if(byteValue.length == 1)
-            writeUARTDataRegister(0x30);
+        1 == byteValue.length && writeUARTDataRegister(48);
         writeUARTDataRegister(byteValue.substring(0, 1).charCodeAt(0));
-        if(byteValue.length > 1)
-            writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
-        writeUARTDataRegister(0x20);
+        1 < byteValue.length && writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
+        writeUARTDataRegister(32)
     }
 }
-
-function isNumber(b) {
-    return !isNaN(parseInt(b, 16))
+function isNumber(c) {
+    return !isNaN(parseInt(c, 16))
 }
-
-function setPin(b, a) {
-    var d = document.getElementById(b).getContext("2d");
-    d.fillStyle = a;
-    d.fillRect(0, 0, 10, 10)
+function setPin(c, b) {
+    var e = document.getElementById(c).getContext("2d");
+    e.fillStyle = b;
+    e.fillRect(0, 0, 10, 10)
 }
-
-function generateRegisterHtml(b) {
-    return '<textarea id="register' + b + '" rows="1" cols="4">0x00</textarea>'
+function generateRegisterHtml(c) {
+    return '<textarea id="register' + c + '" rows="1" cols="4">0x00</textarea>'
 }
-
 function generateFillerHtml() {
-    return '<div style=\"display: table-cell;\"><canvas width=\"10\" height=\"10\"/></div>';
+    return '<div style="display: table-cell;"><canvas width="10" height="10"/></div>'
 }
 
-function generatePortHtml(b, a) {
-    var d = 8 * b,
-        f = '<div style="display: table-row">';
+function generatePortHtml(c, b) {
+    var e = 8 * c,
+        g = '<div style="display: table-row">';
     for (i = 0; 8 > i; i++) {
-        var c = parseInt(d + i),
-            f = f + ('<div style="display: table-cell;">  <canvas id="pin' + c + '" width="10" height="10"/> </div>');
-        0 < (1 << i & a) && (f += '<script>setPin("pin' + c + '", "#FF0000");\x3c/script>')
+        var d = parseInt(e + i),
+            g = g + ('<div style="display: table-cell;">  <canvas id="pin' + d + '" width="10" height="10"/> </div>');
+        0 < (1 << i & b) && (g += '<script>setPin("pin' + d + '", "#FF0000");\x3c/script>')
     }
-    return f + "</div>"
+    return g + "</div>"
 };

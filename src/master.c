@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with jAVRscript; see the file LICENSE.  If not see
 <http://www.gnu.org/licenses/>.  */
 #include <avr/io.h>
+#include "platform.h"
 
 char data = 0xFF;
 short address;
@@ -544,6 +545,7 @@ main (void)
   PORTF = 0xFF;
 #endif
 #endif
+  platformBasedSerialWrite(0x50);
 #ifndef atmega8
   asm ("BREAK;");
 #else
@@ -559,6 +561,7 @@ main (void)
   PORTF = 0x00;
 #endif
 #endif
+  platformBasedSerialWrite(0x46);
 #ifndef atmega8
   asm ("BREAK;");
 #else
