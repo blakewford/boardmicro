@@ -39,10 +39,10 @@ var SP = 95,
     hasDeviceSignature = !1,
     simulationManufacturerID = 0xBF,
     uartBufferLength = 32,
-    udr, ucsra, ucsrb, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
+    udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
 
 function initCore() {
-    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, udr = 0x41FF, ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, udr = 44, ucsra = 43, ucsrb = 44, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, udr = 206, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
+    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, udr = 0x41FF, udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, udr = 44, udri = 0x18, ucsra = 43, ucsrb = 44, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, udr = 206, udri = 0x68, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8) : alert("Failed! Unknown target");
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
@@ -82,7 +82,7 @@ function writeUARTDataRegister(b) {
 function callUARTInterrupt(){
    writeMemory(SP--, PC >> 8);
    writeMemory(SP--, PC & 0xFF);
-   PC = 0x68+flashStart;
+   PC = udri+flashStart;
 }
 
 function writeSpecificPort(b) {

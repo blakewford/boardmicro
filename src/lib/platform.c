@@ -29,6 +29,7 @@
 #define BAUD 9600
 #define CPU_CLK 8000000
 #define CYCLES_PER_MS CPU_CLK/1000
+#define SIMULATED_PLATFORM_SIGNATURE 0xBF
 
 void delay(unsigned long milliseconds){
     long i,j = 0;
@@ -39,12 +40,16 @@ void delay(unsigned long milliseconds){
     }
 }
 
-void platformBasedDelay(unsigned long milliseconds) {
+char getPlatformType(){
 #ifndef attiny4
-  if(boot_signature_byte_get(0) == 0xBF)
+  return boot_signature_byte_get(0);
 #else
-  if(*((char*)0x3FC0) == 0xBF)
+  return *((char*)0x3FC0);
 #endif
+}
+
+void platformBasedDelay(unsigned long milliseconds) {
+  if(getPlatformType() == SIMULATED_PLATFORM_SIGNATURE)
     delay(milliseconds >> 8);
   else
     delay(milliseconds);
