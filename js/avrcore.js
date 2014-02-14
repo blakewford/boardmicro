@@ -52,16 +52,19 @@ function initCore() {
     mainAddress = usbVectorBase + 72;
     for (a = 0; a < memory.length; a++) writeMemory(a, 0);
     memory[ucsra] = 32;
+    memory[ucsrb] = 32;
     "attiny4" === target && (memory[16320] = simulationManufacturerID, memory[16321] = 143, memory[16322] = 10)
 }
 
 function writeClockRegister(c) {
     memory[pllCsr] = 0 < (c & 2) ? memory[pllCsr] | 1 : memory[pllCsr] & 254
 }
+
 function writeControlRegister(c) {
     33 === c && writeMemory((r[31] << 8 | r[30]) + flashStart, simulationManufacturerID.toString(16));
     memory[spmCr] = c
 }
+
 function writeUARTDataRegister(c) {
     try {
         var b = document.getElementById("uart");
@@ -110,8 +113,9 @@ function writeMemory(c, b) {
     c == pllCsr && writeClockRegister(b);
     c == spmCr && writeControlRegister(b);
     c == udr && writeUARTDataRegister(b);
-    c == ucsra && b & 64 && callUARTInterrupt()
+    c == ucsra && memory[ucsrb] & 32 && b & 64 && callUARTInterrupt()
 }
+
 function readMemory(c) {
     return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : memory[c]
 }
@@ -133,9 +137,11 @@ function loadMemory(c) {
         b++
     }
 }
+
 function setPreEvaluationFlags(c, b) {
     H = 15 < c + b ? 1 : 0
 }
+
 function setPostEvaluationFlags(c) {
     255 < c ? (C = 1, c &= 255) : C = 0;
     Z = 0 === c ? 1 : 0;
@@ -147,27 +153,35 @@ function setPostEvaluationFlags(c) {
 function getBreakDistance(c, b) {
     return (c & 3) << 5 | (b & 240) >> 3 | (b & 8) >> 3
 }
+
 function getRegister(c, b) {
     return ioRegStart + ((b & 248) >> 3)
 }
+
 function getRegisterValue(c, b) {
     return b & 7
 }
+
 function getIOValue(c, b) {
     return ioRegStart + ((c & 6) >> 1 << 4 | b & 15)
 }
+
 function getJumpConstant(c, b) {
     return (c & 15) << 8 | b
 }
+
 function getBigConstant(c, b) {
     return (c & 15) << 4 | b & 15
 }
+
 function getSmallDestinationRegister(c, b) {
     return ((b & 240) >> 4) + 16
 }
+
 function getSmallSourceRegister(c, b) {
     return (b & 15) + 16
 }
+
 function getConstant(c, b) {
     return b & 192 | b & 15
 }
@@ -175,6 +189,7 @@ function getConstant(c, b) {
 function getUpperPair(c, b) {
     return 2 * ((b & 48) >> 4) + 24
 }
+
 function getDisplacement(c, b) {
     return (c & 32) >> 5 << 4 | (c & 12) >> 2 << 3 | b & 7
 }
@@ -707,10 +722,13 @@ function fetch(c, b) {
     }
     r[e] &= 255;
     r[g] &= 255
+    memory[ucsrb] = 32;
 }
+
 function handleBreakpoint(c) {
     alert("Breakpoint at 0x" + c)
 }
+
 function isSoftBreakpoint(c) {
     for (i = 0; i < softBreakpoints.length; i++) if (softBreakpoints[i] + flashStart === c) return !0;
     return !1
@@ -761,17 +779,21 @@ function memoryDump() {
         writeUARTDataRegister(32)
     }
 }
+
 function isNumber(c) {
     return !isNaN(parseInt(c, 16))
 }
+
 function setPin(c, b) {
     var e = document.getElementById(c).getContext("2d");
     e.fillStyle = b;
     e.fillRect(0, 0, 10, 10)
 }
+
 function generateRegisterHtml(c) {
     return '<textarea id="register' + c + '" rows="1" cols="4">0x00</textarea>'
 }
+
 function generateFillerHtml() {
     return '<div style="display: table-cell;"><canvas width="10" height="10"/></div>'
 }
