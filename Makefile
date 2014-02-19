@@ -64,6 +64,7 @@ bench.html:
 	echo '</script>' >> $(TARGET)_$@
 	cat htmlfrag/bench_platform_header >> $(TARGET)_$@
 	cat htmlfrag/$(TARGET)_port_gui >> $(TARGET)_$@
+	cat htmlfrag/tft_panel >> $(TARGET)_$@
 	cat htmlfrag/generic_uart_gui >> $(TARGET)_$@
 	cat htmlfrag/bench_platform_footer >> $(TARGET)_$@
 	echo '</html>' >> $(TARGET)_$@
