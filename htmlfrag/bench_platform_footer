@@ -7,6 +7,10 @@
     <button onClick="setBreakpoint()">Set Breakpoint</button>
     <button onClick="forceBreak = true; exec();">Step/Break</button>
     <button onClick="softBreakpoints = [];">Clear Breakpoints</button>    
+    <button onClick="exec()">Continue</button>
+    <span class="loadMemory">
+      <button>Load Memory</button>
+    </span>
     <br/>
     <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
     <script>
