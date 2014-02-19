@@ -1,3 +1,4 @@
+    <body style="background-color: #00979C">
     <div>
     Intel Hex File <input type="file" id="hexfile"/>
     Disassembly File <input name="debug" type="file" id="debugfile"/>

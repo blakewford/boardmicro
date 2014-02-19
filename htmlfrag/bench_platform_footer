@@ -115,3 +115,4 @@
         reader.readAsBinaryString(file.slice(0, file.size));
       }, false);
     </script>
+    </body>
