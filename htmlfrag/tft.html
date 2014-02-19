@@ -1,0 +1,29 @@
+<html>
+  <table style="border-spacing: 0px; width:160px; height:128">
+  <script>
+    function drawPixel(x, y, color){
+        var element = document.getElementById(x.toString(16)+y.toString(16));
+        element.style.background = color;
+    }
+    
+    function init(){
+        for(var j =0; j < 128; j++){
+            document.write("<tr>");
+            for(var i =0; i < 160; i++){
+                var id = i.toString(16)+j.toString(16);
+                document.write("<td id=\""+id+"\" style=\"background-color: black;\"></td>");
+            }
+            document.write("</tr>");
+        }
+    }
+    
+    function peripheralSPIWrite(data) {
+        //Override with peripheral code
+    }
+    
+    init();
+    drawPixel(0, 0, "green");
+    drawPixel(159, 127, "blue");
+  </script>
+</table>
+</html>

@@ -75,8 +75,13 @@ function writeUARTDataRegister(c) {
     memory[udr] = c
 }
 
+function peripheralSPIWrite(c) {
+    //Override with peripheral code
+}
+
 function writeSPIDataRegister(c) {
     memory[sdr] = c
+    peripheralSPIWrite(c);
 }
 
 function callUARTInterrupt() {
