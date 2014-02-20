@@ -730,11 +730,13 @@ function fetch(c, b) {
         16 <= d | 0 == d && 146 == f | 147 == f && (PC += 2);
         break;
     default:
-        document.write("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b + "<br/>")
+        forceBreak = true;
+        alert("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b)
     }
     r[e] &= 255;
     r[g] &= 255
-    memory[ucsrb] = 32;
+    memory[ucsrb] |= 32;
+    memory[spsr]  |= 128;
 }
 
 function handleBreakpoint(c) {
@@ -778,18 +780,20 @@ function exec() {
 
 function memoryDump() {
     document.getElementById("uart").value = "";
+    var memAddr = document.getElementById("memoryAddress");
     for (i = 0; 10 > i; i++) {
         var c = null;
         try {
-            c = parseInt(document.getElementById("memoryAddress").value.substring(2), 16)
+            c = parseInt(memAddr.value.substring(2), 16)
         } catch (b) {} finally {
-            isNumber(c) || (document.getElementById("memoryAddress").value = "0x" + (PC-flashStart).toString(16), c = PC), byteValue = readMemory(c - 5 + i).toString(16)
+            isNumber(c) || (c = PC), byteValue = readMemory(c - 5 + i).toString(16)
         }
         1 == byteValue.length && writeUARTDataRegister(48);
         writeUARTDataRegister(byteValue.substring(0, 1).charCodeAt(0));
         1 < byteValue.length && writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
         writeUARTDataRegister(32)
     }
+    memAddr.value = "0x" + (PC-flashStart).toString(16);
 }
 
 function isNumber(c) {
