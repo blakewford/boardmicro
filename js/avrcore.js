@@ -202,7 +202,7 @@ function getUpperPair(c, b) {
 }
 
 function getDisplacement(c, b) {
-    return (c & 32) >> 5 << 4 | (c & 12) >> 2 << 3 | b & 7
+    return (c & 32) | (c & 12) << 1 | b & 7
 }
 
 function fetch(c, b) {
