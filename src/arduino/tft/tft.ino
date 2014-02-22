@@ -4,6 +4,7 @@
 Adafruit_ST7735 screen(7, 0, 1);
 
 void setup() {
+    screen.initR(INITR_REDTAB);
     screen.setRotation(1);  
     screen.setAddrWindow(0, 0, 1, 1);
 }
