@@ -9,6 +9,15 @@
     #define SIGRD 5
 #endif
 
+#define DDR_SPI DDRB
+#ifdef atmega8
+    #define DD_MOSI PB3
+    #define DD_SCK PB5
+#else
+    #define DD_MOSI PB2
+    #define DD_SCK PB1
+#endif
+
 #ifdef atmega32u4
     #define UBRRH UBRR1H
     #define UBRRL UBRR1L
@@ -46,7 +55,7 @@
 #ifdef attiny4
     #define SPI_SELECT_CMD PORTB
     #define SPI_SELECT_DATA PORTB
-    #define SPI_SELECT_CMD_ACTIVE 0x4
+    #define SPI_SELECT_CMD_ACTIVE 0x8
     #define SPI_SELECT_DATA_ACTIVE 0x1
 #endif
 
@@ -77,6 +86,27 @@ void platformBasedDelay(unsigned long milliseconds) {
     delay(milliseconds >> 8);
   else
     delay(milliseconds);
+}
+
+void platformBasedSPIBegin(void)
+{
+#ifndef attiny4
+    /* Set MOSI and SCK output, all others input */
+    DDR_SPI = (1<<DD_MOSI)|(1<<DD_SCK);
+    /* Enable SPI, Master, set clock rate fck/16 */
+    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+#endif
+}
+
+void platformBasedSPITransmit(char cData)
+{
+    /* Start transmission */
+    SPDR = cData;
+#ifndef attiny4
+    /* Wait for transmission complete */
+    while(!(SPSR & (1<<SPIF)))
+    ;
+#endif
 }
 
 void platformBasedSerialBegin()
