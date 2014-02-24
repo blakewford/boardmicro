@@ -88,7 +88,7 @@ void platformBasedDelay(unsigned long milliseconds) {
     delay(milliseconds);
 }
 
-void platformBasedSPIBegin(void)
+void platformBasedSPIBegin()
 {
 #ifndef attiny4
     /* Set MOSI and SCK output, all others input */
@@ -98,10 +98,10 @@ void platformBasedSPIBegin(void)
 #endif
 }
 
-void platformBasedSPITransmit(char cData)
+void platformBasedSPITransmit(unsigned char data)
 {
     /* Start transmission */
-    SPDR = cData;
+    SPDR = data;
 #ifndef attiny4
     /* Wait for transmission complete */
     while(!(SPSR & (1<<SPIF)))
@@ -133,23 +133,23 @@ void platformBasedSerialWrite(unsigned char data)
     UDR = data;
 }
 
-void writeDisplayCommand(uint8_t c) {
-
-  SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
-  SPI_SELECT_DATA = SPI_SELECT_PORT_DISABLED;
-  SPDR = c;
-  SPI_SELECT_CMD = SPI_SELECT_CMD_ACTIVE;
+void writeDisplayCommand(unsigned char data) {
+    SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
+    SPI_SELECT_DATA = SPI_SELECT_PORT_DISABLED;
+    platformBasedSPITransmit(data);
+    SPI_SELECT_CMD = SPI_SELECT_CMD_ACTIVE;
 }
 
-void writeDisplayData(uint8_t c) {
-  SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
-  SPI_SELECT_DATA = SPI_SELECT_DATA_ACTIVE;
-  SPDR = c;
-  SPI_SELECT_CMD = SPI_SELECT_CMD_ACTIVE;
+void writeDisplayData(unsigned char data) {
+    SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
+    SPI_SELECT_DATA = SPI_SELECT_DATA_ACTIVE;
+    platformBasedSPITransmit(data);
+    SPI_SELECT_CMD = SPI_SELECT_CMD_ACTIVE;
 }
 
 void platformBasedDisplayBegin() {
     if(getPlatformType() != SIMULATED_PLATFORM_SIGNATURE){
+        platformBasedSPIBegin();
         writeDisplayCommand(0x1);
         platformBasedDelay(150);
         writeDisplayCommand(0x11);
