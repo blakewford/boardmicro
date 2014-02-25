@@ -133,6 +133,20 @@ void platformBasedSerialWrite(unsigned char data)
     UDR = data;
 }
 
+void setupDisplayWindow(unsigned char startX, unsigned char startY, unsigned char endX, unsigned char endY){
+    writeDisplayCommand(0x2A);
+    writeDisplayData(0x00);
+    writeDisplayData(startX);
+    writeDisplayData(0x00);
+    writeDisplayData(endX);
+    writeDisplayCommand(0x2B);
+    writeDisplayData(0x00);
+    writeDisplayData(startY);
+    writeDisplayData(0x00);
+    writeDisplayData(endY);
+    writeDisplayCommand(0x2C);
+}
+
 void writeDisplayCommand(unsigned char data) {
     SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
     SPI_SELECT_DATA = SPI_SELECT_PORT_DISABLED;
@@ -145,6 +159,12 @@ void writeDisplayData(unsigned char data) {
     SPI_SELECT_DATA = SPI_SELECT_DATA_ACTIVE;
     platformBasedSPITransmit(data);
     SPI_SELECT_CMD = SPI_SELECT_CMD_ACTIVE;
+}
+
+void platformBasedDisplaySetPixel(unsigned char x, unsigned char y, unsigned int color) {
+    setupDisplayWindow(x, y, x+1, y+1);
+    writeDisplayData(color >> 8);
+    writeDisplayData(color);
 }
 
 void platformBasedDisplayBegin() {
@@ -241,5 +261,7 @@ void platformBasedDisplayBegin() {
         platformBasedDelay(10);
         writeDisplayCommand(0x29);
         platformBasedDelay(100);
+        writeDisplayCommand(0x36);
+        writeDisplayData(0xA8);
     }
 }
