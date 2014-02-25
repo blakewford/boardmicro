@@ -75,5 +75,10 @@ bench.html:
 	cat htmlfrag/bench_platform_footer >> $(TARGET)_$@
 	echo '</html>' >> $(TARGET)_$@
 
+upload: $(BASENAME).hex
+	python reset.py /dev/ttyACM0
+	sleep 2
+	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
+
 clean: 
 	-@rm *.elf *.dis *.hex *.html *.o *.a
