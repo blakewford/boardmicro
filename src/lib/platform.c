@@ -64,6 +64,10 @@
 #define CYCLES_PER_MS CPU_CLK/1000
 #define SIMULATED_PLATFORM_SIGNATURE 0xBF
 
+void writeDisplayCommand(unsigned char data);
+void writeDisplayData(unsigned char data);
+
+
 void delay(unsigned long milliseconds){
     long i,j = 0;
     for(i; i < milliseconds; i++){
@@ -167,8 +171,37 @@ void platformBasedDisplaySetPixel(unsigned char x, unsigned char y, unsigned int
     writeDisplayData(color);
 }
 
+void platformBasedDisplayBackground(int color) {
+    setupDisplayWindow(0, 0, 159, 127);
+    unsigned char x,y;
+    for(y = 127; y > 0; y--) {
+      for(x = 159; x > 0; x--) {
+          writeDisplayData(color >> 8);
+          writeDisplayData(color);
+      }
+    }
+}
+
+
 void platformBasedDisplayBegin() {
     if(getPlatformType() != SIMULATED_PLATFORM_SIGNATURE){
+        DDRE = _BV (6);
+        DDRD = _BV (2);
+
+        PORTB = 0x1;
+        DDRB = _BV (0);
+        DDRB |= _BV (1);
+        DDRB |= _BV (2);
+        SPCR |= _BV(MSTR);
+        SPCR |= _BV(SPE);
+
+        SPCR = (SPCR & ~0x3) | (0x00 & 0x3);
+        SPSR = (SPSR & ~0x1) | ((0x00 >> 2) & 0x1);
+
+        SPCR &= ~(_BV(DORD));
+
+        SPCR = (SPCR & ~0xC0) | 0x00;
+
         platformBasedSPIBegin();
         writeDisplayCommand(0x1);
         platformBasedDelay(150);
