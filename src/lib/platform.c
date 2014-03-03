@@ -16,6 +16,7 @@
 #else
     #define DD_MOSI PB2
     #define DD_SCK PB1
+    #define DD_SS PB0
 #endif
 
 #ifdef atmega32u4
@@ -40,7 +41,9 @@
 
 #ifdef atmega32u4
     #define SPI_SELECT_CMD PORTE
-    #define SPI_SELECT_DATA PORTD
+    #define SPI_CMD_DIRECTION DDRE
+    #define SPI_SELECT_DATA PORTB
+    #define SPI_DATA_DIRECTION DDRB
     #define SPI_SELECT_CMD_ACTIVE 0x40
     #define SPI_SELECT_DATA_ACTIVE 0x4
 #endif
@@ -95,8 +98,9 @@ void platformBasedDelay(unsigned long milliseconds) {
 void platformBasedSPIBegin()
 {
 #ifndef attiny4
-    /* Set MOSI and SCK output, all others input */
-    DDR_SPI = (1<<DD_MOSI)|(1<<DD_SCK);
+    SPI_SELECT_DATA = 0x1;
+    SPI_DATA_DIRECTION = _BV(0);
+    DDR_SPI = (1<<DD_SS)|(1<<DD_MOSI)|(1<<DD_SCK);
     /* Enable SPI, Master, set clock rate fck/16 */
     SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
 #endif
@@ -185,24 +189,20 @@ void platformBasedDisplayBackground(int color) {
 
 void platformBasedDisplayBegin() {
     if(getPlatformType() != SIMULATED_PLATFORM_SIGNATURE){
-        DDRE = _BV (6);
-        DDRD = _BV (2);
+        SPI_CMD_DIRECTION = _BV (6);
+        SPI_DATA_DIRECTION = _BV (0);
 
-        PORTB = 0x1;
-        DDRB = _BV (0);
-        DDRB |= _BV (1);
-        DDRB |= _BV (2);
-        SPCR |= _BV(MSTR);
-        SPCR |= _BV(SPE);
+        platformBasedSPIBegin();
 
-        SPCR = (SPCR & ~0x3) | (0x00 & 0x3);
-        SPSR = (SPSR & ~0x1) | ((0x00 >> 2) & 0x1);
+        SPCR = (SPCR & ~0x3) | 0x3;
+        SPSR = (SPSR & ~0x1) | 0x1;
 
         SPCR &= ~(_BV(DORD));
 
-        SPCR = (SPCR & ~0xC0) | 0x00;
+        SPCR = (SPCR & ~0xC0);
 
-        platformBasedSPIBegin();
+        SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
+
         writeDisplayCommand(0x1);
         platformBasedDelay(150);
         writeDisplayCommand(0x11);
