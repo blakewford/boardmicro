@@ -9,6 +9,7 @@
     #define SIGRD 5
 #endif
 
+#define SPI_PORT PORTB
 #define DDR_SPI DDRB
 #ifdef atmega8
     #define DD_MOSI PB3
@@ -36,8 +37,6 @@
     #define SPDR _SFR_MEM8(0x41FE)
     #define UDR _SFR_MEM8(0x41FF)
 #endif
-
-#define SPI_SELECT_PORT_DISABLED 0x0
 
 #ifdef atmega32u4
     #define SPI_SELECT_CMD PORTE
@@ -98,8 +97,7 @@ void platformBasedDelay(unsigned long milliseconds) {
 void platformBasedSPIBegin()
 {
 #ifndef attiny4
-    SPI_SELECT_DATA = 0x1;
-    SPI_DATA_DIRECTION = _BV(0);
+    SPI_PORT = 0x1;
     DDR_SPI = (1<<DD_SS)|(1<<DD_MOSI)|(1<<DD_SCK);
     /* Enable SPI, Master, set clock rate fck/16 */
     SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
@@ -155,18 +153,18 @@ void setupDisplayWindow(unsigned char startX, unsigned char startY, unsigned cha
     writeDisplayCommand(0x2C);
 }
 
-void writeDisplayCommand(unsigned char data) {
-    SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
-    SPI_SELECT_DATA = SPI_SELECT_PORT_DISABLED;
-    platformBasedSPITransmit(data);
-    SPI_SELECT_CMD = SPI_SELECT_CMD_ACTIVE;
+void writeDisplayCommand(uint8_t c) {
+    SPI_SELECT_DATA &= ~SPI_SELECT_DATA_ACTIVE;
+    SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
+    platformBasedSPITransmit(c);
+    SPI_SELECT_CMD |= SPI_SELECT_CMD_ACTIVE;
 }
 
-void writeDisplayData(unsigned char data) {
-    SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
-    SPI_SELECT_DATA = SPI_SELECT_DATA_ACTIVE;
-    platformBasedSPITransmit(data);
-    SPI_SELECT_CMD = SPI_SELECT_CMD_ACTIVE;
+void writeDisplayData(uint8_t c) {
+    SPI_SELECT_DATA |= SPI_SELECT_DATA_ACTIVE;
+    SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
+    platformBasedSPITransmit(c);
+    SPI_SELECT_CMD |= SPI_SELECT_CMD_ACTIVE;
 }
 
 void platformBasedDisplaySetPixel(unsigned char x, unsigned char y, unsigned int color) {
@@ -176,16 +174,18 @@ void platformBasedDisplaySetPixel(unsigned char x, unsigned char y, unsigned int
 }
 
 void platformBasedDisplayBackground(int color) {
-    setupDisplayWindow(0, 0, 159, 127);
-    unsigned char x,y;
-    for(y = 127; y > 0; y--) {
-      for(x = 159; x > 0; x--) {
-          writeDisplayData(color >> 8);
-          writeDisplayData(color);
+    setupDisplayWindow(0, 0, 160, 128);
+    uint8_t hi = color >> 8, lo = color;
+    SPI_SELECT_DATA |= SPI_SELECT_DATA_ACTIVE;
+    SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
+    int x, y;
+    for(y=128; y>0; y--) {
+      for(x=160; x>0; x--) {
+        platformBasedSPITransmit(hi);
+        platformBasedSPITransmit(lo);
       }
     }
 }
-
 
 void platformBasedDisplayBegin() {
     if(getPlatformType() != SIMULATED_PLATFORM_SIGNATURE){
@@ -194,14 +194,14 @@ void platformBasedDisplayBegin() {
 
         platformBasedSPIBegin();
 
-        SPCR = (SPCR & ~0x3) | 0x3;
-        SPSR = (SPSR & ~0x1) | 0x1;
+        SPCR = (SPCR & ~0x3);
+        SPSR = (SPSR & ~0x1);
 
         SPCR &= ~(_BV(DORD));
 
-        SPCR = (SPCR & ~0xC0);
+        SPCR = (SPCR & ~0xC);
 
-        SPI_SELECT_CMD = SPI_SELECT_PORT_DISABLED;
+        SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
 
         writeDisplayCommand(0x1);
         platformBasedDelay(150);
