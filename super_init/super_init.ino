@@ -51,23 +51,35 @@ void writedata(uint8_t c) {
   PORTE |= 0x40;
 } 
 
+void platformBasedSPIBegin()
+{
+#ifndef attiny4
+    PORTB = 0x1;
+    DDRB = _BV(0);
+    DDRB = (1<<0)|(1<<1)|(1<<2);
+    /* Enable SPI, Master, set clock rate fck/16 */
+    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+#endif
+}
+ 
+
+void setupDisplayWindow(unsigned char startX, unsigned char startY, unsigned char endX, unsigned char endY){
+    writecommand(0x2A);
+    writedata(0x00);
+    writedata(startX);
+    writedata(0x00);
+    writedata(endX);
+    writecommand(0x2B);
+    writedata(0x00);
+    writedata(startY);
+    writedata(0x00);
+    writedata(endY);
+    writecommand(0x2C);
+}
+
 void fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
   uint16_t color) {
- 
-  writecommand(0x2A);
-  writedata(0x00);
-  writedata(x);     
-  writedata(0x00);
-  writedata(w);    
- 
-  writecommand(0x2B); 
-  writedata(0x00);
-  writedata(y);    
-  writedata(0x00);
-  writedata(h);     
- 
-  writecommand(0x2C);
- 
+ setupDisplayWindow(0, 0, 160, 128);
   uint8_t hi = color >> 8, lo = color;
   PORTD |=  0x4;
   PORTE &= ~0x40;
@@ -86,12 +98,7 @@ void setup() {
   DDRE = _BV (6);
   DDRD = _BV (2);
   
-  PORTB = 0x1;
-  DDRB = _BV (0);
-  DDRB |= _BV (1);
-  DDRB |= _BV (2);
-  SPCR |= _BV(MSTR);
-  SPCR |= _BV(SPE);
+  platformBasedSPIBegin();
 
   SPCR = (SPCR & ~0x3) | (0x00 & 0x3);
   SPSR = (SPSR & ~0x1) | ((0x00 >> 2) & 0x1);
@@ -197,7 +204,7 @@ void setup() {
   writecommand(0x36);
   writedata(0xA8);
   
-  fillRect(0, 0, 159, 127, ST7735_RED);
+  fillRect(0, 0, 159, 127, ST7735_GREEN);
 }
 
 void loop(){}
