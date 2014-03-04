@@ -34,7 +34,7 @@ void platformBasedDelay(unsigned long milliseconds) {
 } 
 
 void writecommand(uint8_t c) {
-  PORTB &= ~0x4;
+  PORTD &= ~0x4;
   PORTE &= ~0x40;
  
   platformBasedSPITransmit(c);
@@ -43,7 +43,7 @@ void writecommand(uint8_t c) {
 } 
 
 void writedata(uint8_t c) {
-  PORTB |=  0x4;
+  PORTD |=  0x4;
   PORTE &= ~0x40;
      
   platformBasedSPITransmit(c);
@@ -69,7 +69,7 @@ void fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
   writecommand(0x2C);
  
   uint8_t hi = color >> 8, lo = color;
-  PORTB |=  0x4;
+  PORTD |=  0x4;
   PORTE &= ~0x40;
   for(y=h; y>0; y--) {
     for(x=w; x>0; x--) {
@@ -84,7 +84,7 @@ void fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 void setup() {
  
   DDRE = _BV (6);
-  DDRB = _BV (0);
+  DDRD = _BV (2);
   
   PORTB = 0x1;
   DDRB = _BV (0);
@@ -197,7 +197,7 @@ void setup() {
   writecommand(0x36);
   writedata(0xA8);
   
-  fillRect(0, 0, 159, 127, ST7735_BLUE);
+  fillRect(0, 0, 159, 127, ST7735_RED);
 }
 
 void loop(){}

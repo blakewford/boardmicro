@@ -42,8 +42,8 @@
 #ifdef atmega32u4
     #define SPI_SELECT_CMD PORTE
     #define SPI_CMD_DIRECTION DDRE
-    #define SPI_SELECT_DATA PORTB
-    #define SPI_DATA_DIRECTION DDRB
+    #define SPI_SELECT_DATA PORTD
+    #define SPI_DATA_DIRECTION DDRD
     #define SPI_SELECT_CMD_ACTIVE 0x40
     #define SPI_SELECT_DATA_ACTIVE 0x4
 #endif
@@ -190,7 +190,7 @@ void platformBasedDisplayBackground(int color) {
 void platformBasedDisplayBegin() {
     if(getPlatformType() != SIMULATED_PLATFORM_SIGNATURE){
         SPI_CMD_DIRECTION = _BV (6);
-        SPI_DATA_DIRECTION = _BV (0);
+        SPI_DATA_DIRECTION = _BV (2);
 
         platformBasedSPIBegin();
 
