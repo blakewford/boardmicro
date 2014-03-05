@@ -1,5 +1,10 @@
-void platformBasedDelay(unsigned long milliseconds);
+#include <stdint.h>
+
+void platformBasedDelay(uint32_t milliseconds);
+
 void platformBasedSerialBegin();
-void platformBasedSerialWrite(unsigned char data);
+void platformBasedSerialWrite(uint8_t data);
+
 void platformBasedDisplayBegin();
-void platformBasedDisplaySetPixel(unsigned char x, unsigned char y, unsigned int color);
+void platformBasedDisplayBackground(uint16_t color);
+void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color);

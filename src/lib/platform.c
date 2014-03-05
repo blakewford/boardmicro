@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <platform.h>
+#include <stdbool.h>
 
 #ifndef attiny4
     #include <avr/boot.h>
@@ -66,11 +67,10 @@
 #define CYCLES_PER_MS CPU_CLK/1000
 #define SIMULATED_PLATFORM_SIGNATURE 0xBF
 
-void writeDisplayCommand(unsigned char data);
-void writeDisplayData(unsigned char data);
+void writeDisplayCommand(uint8_t data);
+void writeDisplayData(uint8_t data);
 
-
-void delay(unsigned long milliseconds){
+void delay(uint32_t milliseconds){
     long i,j = 0;
     for(i; i < milliseconds; i++){
         for(j; j < CYCLES_PER_MS; j++){
@@ -79,16 +79,16 @@ void delay(unsigned long milliseconds){
     }
 }
 
-char getPlatformType(){
+bool platformIsSimulated(){
 #ifndef attiny4
-  return boot_signature_byte_get(0);
+  return boot_signature_byte_get(0) == SIMULATED_PLATFORM_SIGNATURE;
 #else
-  return *((char*)0x3FC0);
+  return *((uint8_t*)0x3FC0) == SIMULATED_PLATFORM_SIGNATURE;
 #endif
 }
 
-void platformBasedDelay(unsigned long milliseconds) {
-  if(getPlatformType() == SIMULATED_PLATFORM_SIGNATURE)
+void platformBasedDelay(uint32_t milliseconds) {
+  if(platformIsSimulated())
     delay(milliseconds >> 8);
   else
     delay(milliseconds);
@@ -104,7 +104,7 @@ void platformBasedSPIBegin()
 #endif
 }
 
-void platformBasedSPITransmit(unsigned char data)
+void platformBasedSPITransmit(uint8_t data)
 {
     /* Start transmission */
     SPDR = data;
@@ -119,8 +119,8 @@ void platformBasedSerialBegin()
 {
 #ifndef attiny4
     /* Set baud rate */
-    UBRRH = (unsigned char)(BAUD>>8);
-    UBRRL = (unsigned char)BAUD;
+    UBRRH = (uint8_t)(BAUD>>8);
+    UBRRL = (uint8_t)BAUD;
     /* Enable receiver and transmitter */
     UCSRB = (1<<RXEN)|(1<<TXEN);
     /* Set frame format: 8data, 2stop bit */
@@ -128,7 +128,7 @@ void platformBasedSerialBegin()
 #endif
 }
 
-void platformBasedSerialWrite(unsigned char data)
+void platformBasedSerialWrite(uint8_t data)
 {
 #ifndef attiny4
     /* Wait for empty transmit buffer */
@@ -139,7 +139,7 @@ void platformBasedSerialWrite(unsigned char data)
     UDR = data;
 }
 
-void setupDisplayWindow(unsigned char startX, unsigned char startY, unsigned char endX, unsigned char endY){
+void setupDisplayWindow(uint8_t startX, uint8_t startY, uint8_t endX, uint8_t endY){
     writeDisplayCommand(0x2A);
     writeDisplayData(0x00);
     writeDisplayData(startX);
@@ -153,32 +153,32 @@ void setupDisplayWindow(unsigned char startX, unsigned char startY, unsigned cha
     writeDisplayCommand(0x2C);
 }
 
-void writeDisplayCommand(uint8_t c) {
+void writeDisplayCommand(uint8_t data) {
     SPI_SELECT_DATA &= ~SPI_SELECT_DATA_ACTIVE;
     SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
-    platformBasedSPITransmit(c);
+    platformBasedSPITransmit(data);
     SPI_SELECT_CMD |= SPI_SELECT_CMD_ACTIVE;
 }
 
-void writeDisplayData(uint8_t c) {
+void writeDisplayData(uint8_t data) {
     SPI_SELECT_DATA |= SPI_SELECT_DATA_ACTIVE;
     SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
-    platformBasedSPITransmit(c);
+    platformBasedSPITransmit(data);
     SPI_SELECT_CMD |= SPI_SELECT_CMD_ACTIVE;
 }
 
-void platformBasedDisplaySetPixel(unsigned char x, unsigned char y, unsigned int color) {
+void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
     setupDisplayWindow(x, y, x+1, y+1);
     writeDisplayData(color >> 8);
     writeDisplayData(color);
 }
 
-void platformBasedDisplayBackground(int color) {
+void platformBasedDisplayBackground(uint16_t color) {
     setupDisplayWindow(0, 0, 160, 128);
     uint8_t hi = color >> 8, lo = color;
     SPI_SELECT_DATA |= SPI_SELECT_DATA_ACTIVE;
     SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
-    int x, y;
+    uint8_t x, y;
     for(y=128; y>0; y--) {
       for(x=160; x>0; x--) {
         platformBasedSPITransmit(hi);
@@ -188,7 +188,7 @@ void platformBasedDisplayBackground(int color) {
 }
 
 void platformBasedDisplayBegin() {
-    if(getPlatformType() != SIMULATED_PLATFORM_SIGNATURE){
+    if(!platformIsSimulated()){
         SPI_CMD_DIRECTION = _BV (6);
         SPI_DATA_DIRECTION = _BV (2);
 
