@@ -15,6 +15,7 @@
 #ifdef atmega8
     #define DD_MOSI PB3
     #define DD_SCK PB5
+    #define DD_SS PB0
 #else
     #define DD_MOSI PB2
     #define DD_SCK PB1
@@ -50,15 +51,19 @@
 
 #ifdef atmega8
     #define SPI_SELECT_CMD PORTD
+    #define SPI_CMD_DIRECTION DDRD
     #define SPI_SELECT_DATA PORTD
+    #define SPI_DATA_DIRECTION DDRD
     #define SPI_SELECT_CMD_ACTIVE 0x80
     #define SPI_SELECT_DATA_ACTIVE 0x1
 #endif
 
 #ifdef attiny4
     #define SPI_SELECT_CMD PORTB
+    #define SPI_CMD_DIRECTION DDRB
     #define SPI_SELECT_DATA PORTB
     #define SPI_SELECT_CMD_ACTIVE 0x8
+    #define SPI_DATA_DIRECTION DDRB
     #define SPI_SELECT_DATA_ACTIVE 0x1
 #endif
 
@@ -174,15 +179,10 @@ void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
 }
 
 void platformBasedDisplayBackground(uint16_t color) {
-    setupDisplayWindow(0, 0, 160, 128);
-    uint8_t hi = color >> 8, lo = color;
-    SPI_SELECT_DATA |= SPI_SELECT_DATA_ACTIVE;
-    SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
     uint8_t x, y;
     for(y=128; y>0; y--) {
       for(x=160; x>0; x--) {
-        platformBasedSPITransmit(hi);
-        platformBasedSPITransmit(lo);
+        platformBasedDisplaySetPixel(x, y, color);
       }
     }
 }
@@ -193,14 +193,14 @@ void platformBasedDisplayBegin() {
         SPI_DATA_DIRECTION = _BV (2);
 
         platformBasedSPIBegin();
-
+#ifndef attiny4
         SPCR = (SPCR & ~0x3);
         SPSR = (SPSR & ~0x1);
 
         SPCR &= ~(_BV(DORD));
 
         SPCR = (SPCR & ~0xC);
-
+#endif
         SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
 
         writeDisplayCommand(0x1);
