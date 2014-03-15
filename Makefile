@@ -24,7 +24,7 @@ SRC_DIR = src/
 LIB_DIR = src/lib
 BASENAME = $(SRC)_$(TARGET)
 
-all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).html bench.html
+all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).bin $(BASENAME).html bench.html
 
 libplatform.a: platform.o
 	avr-ar rcs $@ $<
@@ -40,6 +40,9 @@ $(BASENAME).dis: $(BASENAME).elf
 
 $(BASENAME).hex: $(BASENAME).elf
 	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex
+
+$(BASENAME).bin: $(BASENAME).elf
+	avr-objcopy -I elf32-avr -O binary $(BASENAME).elf $(BASENAME).bin
 
 .PHONY $(BASENAME).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
@@ -81,4 +84,4 @@ upload: $(BASENAME).hex
 	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html *.o *.a
+	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin
