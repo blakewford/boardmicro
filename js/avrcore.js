@@ -730,11 +730,18 @@ function isSoftBreakpoint(c) {
 }
 
 function loop() {
-    var p;
+    var p, continueBatching = true;
     for(j = 0; j < 1000; j++){
         var c = parseInt(memory[PC++], 16), b = parseInt(memory[PC++], 16);
         var isBreak = 149 == b && 152 == c || isSoftBreakpoint(PC) || forceBreak;
-        //isBreak || 207 == b && 255 == c ? isBreak && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : void(0);
+        if((207 == b && 255 == c) || isBreak){
+            continueBatching = false;
+            if(isBreak){
+                forceBreak = false;
+                isPaused = true;
+                handleBreakpoint((PC - 2).toString(16).toUpperCase());
+            }
+        }
         fetch(b, c);
         for(i = 0; i < 5; i++){
             switch (i) {
@@ -755,8 +762,11 @@ function loop() {
             }
             for (; 0 < p.length;) writeSpecificPort(i);
         }
+        if(!continueBatching)
+            break;
     }
-    setTimeout(loop, 0);
+    if(continueBatching)
+        setTimeout(loop, 0);
 }
 
 function engineInit() {
