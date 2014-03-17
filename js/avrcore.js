@@ -101,9 +101,13 @@ function writeSpecificPort(c) {
     case 4:
         b = dataQueueF
     }
-    for (i = 0; i < bitsPerPort; i++) c = "pin" + parseInt(i + d), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
-    b = b.shift();
-    for (i = 0; i < bitsPerPort; i++) parseInt(b) & 1 << i && setPin("pin" + parseInt(i + d), "#00FF00")
+    try{
+        for (i = 0; i < bitsPerPort; i++) c = "pin" + parseInt(i + d), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
+        b = b.shift();
+        for (i = 0; i < bitsPerPort; i++) parseInt(b) & 1 << i && setPin("pin" + parseInt(i + d), "#00FF00")
+    }catch(e){
+        b = b.shift();
+    }
 }
 
 function writeMemory(c, b) {
@@ -726,16 +730,33 @@ function isSoftBreakpoint(c) {
 }
 
 function loop() {
-    var c = parseInt(memory[PC], 16),
-        b = parseInt(memory[++PC], 16);
-    PC++;
-    var d = 149 == b && 152 == c || isSoftBreakpoint(PC) || forceBreak;
-    d || 207 == b && 255 == c ? d && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : setTimeout(loop, 0);
-    for (fetch(b, c); 0 < dataQueueB.length;) writeSpecificPort(0);
-    for (; 0 < dataQueueC.length;) writeSpecificPort(1);
-    for (; 0 < dataQueueD.length;) writeSpecificPort(2);
-    for (; 0 < dataQueueE.length;) writeSpecificPort(3);
-    for (; 0 < dataQueueF.length;) writeSpecificPort(4)
+    var p;
+    for(j = 0; j < 1000; j++){
+        var c = parseInt(memory[PC++], 16), b = parseInt(memory[PC++], 16);
+        var isBreak = 149 == b && 152 == c || isSoftBreakpoint(PC) || forceBreak;
+        //isBreak || 207 == b && 255 == c ? isBreak && (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : void(0);
+        fetch(b, c);
+        for(i = 0; i < 5; i++){
+            switch (i) {
+            case 0:
+                p = dataQueueB;
+                break;
+            case 1:
+                p = dataQueueC;
+                break;
+            case 2:
+                p = dataQueueD;
+                break;
+            case 3:
+                p = dataQueueE;
+                break;
+            case 4:
+                p = dataQueueF
+            }
+            for (; 0 < p.length;) writeSpecificPort(i);
+        }
+    }
+    setTimeout(loop, 0);
 }
 
 function engineInit() {
