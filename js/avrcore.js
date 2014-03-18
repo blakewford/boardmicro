@@ -503,6 +503,7 @@ function fetch(c, b) {
         r[f] = h & 255;
         r[f + 1] = h >> 8;
         setPostEvaluationFlags(65535 < h);
+        Z = h == 0;
         break;
     case 151:
         H = 0;
@@ -513,6 +514,7 @@ function fetch(c, b) {
         r[f] = h & 255;
         r[f + 1] = h >> 8;
         setPostEvaluationFlags(h);
+        Z = h == 0;
         break;
     case 152:
         e = getRegister(c, b);
