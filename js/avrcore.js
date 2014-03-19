@@ -50,7 +50,10 @@ function initCore() {
     signatureOffset = flashStart + 176;
     jumpTableAddress = usbVectorBase + 64;
     mainAddress = usbVectorBase + 72;
-    for (a = 0; a < memory.length; a++) writeMemory(a, 0);
+    for (a = 0; a < memory.length; a++){
+        if(a != sdr)
+            writeMemory(a, 0);
+    }
     memory[ucsra] = 32;
     memory[ucsrb] = 32;
     memory[spsr] = 128;
@@ -121,7 +124,10 @@ function writeMemory(c, b) {
     c == spmCr && writeControlRegister(b);
     c == udr && writeUARTDataRegister(b);
     c == sdr && writeSPIDataRegister(b);
-    c == ucsra && memory[ucsrb] & 32 && b & 64 && callUARTInterrupt()
+    c == ucsra && memory[ucsrb] & 32 && b & 64 && callUARTInterrupt();
+    if(c == SPH || c == SPL){
+        SP = memory[SPH] << 8 | memory[SPL];
+    }
 }
 function readMemory(c) {
     return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : memory[c]

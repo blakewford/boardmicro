@@ -76,9 +76,10 @@ void writeDisplayCommand(uint8_t data);
 void writeDisplayData(uint8_t data);
 
 void delay(uint32_t milliseconds){
-    long i,j = 0;
-    for(i; i < milliseconds; i++){
-        for(j; j < CYCLES_PER_MS; j++){
+    uint32_t i;
+    uint16_t j;
+    for(i=milliseconds; i > 0; i--){
+        for(j=CYCLES_PER_MS; j > 0; j--){
             asm volatile ("nop");
         }
     }
