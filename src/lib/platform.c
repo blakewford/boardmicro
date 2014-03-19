@@ -35,10 +35,6 @@
     #define UDRE UDRE1
     #define UDR UDR1
 #endif
-#ifdef attiny4
-    #define SPDR _SFR_MEM8(0x41FE)
-    #define UDR _SFR_MEM8(0x41FF)
-#endif
 
 #ifdef atmega32u4
     #define SPI_SELECT_CMD PORTE
@@ -71,6 +67,29 @@
 #define CPU_CLK 8000000
 #define CYCLES_PER_MS CPU_CLK/1000
 #define SIMULATED_PLATFORM_SIGNATURE 0xBF
+
+#ifdef attiny4
+    #define dmaAddress 0x4200 - sizeof(dmaRegion)
+#endif
+#ifdef atmega8
+    #define dmaAddress 0x2000 - sizeof(dmaRegion)
+#endif
+#ifdef atmega32u4
+    #define dmaAddress 0x8000 - sizeof(dmaRegion)
+#endif
+
+#ifdef attiny4
+    #define SPDR _SFR_MEM8(dmaAddress-2)
+    #define UDR _SFR_MEM8(dmaAddress-1)
+#endif
+
+typedef struct dmaRegion {
+    uint16_t startColumn;
+    uint16_t endColumn;
+    uint16_t startRow;
+    uint16_t endRow;
+    uint16_t data;
+} dmaRegion;
 
 void writeDisplayCommand(uint8_t data);
 void writeDisplayData(uint8_t data);
@@ -146,17 +165,25 @@ void platformBasedSerialWrite(uint8_t data)
 }
 
 void setupDisplayWindow(uint8_t startX, uint8_t startY, uint8_t endX, uint8_t endY){
-    writeDisplayCommand(0x2A);
-    writeDisplayData(0x00);
-    writeDisplayData(startX);
-    writeDisplayData(0x00);
-    writeDisplayData(endX);
-    writeDisplayCommand(0x2B);
-    writeDisplayData(0x00);
-    writeDisplayData(startY);
-    writeDisplayData(0x00);
-    writeDisplayData(endY);
-    writeDisplayCommand(0x2C);
+    if(!platformIsSimulated()){
+        writeDisplayCommand(0x2A);
+        writeDisplayData(0x00);
+        writeDisplayData(startX);
+        writeDisplayData(0x00);
+        writeDisplayData(endX);
+        writeDisplayCommand(0x2B);
+        writeDisplayData(0x00);
+        writeDisplayData(startY);
+        writeDisplayData(0x00);
+        writeDisplayData(endY);
+        writeDisplayCommand(0x2C);
+    }else{
+        dmaRegion* dma = (dmaRegion*)dmaAddress;
+        dma->startColumn = startX;
+        dma->startRow = startY;
+        dma->endColumn = endX;
+        dma->endRow = endY;
+    }
 }
 
 void writeDisplayCommand(uint8_t data) {
@@ -175,8 +202,13 @@ void writeDisplayData(uint8_t data) {
 
 void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
     setupDisplayWindow(x, y, x+1, y+1);
-    writeDisplayData(color >> 8);
-    writeDisplayData(color);
+    if(!platformIsSimulated()){
+        writeDisplayData(color >> 8);
+        writeDisplayData(color);
+    }else{
+        dmaRegion* dma = (dmaRegion*)dmaAddress;
+        dma->data = color;
+    }
 }
 
 void platformBasedDisplayBackground(uint16_t color) {
