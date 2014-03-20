@@ -42,7 +42,7 @@ var SP = 95,
     sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
 
 function initCore() {
-    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spr = 16894, udr = 16895, spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4, SPH = 62, SPL = 61) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, sdr = 47, spsr = 46, udr = 44, udri = 24, ucsra = 43, ucsrb = 42, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815) : alert("Failed! Unknown target");
+    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spr = 16894, udr = 16895, spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4, SPH = 62, SPL = 61) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, sdr = 47, spsr = 46, udr = 44, udri = 24, ucsra = 43, ucsrb = 42, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, DMA = 32758) : alert("Failed! Unknown target");
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
@@ -113,6 +113,22 @@ function writeSpecificPort(c) {
     }
 }
 
+function writeDMARegion(address, data){
+    if(address == DMA+9 || address == DMA+8){
+        var startColumn = memory[DMA+1] << 8 | memory[DMA];
+        var endColumn = memory[DMA+3] << 8 | memory[DMA+2];
+        var startRow = memory[DMA+5] << 8 | memory[DMA+4];
+        var endRow = memory[DMA+7] << 8 | memory[DMA+6];
+        var color = memory[DMA+9] << 8 | memory[DMA+8];
+        color = color == 0xF800 ? "red": color == 0x001f ? "blue": "black";
+        for(i=startRow; i < endRow; i++){
+            for(j=startColumn; j < endColumn; j++){
+                drawPixel(j, i, color);
+            }
+        }
+    }
+}
+
 function writeMemory(c, b) {
     memory[c] = b;
     c == portB && dataQueueB.push(b);
@@ -128,6 +144,7 @@ function writeMemory(c, b) {
     if(c == SPH || c == SPL){
         SP = memory[SPH] << 8 | memory[SPL];
     }
+    c >= DMA && writeDMARegion(c, b);
 }
 function readMemory(c) {
     return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : memory[c]
@@ -408,7 +425,7 @@ function fetch(c, b) {
             r[d] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b));
             break
         }
-        if (8 > (b & 15) && 0 < (b & 15)) {
+        if (8 > (b & 15) && 0 <= (b & 15)) {
             r[d] = readMemory((r[31] << 8 | r[30]) + getDisplacement(c, b));
             break
         }
@@ -420,7 +437,7 @@ function fetch(c, b) {
             writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[d]);
             break
         }
-        if (8 > (b & 15) && 0 < (b & 15)) {
+        if (8 > (b & 15) && 0 <= (b & 15)) {
             writeMemory((r[31] << 8 | r[30]) + getDisplacement(c, b), r[d]);
             break
         }
@@ -437,7 +454,7 @@ function fetch(c, b) {
             r[d] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b));
             break
         }
-        if (8 > (b & 15) && 0 < (b & 15)) {
+        if (8 > (b & 15) && 0 <= (b & 15)) {
             r[d] = readMemory((r[31] << 8 | r[30]) + getDisplacement(c, b));
             break
         }
@@ -452,7 +469,7 @@ function fetch(c, b) {
             writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[d]);
             break
         }
-        if (8 > (b & 15) && 0 < (b & 15)) {
+        if (8 > (b & 15) && 0 <= (b & 15)) {
             writeMemory((r[31] << 8 | r[30]) + getDisplacement(c, b), r[d]);
             break
         }

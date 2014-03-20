@@ -1,35 +1,11 @@
   <br>
   <table style="border-spacing: 0px; width:160px; height:128">
   <script>
-    var ST7735_CASET = 0x2A;
-    var ST7735_RASET = 0x2B;
-    var ST7735_RAMWR = 0x2C;
-    var ST7735_RAMRD = 0x2E;
-
     function drawPixel(x, y, color){
         var element = document.getElementById(x.toString(16)+y.toString(16));
         element.style.background = color;
     }
         
-    function peripheralSPIWrite(data) {
-    	switch(data){
-	    case ST7735_CASET:
-                alert("CASET");
-		break;
-	    case ST7735_RASET:
-                alert("RASET");
-		break;
-	    case ST7735_RAMWR:
-                alert("RAMWR");
-		break;
-	    case ST7735_RAMRD:
-                alert("RAMRD");
-		break;
-            default:
-                alert(data.toString(16));
-	}
-    }
-
     for(var j =0; j < 128; j++){
         document.write("<tr>");
         for(var i =0; i < 160; i++){

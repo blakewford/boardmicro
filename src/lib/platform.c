@@ -69,13 +69,13 @@
 #define SIMULATED_PLATFORM_SIGNATURE 0xBF
 
 #ifdef attiny4
-    #define dmaAddress 0x4200 - sizeof(dmaRegion)
+    #define dmaAddress 0x41F6
 #endif
 #ifdef atmega8
-    #define dmaAddress 0x2000 - sizeof(dmaRegion)
+    #define dmaAddress 0x1FF6
 #endif
 #ifdef atmega32u4
-    #define dmaAddress 0x8000 - sizeof(dmaRegion)
+    #define dmaAddress 0x7FF6
 #endif
 
 #ifdef attiny4
@@ -213,8 +213,8 @@ void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
 
 void platformBasedDisplayBackground(uint16_t color) {
     uint8_t x, y;
-    for(y=128; y>0; y--) {
-      for(x=160; x>0; x--) {
+    for(y=127; y>0; y--) {
+      for(x=159; x>0; x--) {
         platformBasedDisplaySetPixel(x, y, color);
       }
     }
