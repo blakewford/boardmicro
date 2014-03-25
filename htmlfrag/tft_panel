@@ -1,15 +1,22 @@
   <br>
   <table style="border-spacing: 0px; width:160px; height:128">
   <script>
+    function normalize(value){
+        return value.length == 2 ? value: "0"+ value;
+    }
+
     function drawPixel(x, y, color){
-        var element = document.getElementById(x.toString(16)+y.toString(16));
+        var id = normalize(x.toString(16));
+        id+=normalize(y.toString(16));
+        var element = document.getElementById(id);
         element.style.background = color;
     }
         
     for(var j =0; j < 128; j++){
         document.write("<tr>");
         for(var i =0; i < 160; i++){
-            var id = i.toString(16)+j.toString(16);
+            var id = normalize(i.toString(16));
+            id+=normalize(j.toString(16));
             document.write("<td id=\""+id+"\" style=\"background-color: black;\"></td>");
         }
         document.write("</tr>");
