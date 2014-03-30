@@ -1,0 +1,12 @@
+    <body style="background-color: #00979C">
+    <div style="text-align: center;">
+    <font style="color: white">Intel Hex File</font><input text="this" type="file" id="hexfile"/>
+    <br/>
+    <script>
+      for(j = 0; j < 4; j++){
+        for(i = 0; i < 8; i++)
+            document.write(generateRegisterHtml((j*8)+i));
+        document.write("<br/>")
+      }
+    </script>
+    </div>

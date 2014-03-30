@@ -78,6 +78,25 @@ bench.html:
 	cat htmlfrag/bench_platform_footer >> $(TARGET)_$@
 	echo '</html>' >> $(TARGET)_$@
 
+mobile.html:
+	cat htmlfrag/license > $(TARGET)_$@
+	echo '<html>' >> $(TARGET)_$@
+	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $(TARGET)_$@;
+	echo '<script>' >> $(TARGET)_$@
+	cat js/avrcore.js >> $(TARGET)_$@
+	echo '</script>' >> $(TARGET)_$@
+	cat htmlfrag/mobile_platform_header >> $(TARGET)_$@
+	echo '<div style="text-align: center;">' >> $(TARGET)_$@
+	echo '<table><tr>' >> $(TARGET)_$@
+	echo '<td>' >> $(TARGET)_$@
+	cat htmlfrag/$(TARGET)_port_gui >> $(TARGET)_$@
+	echo '</td>' >> $(TARGET)_$@
+	echo '</tr></table>' >> $(TARGET)_$@
+	cat htmlfrag/generic_uart_gui >> $(TARGET)_$@
+	echo '</div>' >> $(TARGET)_$@
+	cat htmlfrag/mobile_platform_footer >> $(TARGET)_$@
+	echo '</html>' >> $(TARGET)_$@
+
 upload: $(BASENAME).hex
 	python reset.py /dev/ttyACM0
 	sleep 2

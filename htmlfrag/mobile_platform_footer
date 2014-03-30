@@ -1,0 +1,35 @@
+    <div style="text-align: center;">
+    <br/>
+    <button onClick="forceBreak = true; exec();">Step/Break</button>
+    <button onClick="exec()">Continue</button>
+    <span class="loadMemory">
+      <button>Load Memory</button>
+    </span>
+    </div>
+    <script>
+      softBreakpoints.push(2);
+      function handleBreakpoint(address){
+        for(i = 0; i < 32; i++)
+            document.getElementById('register'+i).value = r[i].toString(16);
+      }
+      
+      document.querySelector('.loadMemory').addEventListener('click', function(evt) {
+        var file = document.getElementById('hexfile').files[0];
+        if (!file) {
+          alert('Intel Hex File Required');
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onloadend = function(evt) {
+          if (evt.target.readyState == FileReader.DONE) {
+              loadMemory(evt.target.result);
+              engineInit();
+              exec();
+          }
+        };
+    
+        reader.readAsBinaryString(file.slice(0, file.size));
+      }, false);
+    </script>
+    </body>
