@@ -1,1 +1,3 @@
 *.ignore
+android/build.xml
+android/local.properties

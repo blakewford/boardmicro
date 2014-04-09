@@ -66,6 +66,11 @@ function writeControlRegister(c) {
     33 === c && writeMemory((r[31] << 8 | r[30]) + flashStart, simulationManufacturerID.toString(16));
     memory[spmCr] = c
 }
+
+function isNative() {
+    return navigator.userAgent.indexOf("NativeApp") != -1;
+}
+
 function writeUARTDataRegister(c) {
     try {
         var b = document.getElementById("uart");
@@ -73,6 +78,8 @@ function writeUARTDataRegister(c) {
         b.value += String.fromCharCode(c)
     } catch (d) {}
     memory[udr] = c
+    if(isNative())
+        Android.showToast(c);
 }
 
 function peripheralSPIWrite(c) {}
@@ -148,6 +155,10 @@ function writeMemory(c, b) {
 }
 function readMemory(c) {
     return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : memory[c]
+}
+
+function loadDefault() {
+    loadMemory(hex);
 }
 
 function loadMemory(c) {

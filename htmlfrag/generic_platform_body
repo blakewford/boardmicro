@@ -1,6 +1,6 @@
 
 
-      loadMemory(hex);
+      loadDefault();
       engineInit();
       exec();
     </script>
