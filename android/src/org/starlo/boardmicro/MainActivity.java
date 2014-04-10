@@ -19,7 +19,6 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.util.Log;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
@@ -40,12 +39,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_layout);
 		SurfaceView surfaceView = (SurfaceView)findViewById(R.id.display);
-		Resources r = surfaceView.getResources();
 		mHolder = surfaceView.getHolder();
 		mHolder.addCallback(this);
 		mBitmap = Bitmap.createBitmap(SCREEN_WIDTH, SCREEN_HEIGHT, Config.ARGB_8888);
+		Resources r = surfaceView.getResources();
 		mScreenWidth =
-			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenWidthDp, r.getDisplayMetrics())).intValue();		setContentView(R.layout.display_layout);
+			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenWidthDp, r.getDisplayMetrics())).intValue();
 		mScreenHeight =
 			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenHeightDp, r.getDisplayMetrics())).intValue();
 		mBackgroundWebView = new WebView(this);
