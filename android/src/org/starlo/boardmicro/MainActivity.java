@@ -27,9 +27,10 @@ public class MainActivity extends Activity {
 		mBackgroundWebView.getSettings().setUserAgentString(mBackgroundWebView.getSettings().getUserAgentString()+" NativeApp");
 		mBackgroundWebView.setWebViewClient(new WebViewClient() {
 			public void onPageFinished(WebView view, String loc) {
-				if(!mDropboxCalled){
+				if(DropboxConstants.USE_DROPBOX && !mDropboxCalled){
 					mDropboxCalled = true;
-//					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.FILE_CONTENT).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.FILE_CONTENT).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+				}else{
 					mBackgroundWebView.loadUrl("javascript:loadDefault()");
 					mBackgroundWebView.loadUrl("javascript:engineInit()");
 					mBackgroundWebView.loadUrl("javascript:exec()");
