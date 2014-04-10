@@ -79,7 +79,7 @@ function writeUARTDataRegister(c) {
     } catch (d) {}
     memory[udr] = c
     if(isNative())
-        Android.showToast(c);
+        Android.writeUARTBuffer(c);
 }
 
 function peripheralSPIWrite(c) {}
