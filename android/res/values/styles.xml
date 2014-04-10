@@ -2,8 +2,8 @@
     <style name="keyboard_row">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:weightSum">4</item>
+        <item name="android:layout_weight">1.1</item>
+        <item name="android:weightSum">8</item>
     	<item name="android:orientation">horizontal</item>
     </style>
     <style name="keyboard_button">
