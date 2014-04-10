@@ -1,3 +1,4 @@
 *.ignore
 android/build.xml
 android/local.properties
+android/src/org/starlo/boardmicro/DropboxConstants.java

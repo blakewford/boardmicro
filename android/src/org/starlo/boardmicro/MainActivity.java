@@ -22,14 +22,17 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.display_layout);
 		mBackgroundWebView = new WebView(this);
 		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
-		mBackgroundWebView.loadUrl("file:///android_asset/index.html");
+		mBackgroundWebView.loadUrl("file:///android_asset/example.html");
 		mBackgroundWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
-                mBackgroundWebView.getSettings().setUserAgentString(mBackgroundWebView.getSettings().getUserAgentString()+" NativeApp");
+		mBackgroundWebView.getSettings().setUserAgentString(mBackgroundWebView.getSettings().getUserAgentString()+" NativeApp");
 		mBackgroundWebView.setWebViewClient(new WebViewClient() {
 			public void onPageFinished(WebView view, String loc) {
 				if(!mDropboxCalled){
 					mDropboxCalled = true;
-					new DbxChooser("").forResultType(DbxChooser.ResultType.FILE_CONTENT).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+//					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.FILE_CONTENT).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+					mBackgroundWebView.loadUrl("javascript:loadDefault()");
+					mBackgroundWebView.loadUrl("javascript:engineInit()");
+					mBackgroundWebView.loadUrl("javascript:exec()");
 				}
 			}
 		});
@@ -39,11 +42,10 @@ public class MainActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == DBX_CHOOSER_REQUEST) {
 			if (resultCode == Activity.RESULT_OK) {
-				mBackgroundWebView.loadUrl("javascript:loadDefault()");
-				mBackgroundWebView.loadUrl("javascript:engineInit()");
-				mBackgroundWebView.loadUrl("javascript:exec()");
 				DbxChooser.Result result = new DbxChooser.Result(data);
 				Toast.makeText(this, result.getLink().toString(), Toast.LENGTH_SHORT).show();
+				mBackgroundWebView.loadUrl("javascript:engineInit()");
+				mBackgroundWebView.loadUrl("javascript:exec()");
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);

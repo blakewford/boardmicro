@@ -110,7 +110,7 @@ android.html: $(BASENAME).hex
 	cat htmlfrag/$(TARGET)_pinout_gui >> $@
 	cat htmlfrag/generic_uart_gui >> $@
 	echo '</html>' >> $@
-	cp $@ ./android/assets/index.html
+	cp $@ ./android/assets/example.html
 	cd android; ant debug
 
 upload: $(BASENAME).hex
@@ -119,5 +119,5 @@ upload: $(BASENAME).hex
 	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin android/assets/index.html
+	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin android/assets/example.html
 	cd android; ant clean
