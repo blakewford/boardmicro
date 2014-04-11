@@ -33,6 +33,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private Bitmap mScaledBitmap;
 	private int mScreenWidth;
 	private int mScreenHeight;
+	int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		mScreenHeight =
 			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenHeightDp, r.getDisplayMetrics())).intValue();
 		mBackgroundWebView = new WebView(this);
+		refreshScreenLoop();
 		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
 		mBackgroundWebView.loadUrl("file:///android_asset/example.html");
 		mBackgroundWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
@@ -110,19 +112,34 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		});
 	}
 
+	@Override
+        public void setPixel(int x, int y, int color){
+		mPixelArray[y*SCREEN_WIDTH+x] = color;
+	}
+
 	private void wipeScreen(){
+		for(int i = 0; i < SCREEN_HEIGHT; i++){
+			for(int j = 0; j < SCREEN_WIDTH; j++){
+				setPixel(j, i, Color.WHITE);
+			}
+		}
+	}
+
+	private void refreshScreenLoop(){
 		if(mScaledBitmap != null)
 			mScaledBitmap.recycle();
 		Canvas canvas = mHolder.lockCanvas();
 		if(canvas != null){
-			int[] colors = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
-			for(int i = 0; i < colors.length; i++)
-				colors[i] = Color.BLUE;
 			canvas.drawColor(Color.BLACK);
-			mBitmap.setPixels(colors, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, mScreenWidth, false);
 			canvas.drawBitmap(mScaledBitmap, 0, 0, null);
 			mHolder.unlockCanvasAndPost(canvas);
 		}
+		mBackgroundWebView.postDelayed(new Runnable(){
+			public void run(){
+				refreshScreenLoop();
+			}
+		}, 200);
 	}
 }

@@ -133,6 +133,8 @@ function writeDMARegion(address, data){
         for(i=startRow; i < endRow; i++){
             for(j=startColumn; j < endColumn; j++){
                 drawPixel(j, i, color);
+                if(isNative())
+                    Android.drawPixel(j, i, color);
             }
         }
     }

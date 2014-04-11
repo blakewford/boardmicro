@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 import android.content.Context;
 import java.util.LinkedList;
-import android.util.Log;
+import android.graphics.Color;
 
 public class WebAppInterface {
 
@@ -46,6 +46,11 @@ public class WebAppInterface {
 			mBoardMicro.setPinState(portChar, i, status);
 			value = (byte)(value >> 0x1);
 		}
+	}
+
+	@JavascriptInterface
+	public void drawPixel(int x, int y, String colorString) {
+		mBoardMicro.setPixel(x, y, Color.parseColor(colorString));
 	}
 
 	private class LimitedQueue<E> extends LinkedList<E> {
