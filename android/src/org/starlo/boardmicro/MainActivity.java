@@ -8,8 +8,8 @@ import android.webkit.WebView;
 import android.widget.Toast;
 import android.content.Intent;
 import android.webkit.WebViewClient;
+import android.view.*;
 import com.dropbox.chooser.android.DbxChooser;
-
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -18,9 +18,9 @@ import android.graphics.Canvas;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.util.Log;
 
-public class MainActivity extends Activity implements SurfaceHolder.Callback {
+public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
 	static final int DBX_CHOOSER_REQUEST = 0;
 	private WebView mBackgroundWebView;
@@ -90,6 +90,25 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {}
+
+	@Override
+        public void writeToUARTBuffer(String buffer) {
+		Log.v("UART", buffer);
+                Toast.makeText(this, buffer, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+        public void setPinState(char port, byte pin, boolean status) {
+		Resources r = getResources();
+		final boolean finalStatus = status;
+		final View view = findViewById(r.getIdentifier("port"+new Character(port).toString(), "id", this.getPackageName()))
+		.findViewById(r.getIdentifier("pin"+new Byte(pin).toString(), "id", this.getPackageName()));
+		view.post(new Runnable(){
+			public void run(){
+				view.setBackgroundColor(finalStatus ? Color.GREEN: Color.RED);
+			}
+		});
+	}
 
 	private void wipeScreen(){
 		if(mScaledBitmap != null)

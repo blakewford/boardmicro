@@ -9,23 +9,22 @@
         android:layout_weight="4.5"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
-    <LinearLayout
-        style="@style/keyboard_row">
-        <View style="@style/keyboard_button"/>
+    <LinearLayout style="@style/keyboard_row" android:id="@+id/portB">
+        <View style="@style/keyboard_button" android:id="@+id/pin0"/>
         <include layout="@layout/vertical_divider"/>
-        <View style="@style/keyboard_button"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin1"/>
         <include layout="@layout/vertical_divider"/>
-        <View style="@style/keyboard_button"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin2"/>
         <include layout="@layout/vertical_divider"/>
-        <View style="@style/keyboard_button"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin3"/>
         <include layout="@layout/vertical_divider"/>
-        <View style="@style/keyboard_button"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin4"/>
         <include layout="@layout/vertical_divider"/>
-        <View style="@style/keyboard_button"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin5"/>
         <include layout="@layout/vertical_divider"/>
-        <View style="@style/keyboard_button"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin6"/>
         <include layout="@layout/vertical_divider"/>
-        <View style="@style/keyboard_button"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin7"/>
     </LinearLayout>
     <include layout="@layout/horizontal_divider"/>
     <LinearLayout 

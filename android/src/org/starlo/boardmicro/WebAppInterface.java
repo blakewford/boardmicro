@@ -8,19 +8,45 @@ import android.util.Log;
 
 public class WebAppInterface {
 
-	private Context mContext;
 	private LimitedQueue<String> mUARTBuffer = new LimitedQueue<String>(32);
-	private static final String TAG = "UART Buffer";
+	private BoardMicroInterface mBoardMicro;
 
-	WebAppInterface(Context c) {
-		mContext = c;
+	public WebAppInterface(BoardMicroInterface boardMicro){
+		mBoardMicro = boardMicro;
 	}
 
 	@JavascriptInterface
-	public void writeUARTBuffer(String value) {
-                mUARTBuffer.add(new Character((char)Integer.parseInt(value)).toString());
-		Log.v(TAG, mUARTBuffer.toString());
-		Toast.makeText(mContext, mUARTBuffer.toString(), Toast.LENGTH_SHORT).show();
+	public void writeUARTBuffer(int value) {
+		mUARTBuffer.add(new Character((char)value).toString());
+		mBoardMicro.writeToUARTBuffer(mUARTBuffer.toString());
+	}
+
+	@JavascriptInterface
+	public void writePort(int port, byte value) {
+		for(byte i=0; i < 8; i++){
+			if((value & 0x1) > 0){
+				char portChar = '\0';
+				switch(port){
+					case 0:
+						portChar = 'B';
+						mBoardMicro.setPinState(portChar, i, true);
+						break;
+					case 1:
+						portChar = 'C';
+						break;
+					case 2:
+						portChar = 'D';
+						break;
+					case 3:
+						portChar = 'E';
+						break;
+					case 4:
+						portChar = 'F';
+						break;
+				}
+			}
+			value = (byte)(value >> 0x1);
+		}
 	}
 
 	private class LimitedQueue<E> extends LinkedList<E> {

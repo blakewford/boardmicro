@@ -111,6 +111,8 @@ function writeSpecificPort(c) {
     case 4:
         b = dataQueueF
     }
+    if(isNative())
+        Android.writePort(c, b[0]);
     try{
         for (i = 0; i < bitsPerPort; i++) c = "pin" + parseInt(i + d), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
         b = b.shift();
