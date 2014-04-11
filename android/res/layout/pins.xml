@@ -1,0 +1,17 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <View style="@style/keyboard_button" android:id="@+id/pin0"/>
+    <include layout="@layout/vertical_divider"/>
+    <View style="@style/keyboard_button" android:id="@+id/pin1"/>
+    <include layout="@layout/vertical_divider"/>
+    <View style="@style/keyboard_button" android:id="@+id/pin2"/>
+    <include layout="@layout/vertical_divider"/>
+    <View style="@style/keyboard_button" android:id="@+id/pin3"/>
+    <include layout="@layout/vertical_divider"/>
+    <View style="@style/keyboard_button" android:id="@+id/pin4"/>
+    <include layout="@layout/vertical_divider"/>
+    <View style="@style/keyboard_button" android:id="@+id/pin5"/>
+    <include layout="@layout/vertical_divider"/>
+    <View style="@style/keyboard_button" android:id="@+id/pin6"/>
+    <include layout="@layout/vertical_divider"/>
+    <View style="@style/keyboard_button" android:id="@+id/pin7"/>
+</merge>

@@ -24,27 +24,26 @@ public class WebAppInterface {
 	@JavascriptInterface
 	public void writePort(int port, byte value) {
 		for(byte i=0; i < 8; i++){
-			if((value & 0x1) > 0){
-				char portChar = '\0';
-				switch(port){
-					case 0:
-						portChar = 'B';
-						mBoardMicro.setPinState(portChar, i, true);
-						break;
-					case 1:
-						portChar = 'C';
-						break;
-					case 2:
-						portChar = 'D';
-						break;
-					case 3:
-						portChar = 'E';
-						break;
-					case 4:
-						portChar = 'F';
-						break;
-				}
+			boolean status = (value & 0x1) > 0;
+			char portChar = '\0';
+			switch(port){
+				case 0:
+					portChar = 'B';
+					break;
+				case 1:
+					portChar = 'C';
+					break;
+				case 2:
+					portChar = 'D';
+					break;
+				case 3:
+					portChar = 'E';
+					break;
+				case 4:
+					portChar = 'F';
+					break;
 			}
+			mBoardMicro.setPinState(portChar, i, status);
 			value = (byte)(value >> 0x1);
 		}
 	}
