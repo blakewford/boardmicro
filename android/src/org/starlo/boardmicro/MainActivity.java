@@ -33,7 +33,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private Bitmap mScaledBitmap;
 	private int mScreenWidth;
 	private int mScreenHeight;
-	int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
+	private int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
+	private boolean mScreenDirty = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,27 +115,35 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	@Override
         public void setPixel(int x, int y, int color){
+		mScreenDirty = true;
 		mPixelArray[y*SCREEN_WIDTH+x] = color;
 	}
 
 	private void wipeScreen(){
+		wipeScreen(Color.WHITE);
+	}
+
+	private void wipeScreen(int color){
 		for(int i = 0; i < SCREEN_HEIGHT; i++){
 			for(int j = 0; j < SCREEN_WIDTH; j++){
-				setPixel(j, i, Color.WHITE);
+				setPixel(j, i, color);
 			}
 		}
 	}
 
 	private void refreshScreenLoop(){
-		if(mScaledBitmap != null)
-			mScaledBitmap.recycle();
-		Canvas canvas = mHolder.lockCanvas();
-		if(canvas != null){
-			canvas.drawColor(Color.BLACK);
-			mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, mScreenWidth, false);
-			canvas.drawBitmap(mScaledBitmap, 0, 0, null);
-			mHolder.unlockCanvasAndPost(canvas);
+		if(mScreenDirty){
+			mScreenDirty = false;
+			if(mScaledBitmap != null)
+				mScaledBitmap.recycle();
+			Canvas canvas = mHolder.lockCanvas();
+			if(canvas != null){
+				canvas.drawColor(Color.BLACK);
+				mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, mScreenWidth, false);
+				canvas.drawBitmap(mScaledBitmap, 0, 0, null);
+				mHolder.unlockCanvasAndPost(canvas);
+			}
 		}
 		mBackgroundWebView.postDelayed(new Runnable(){
 			public void run(){
