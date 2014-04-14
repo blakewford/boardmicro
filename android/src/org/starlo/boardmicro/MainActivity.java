@@ -35,6 +35,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private int mScreenHeight;
 	private	int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
 	private boolean mScreenDirty = true;
+	private boolean mProgramEnded = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		mBackgroundWebView = new WebView(this);
 		new Thread(new Runnable(){
 			public void run(){
-				while(true){
+				while(!mProgramEnded){
 					refreshScreenLoop();
 					try{
 						Thread.yield();
@@ -106,7 +107,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	@Override
         public void writeToUARTBuffer(String buffer) {
 		Log.v("UART", buffer);
-                Toast.makeText(this, buffer, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, buffer, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -126,6 +127,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
         public void setPixel(int x, int y, int color){
 		mScreenDirty = true;
 		mPixelArray[y*SCREEN_WIDTH+x] = color;
+	}
+
+	@Override
+        public void endProgram(){
+		mProgramEnded = true;
 	}
 
 	private void wipeScreen(){

@@ -781,6 +781,8 @@ function loop() {
                 forceBreak = false;
                 isPaused = true;
                 handleBreakpoint((PC - 2).toString(16).toUpperCase());
+            }else if(isNative()){
+                Android.endProgram();
             }
         }
         fetch(b, c);

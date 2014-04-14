@@ -53,6 +53,11 @@ public class WebAppInterface {
 		mBoardMicro.setPixel(x, y, Color.parseColor(colorString));
 	}
 
+	@JavascriptInterface
+	public void endProgram() {
+		mBoardMicro.endProgram();
+	}
+
 	private class LimitedQueue<E> extends LinkedList<E> {
 		private final int mLimit;
 
