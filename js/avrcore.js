@@ -83,6 +83,7 @@ function writeUARTDataRegister(c) {
 }
 
 function peripheralSPIWrite(c) {}
+function drawPixel(x, y, color) {}
 function writeSPIDataRegister(c) {
     memory[sdr] = c;
     peripheralSPIWrite(c)
