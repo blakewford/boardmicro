@@ -33,7 +33,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private Bitmap mScaledBitmap;
 	private int mScreenWidth;
 	private int mScreenHeight;
-	private int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
+	private	int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
 	private boolean mScreenDirty = true;
 
 	@Override
@@ -50,7 +50,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		mScreenHeight =
 			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenHeightDp, r.getDisplayMetrics())).intValue();
 		mBackgroundWebView = new WebView(this);
-		refreshScreenLoop();
+		new Thread(new Runnable(){
+			public void run(){
+				while(true){
+					refreshScreenLoop();
+					try{
+						Thread.yield();
+					}catch(Exception e){}
+				}
+			}
+		}).start();
 		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
 		mBackgroundWebView.loadUrl("file:///android_asset/example.html");
 		mBackgroundWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
@@ -145,10 +154,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				mHolder.unlockCanvasAndPost(canvas);
 			}
 		}
-		mBackgroundWebView.postDelayed(new Runnable(){
+		mBackgroundWebView.post(new Runnable(){
 			public void run(){
 				refreshScreenLoop();
 			}
-		}, 200);
+		});
 	}
 }
