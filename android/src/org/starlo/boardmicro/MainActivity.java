@@ -19,6 +19,12 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.util.Log;
+import org.apache.http.*;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.methods.HttpGet;
+import java.io.ByteArrayOutputStream;
+import android.os.AsyncTask;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
@@ -36,6 +42,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private	int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
 	private boolean mScreenDirty = true;
 	private boolean mProgramEnded = false;
+	private Thread mRefreshThread = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		mScreenHeight =
 			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenHeightDp, r.getDisplayMetrics())).intValue();
 		mBackgroundWebView = new WebView(this);
-		new Thread(new Runnable(){
+		mRefreshThread = new Thread(new Runnable(){
 			public void run(){
 				while(!mProgramEnded){
 					refreshScreenLoop();
@@ -60,7 +67,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 					}catch(Exception e){}
 				}
 			}
-		}).start();
+		});
 		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
 		mBackgroundWebView.loadUrl("file:///android_asset/example.html");
 		mBackgroundWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
@@ -69,11 +76,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			public void onPageFinished(WebView view, String loc) {
 				if(DropboxConstants.USE_DROPBOX && !mDropboxCalled){
 					mDropboxCalled = true;
-					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.FILE_CONTENT).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
-				}else{
-					mBackgroundWebView.loadUrl("javascript:loadDefault()");
-					mBackgroundWebView.loadUrl("javascript:engineInit()");
-					mBackgroundWebView.loadUrl("javascript:exec()");
+					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+				}else if(!DropboxConstants.USE_DROPBOX){
+					startProcess("javascript:loadDefault()");
 				}
 			}
 		});
@@ -83,11 +88,31 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == DBX_CHOOSER_REQUEST) {
 			if (resultCode == Activity.RESULT_OK) {
-				DbxChooser.Result result = new DbxChooser.Result(data);
-				Toast.makeText(this, result.getLink().toString(), Toast.LENGTH_SHORT).show();
-				mBackgroundWebView.loadUrl("javascript:engineInit()");
-				mBackgroundWebView.loadUrl("javascript:exec()");
-			}
+				final DbxChooser.Result result = new DbxChooser.Result(data);
+				new AsyncTask<Void, Void, String>(){
+					protected String doInBackground(Void... param) {
+						try{
+							HttpResponse response = new DefaultHttpClient().execute(new HttpGet(result.getLink().toString()));
+							if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+								ByteArrayOutputStream stream = new ByteArrayOutputStream();
+								response.getEntity().writeTo(stream);
+								stream.close();
+								return stream.toString();
+							} else{
+								response.getEntity().getContent().close();
+							}
+						} catch (Exception e) {
+							Log.v("Exception", e.toString());
+						}
+
+						return "";
+					}
+
+					protected void onPostExecute(String result) {
+						startProcess("javascript:loadDefault()");
+					}
+				}.execute();
+			};
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
@@ -132,6 +157,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	@Override
         public void endProgram(){
 		mProgramEnded = true;
+	}
+
+	public void startProcess(String javascriptUrl){
+		try{
+			mBackgroundWebView.loadUrl(javascriptUrl);
+			mBackgroundWebView.loadUrl("javascript:engineInit()");
+			mBackgroundWebView.loadUrl("javascript:exec()");
+			mRefreshThread.start();
+		}catch(Exception e){}
 	}
 
 	private void wipeScreen(){
