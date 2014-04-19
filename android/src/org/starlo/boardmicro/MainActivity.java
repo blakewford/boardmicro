@@ -109,7 +109,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 					}
 
 					protected void onPostExecute(String result) {
-						startProcess("javascript:loadDefault()");
+						startProcess("javascript:loadMemory('"+result.replace("\r\n", "|")+"', true)");
 					}
 				}.execute();
 			};

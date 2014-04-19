@@ -166,9 +166,12 @@ function loadDefault() {
     loadMemory(hex);
 }
 
-function loadMemory(c) {
+function loadMemory(c, alt) {
     initCore();
-    c = c.split(/["\n"]/);
+    if(!alt)
+        c = c.split(/["\n"]/);
+    else
+        c = c.split(/["|"]/);
     for (var b = 0; c[b];) {
         var d = c[b].substring(1),
             g = parseInt(d.substring(2, 6), 16),
