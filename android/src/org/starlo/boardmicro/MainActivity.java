@@ -194,10 +194,5 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				mHolder.unlockCanvasAndPost(canvas);
 			}
 		}
-		mBackgroundWebView.post(new Runnable(){
-			public void run(){
-				refreshScreenLoop();
-			}
-		});
 	}
 }
