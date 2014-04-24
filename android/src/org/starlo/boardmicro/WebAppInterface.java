@@ -5,6 +5,7 @@ import android.widget.Toast;
 import android.content.Context;
 import java.util.LinkedList;
 import android.graphics.Color;
+import com.google.gson.*;
 
 public class WebAppInterface {
 
@@ -58,6 +59,16 @@ public class WebAppInterface {
 		mBoardMicro.endProgram();
 	}
 
+	@JavascriptInterface
+	public void writePixelBuffer(String buffer) {
+		Gson gson = new GsonBuilder().create();
+		PixelPacket[] packetData = gson.fromJson(buffer, PixelPacket[].class);
+		for(int i = 0; i < packetData.length; i++){
+			PixelPacket packet = packetData[i];
+			drawPixel(packet.x, packet.y, packet.color);
+		}
+	}
+
 	private class LimitedQueue<E> extends LinkedList<E> {
 		private final int mLimit;
 
@@ -70,4 +81,11 @@ public class WebAppInterface {
 			return true;
 		}
 	}
+
+	private class PixelPacket {
+		public int x;
+		public int y;
+		public String color;
+	}
 }
+

@@ -33,6 +33,7 @@ var SP = 95,
     dataQueueD = [],
     dataQueueE = [],
     dataQueueF = [],
+    pixelQueue = [],
     softBreakpoints = [],
     isPaused = !0,
     forceBreak = !1,
@@ -134,8 +135,13 @@ function writeDMARegion(address, data){
         for(i=startRow; i < endRow; i++){
             for(j=startColumn; j < endColumn; j++){
                 drawPixel(j, i, color);
-                if(isNative())
-                    Android.drawPixel(j, i, color);
+                if(isNative()){
+                    var packet = new Object();
+                    packet.x = j;
+                    packet.y = i;
+                    packet.color = color;
+                    pixelQueue.push(packet);
+                }
             }
         }
     }
@@ -811,6 +817,8 @@ function loop() {
         if(!continueBatching)
             break;
     }
+    if(pixelQueue.length > 0)
+        Android.writePixelBuffer(JSON.stringify(pixelQueue));
     if(continueBatching)
         setTimeout(loop, 0);
 }
