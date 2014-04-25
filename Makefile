@@ -1,19 +1,19 @@
-#Makefile for jAVRscript.
+#Makefile for pichai.
 
-#This file is part of jAVRscript.
+#This file is part of pichai.
 
-#jAVRscript is free software; you can redistribute it and/or modify it under
+#pichai is free software; you can redistribute it and/or modify it under
 #the terms of the GNU General Public License as published by the Free
 #Software Foundation; either version 3, or (at your option) any later
 #version.
 
-#jAVRscript is distributed in the hope that it will be useful, but WITHOUT ANY
+#pichai is distributed in the hope that it will be useful, but WITHOUT ANY
 #WARRANTY; without even the implied warranty of MERCHANTABILITY or
 #FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 #for more details.
 
 #You should have received a copy of the GNU General Public License
-#along with jAVRscript; see the file LICENSE.  If not see
+#along with pichai; see the file LICENSE.  If not see
 #<http://www.gnu.org/licenses/>.
 
 #SUPPORTED TARGETS: attiny4 atmega8 atmega32u4

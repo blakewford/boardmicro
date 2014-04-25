@@ -1,5 +1,5 @@
 {
-  "name": "jAVRscript",
+  "name": "pichai",
   "description": "AVR Virtual Platform",
   "launch_path": "/index.html",
   "developer": {
@@ -13,15 +13,15 @@
   "messages": [],
   "locales": {
     "en-US": {
-      "name": "jAVRscript",
+      "name": "pichai",
       "description": "AVR Virtual Platform"
     }
   },
   "default_locale": "en-US",
   "icons": {
-    "60": "/style/icons/60/jAVRscript.png",
-    "120": "/style/icons/jAVRscript.png",
-    "128": "/style/icons/128/jAVRscript.png"
+    "60": "/style/icons/60/pichai.png",
+    "120": "/style/icons/pichai.png",
+    "128": "/style/icons/128/pichai.png"
   },
   "orientation": "portrait-primary"
 }

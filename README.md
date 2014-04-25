@@ -1,4 +1,4 @@
-jAVRscript
+pichai
 ===================
 
 HTML5 based AVR simulator
