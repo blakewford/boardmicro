@@ -24,7 +24,7 @@ SRC_DIR = src/
 LIB_DIR = src/lib
 BASENAME = $(SRC)_$(TARGET)
 
-all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).bin $(BASENAME).html bench.html
+all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).bin $(TARGET).html
 
 libplatform.a: platform.o
 	avr-ar rcs $@ $<
@@ -44,73 +44,19 @@ $(BASENAME).hex: $(BASENAME).elf
 $(BASENAME).bin: $(BASENAME).elf
 	avr-objcopy -I elf32-avr -O binary $(BASENAME).elf $(BASENAME).bin
 
-.PHONY $(BASENAME).html: $(BASENAME).hex
+.PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
 	echo '<html>' >> $@
-	cat htmlfrag/generic_platform_header >> $@
-	printf 'var target = "$(TARGET)";\n' >> $@
-	printf 'var hex = "' >> $@
-	tr '\r\n' '\\n' < $(BASENAME).hex >> $@
-	printf '";\n' >> $@
+	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@;
+	echo '<script>' >> $@
 	cat js/avrcore.js >> $@
-	cat htmlfrag/generic_platform_body >> $@
-	cat htmlfrag/$(TARGET)_pinout_gui >> $@
-	cat htmlfrag/generic_uart_gui >> $@
-	echo '</html>' >> $@
+	echo '</script>' >> $@
+	cat htmlfrag/htmlfrag >> $@
+	cat htmlfrag/$(TARGET)_port_gui >> $@
+	cat htmlfrag/htmlfrag2 >> $@
 
-bench.html:
-	cat htmlfrag/license > $(TARGET)_$@
-	echo '<html>' >> $(TARGET)_$@
-	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $(TARGET)_$@;
-	echo '<script>' >> $(TARGET)_$@
-	cat js/avrcore.js >> $(TARGET)_$@
-	echo '</script>' >> $(TARGET)_$@
-	cat htmlfrag/bench_platform_header >> $(TARGET)_$@
-	echo '<table><tr>' >> $(TARGET)_$@
-	echo '<td>' >> $(TARGET)_$@
-	cat htmlfrag/$(TARGET)_port_gui >> $(TARGET)_$@
-	echo '</td>' >> $(TARGET)_$@
-	echo '<td>' >> $(TARGET)_$@
-	cat htmlfrag/tft_panel >> $(TARGET)_$@
-	echo '</td>' >> $(TARGET)_$@
-	echo '</tr></table>' >> $(TARGET)_$@
-	cat htmlfrag/generic_uart_gui >> $(TARGET)_$@
-	cat htmlfrag/bench_platform_footer >> $(TARGET)_$@
-	echo '</html>' >> $(TARGET)_$@
-
-mobile.html:
-	cat htmlfrag/license > $(TARGET)_$@
-	echo '<html>' >> $(TARGET)_$@
-	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $(TARGET)_$@;
-	echo '<script>' >> $(TARGET)_$@
-	cat js/avrcore.js >> $(TARGET)_$@
-	echo '</script>' >> $(TARGET)_$@
-	cat htmlfrag/mobile_platform_header >> $(TARGET)_$@
-	echo '<div style="text-align: center;">' >> $(TARGET)_$@
-	echo '<table><tr>' >> $(TARGET)_$@
-	echo '<td>' >> $(TARGET)_$@
-	cat htmlfrag/$(TARGET)_port_gui >> $(TARGET)_$@
-	echo '</td>' >> $(TARGET)_$@
-	echo '</tr></table>' >> $(TARGET)_$@
-	cat htmlfrag/generic_uart_gui >> $(TARGET)_$@
-	echo '</div>' >> $(TARGET)_$@
-	cat htmlfrag/mobile_platform_footer >> $(TARGET)_$@
-	echo '</html>' >> $(TARGET)_$@
-
-android.html: $(BASENAME).hex
-	cat htmlfrag/license > $@
-	echo '<html>' >> $@
-	cat htmlfrag/generic_platform_header >> $@
-	printf 'var target = "$(TARGET)";\n' >> $@
-	printf 'var hex = "' >> $@
-	tr '\r\n' '\\n' < $(BASENAME).hex >> $@
-	printf '";\n' >> $@
-	cat js/avrcore.js >> $@
-	echo '</script></body>' >> $@
-	cat htmlfrag/$(TARGET)_pinout_gui >> $@
-	cat htmlfrag/generic_uart_gui >> $@
-	echo '</html>' >> $@
-	cp $@ ./android/assets/example.html
+android: $(TARGET).html
+	cp $< ./android/assets/example.html
 	cd android; ant debug
 
 upload: $(BASENAME).hex
