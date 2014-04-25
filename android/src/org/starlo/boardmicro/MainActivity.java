@@ -25,6 +25,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.HttpGet;
 import java.io.ByteArrayOutputStream;
 import android.os.AsyncTask;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.View.OnTouchListener;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
@@ -43,6 +45,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private boolean mScreenDirty = true;
 	private boolean mProgramEnded = false;
 	private Thread mRefreshThread = null;
+	private GestureDetector mGestureDetector = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				}else if(!DropboxConstants.USE_DROPBOX){
 					startProcess("javascript:loadDefault()");
 				}
+			}
+		});
+		mGestureDetector = new GestureDetector(getApplicationContext(), new LongPressListener());
+		surfaceView.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				return mGestureDetector.onTouchEvent(event);
 			}
 		});
 	}
@@ -161,6 +170,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	public void startProcess(String javascriptUrl){
 		try{
+			mProgramEnded = false;
 			mBackgroundWebView.loadUrl(javascriptUrl);
 			mBackgroundWebView.loadUrl("javascript:engineInit()");
 			mBackgroundWebView.loadUrl("javascript:exec()");
@@ -193,6 +203,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				canvas.drawBitmap(mScaledBitmap, 0, 0, null);
 				mHolder.unlockCanvasAndPost(canvas);
 			}
+		}
+	}
+
+	private class LongPressListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onDown(MotionEvent event){
+			return true;
+		}
+
+		@Override
+		public void onLongPress(MotionEvent event){
+			mBackgroundWebView.loadUrl("file:///android_asset/example.html");
+			new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
 		}
 	}
 }
