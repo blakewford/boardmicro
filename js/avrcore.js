@@ -784,6 +784,10 @@ function loop() {
     for(j = 0; j < 1000; j++){
         var c = parseInt(memory[PC++], 16), b = parseInt(memory[PC++], 16);
         var isBreak = 149 == b && 152 == c || isSoftBreakpoint(PC) || forceBreak;
+        if(pixelQueue.length > 0){
+            Android.writePixelBuffer(JSON.stringify(pixelQueue));
+            pixelQueue.length = 0;
+        }
         if((207 == b && 255 == c) || isBreak){
             continueBatching = false;
             if(isBreak){
@@ -817,8 +821,6 @@ function loop() {
         if(!continueBatching)
             break;
     }
-    if(pixelQueue.length > 0)
-        Android.writePixelBuffer(JSON.stringify(pixelQueue));
     if(continueBatching)
         setTimeout(loop, 0);
 }
