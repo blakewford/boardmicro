@@ -1,4 +1,18 @@
-    <body style="background-color: #00979C">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        html {
+            display: table;
+            margin: auto;
+        }
+        body {
+            display: table-cell;
+            vertical-align: middle;
+            background-color: #00979C;
+        }
+    </style>
+    <body>
     <div id="sources">
         <script>
             var options = {
