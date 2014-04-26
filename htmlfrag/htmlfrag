@@ -9,10 +9,11 @@
         body {
             display: table-cell;
             vertical-align: middle;
-            background-color: #00979C;
+            background-color: black;
         }
     </style>
     <body>
+    <div style="padding: 2px; border: 2px solid white; background-color: #00979C;" id="sources">
     <div id="sources">
         <script>
             var options = {
@@ -24,6 +25,7 @@
             document.getElementById("sources").appendChild(Dropbox.createChooseButton(options));
         </script>
     </div>
+    <br/>
     <br/>
     <table style="border-spacing: 0px; width:160px; height:128">
         <script>

@@ -139,5 +139,6 @@
         reader.readAsBinaryString(file.slice(0, file.size));
       }, false);
     </script>
+    </div>
     </body>
 </html>
