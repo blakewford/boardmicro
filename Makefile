@@ -46,7 +46,6 @@ $(BASENAME).bin: $(BASENAME).elf
 
 .PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
-	echo '<html>' >> $@
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@;
 	echo '<script>' >> $@
 	cat js/avrcore.js >> $@

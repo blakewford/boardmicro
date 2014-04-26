@@ -15,35 +15,121 @@
  You should have received a copy of the GNU General Public License
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
-var SP = 95,
-    SPH = 94,
-    SPL = 93,
-    r = Array(32),
-    calculatedOffset = 0,
-    SREG, C = 0,
-    Z = 0,
-    N = 0,
-    V = 0,
-    S = 0,
-    H = 0,
-    T = 0,
-    I = 0,
-    dataQueueB = [],
-    dataQueueC = [],
-    dataQueueD = [],
-    dataQueueE = [],
-    dataQueueF = [],
-    pixelQueue = [],
-    softBreakpoints = [],
-    isPaused = !0,
-    forceBreak = !1,
-    hasDeviceSignature = !1,
-    simulationManufacturerID = 191,
-    uartBufferLength = 32,
-    sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC;
-
+ function peripheralSPIWrite(c) {}
+ function drawPixel(x, y, color) {}
+ function setPin(c, b){}
+ var SP = 95,
+     SPH = 94,
+     SPL = 93,
+     r = Array(32),
+     calculatedOffset = 0,
+     SREG, C = 0,
+     Z = 0,
+     N = 0,
+     V = 0,
+     S = 0,
+     H = 0,
+     T = 0,
+     I = 0,
+     dataQueueB = [],
+     dataQueueC = [],
+     dataQueueD = [],
+     dataQueueE = [],
+     dataQueueF = [],
+     pixelQueue = [],
+     softBreakpoints = [],
+     isPaused = !0,
+     forceBreak = !1,
+     hasDeviceSignature = !1,
+     simulationManufacturerID = 191,
+     uartBufferLength = 32,
+     sdr, 
+     spsr, 
+     udr, 
+     ucsra, 
+     ucsrb, 
+     udri, 
+     memory, 
+     flashStart, 
+     dataStart, 
+     dataEnd, 
+     ioRegStart, 
+     portB, 
+     portC, 
+     portD, 
+     portE, 
+     portF, 
+     pllCsr, 
+     bitsPerPort, 
+     vectorBase, 
+     usbVectorBase, 
+     signatureOffset, 
+     jumpTableAddress, 
+     mainAddress, 
+     PC;
 function initCore() {
-    "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spr = 16894, udr = 16895, spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005, bitsPerPort = 4, SPH = 62, SPL = 61) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, sdr = 47, spsr = 46, udr = 44, udri = 24, ucsra = 43, ucsrb = 42, pllCsr = portF = portE = 57005, bitsPerPort = 8) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, DMA = 32758) : alert("Failed! Unknown target");
+    "attiny4" === target ?
+        (
+            memory = Array(17408), 
+            flashStart = 16384, 
+            dataStart = 64, 
+            dataEnd = 96, 
+            ioRegStart = 0, 
+            portB = 2, 
+            spr = 16894, 
+            udr = 16895,
+            bitsPerPort = 4, SPH = 62, SPL = 61, 
+            spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005 
+        )
+    : 
+    "atmega8" === target ?
+        (
+            memory = Array(8192), 
+            flashStart = 1120, 
+            dataStart = 96, 
+            dataEnd = 1120, 
+            ioRegStart = 32, 
+            portB = 56, 
+            portC = 53, 
+            portD = 50, 
+            spmCr = 87, 
+            sdr = 47, 
+            spsr = 46, 
+            udr = 44, 
+            udri = 24, 
+            ucsra = 43, 
+            ucsrb = 42, 
+            bitsPerPort = 8,
+            pllCsr = portF = portE = 57005
+        )
+    : 
+    "atmega32u4" === target ?
+        (
+            memory = Array(32768), 
+            flashStart = 2816, 
+            dataStart = 256, 
+            dataEnd = 2816, 
+            ioRegStart = 32, 
+            portB = 37, 
+            portC = 40, 
+            portD = 43, 
+            portE = 46, 
+            portF = 49, 
+            spmCr = 87, 
+            sdr = 78, 
+            spsr = 77, 
+            udr = 206, 
+            udri = 104, 
+            ucsra = 200, 
+            ucsrb = 201, 
+            pllCsr = 73, 
+            bitsPerPort = 8, 
+            SP = 2815, 
+            DMA = 32758
+        )
+    :
+    alert("Failed! Unknown target");
+
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
@@ -58,6 +144,7 @@ function initCore() {
     memory[ucsra] = 32;
     memory[ucsrb] = 32;
     memory[spsr] = 128;
+
     "attiny4" === target && (memory[16320] = simulationManufacturerID, memory[16321] = 143, memory[16322] = 10)
 }
 function writeClockRegister(c) {
@@ -67,11 +154,9 @@ function writeControlRegister(c) {
     33 === c && writeMemory((r[31] << 8 | r[30]) + flashStart, simulationManufacturerID.toString(16));
     memory[spmCr] = c
 }
-
 function isNative() {
     return navigator.userAgent.indexOf("NativeApp") != -1;
 }
-
 function writeUARTDataRegister(c) {
     try {
         var b = document.getElementById("uart");
@@ -82,9 +167,6 @@ function writeUARTDataRegister(c) {
     if(isNative())
         Android.writeUARTBuffer(c);
 }
-
-function peripheralSPIWrite(c) {}
-function drawPixel(x, y, color) {}
 function writeSPIDataRegister(c) {
     memory[sdr] = c;
     peripheralSPIWrite(c)
@@ -94,7 +176,6 @@ function callUARTInterrupt() {
     writeMemory(SP--, PC & 255);
     PC = udri + flashStart
 }
-
 function writeSpecificPort(c) {
     var b, d = 8 * c;
     switch (c) {
@@ -123,7 +204,6 @@ function writeSpecificPort(c) {
         b = b.shift();
     }
 }
-
 function writeDMARegion(address, data){
     if(address == DMA+9 || address == DMA+8){
         var startColumn = memory[DMA+1] << 8 | memory[DMA];
@@ -146,7 +226,6 @@ function writeDMARegion(address, data){
         }
     }
 }
-
 function writeMemory(c, b) {
     memory[c] = b;
     c == portB && dataQueueB.push(b);
@@ -167,11 +246,6 @@ function writeMemory(c, b) {
 function readMemory(c) {
     return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : memory[c]
 }
-
-function loadDefault() {
-    loadMemory(hex);
-}
-
 function loadMemory(c, alt) {
     initCore();
     if(!alt)
@@ -202,7 +276,6 @@ function setPostEvaluationFlags(c) {
     V = 127 < c ? 1 : 0;
     S = N ^ V
 }
-
 function getBreakDistance(c, b) {
     return (c & 3) << 5 | (b & 240) >> 3 | (b & 8) >> 3
 }
@@ -237,7 +310,6 @@ function getUpperPair(c, b) {
 function getDisplacement(c, b) {
     return c & 32 | (c & 12) << 1 | b & 7
 }
-
 function fetch(c, b) {
     var d = 16 * (c & 1) + ((b & 240) >> 4),
         g = 16 * ((c & 2) >> 1) + (b & 15);
@@ -778,7 +850,6 @@ function isSoftBreakpoint(c) {
     for (i = 0; i < softBreakpoints.length; i++) if (softBreakpoints[i] + flashStart === c) return !0;
     return !1
 }
-
 function loop() {
     var p, continueBatching = true;
     for(j = 0; j < 1000; j++){
@@ -824,7 +895,6 @@ function loop() {
     if(continueBatching)
         setTimeout(loop, 0);
 }
-
 function engineInit() {
     for (i = 0; i < r.length; i++) r[i] = 0;
     var c = 0;
@@ -837,51 +907,6 @@ function engineInit() {
         hasDeviceSignature = !0
     }
 }
-
 function exec() {
     isPaused && (isPaused = !1, loop())
 }
-
-function memoryDump() {
-    document.getElementById("uart").value = "";
-    var c = document.getElementById("memoryAddress");
-    for (i = 0; 10 > i; i++) {
-        var b = null;
-        try {
-            b = parseInt(c.value.substring(2), 16)
-        } catch (d) {} finally {
-            isNumber(b) || (b = PC), byteValue = readMemory(b - 5 + i).toString(16)
-        }
-        1 == byteValue.length && writeUARTDataRegister(48);
-        writeUARTDataRegister(byteValue.substring(0, 1).charCodeAt(0));
-        1 < byteValue.length && writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
-        writeUARTDataRegister(32)
-    }
-    c.value = "0x" + (PC - flashStart).toString(16)
-}
-
-function isNumber(c) {
-    return !isNaN(parseInt(c, 16))
-}
-function setPin(c, b) {
-    var d = document.getElementById(c).getContext("2d");
-    d.fillStyle = b;
-    d.fillRect(0, 0, 10, 10)
-}
-function generateRegisterHtml(c) {
-    return '<textarea id="register' + c + '" rows="1" cols="4">0x00</textarea>'
-}
-function generateFillerHtml() {
-    return '<div style="display: table-cell;"><canvas width="10" height="10"/></div>'
-}
-
-function generatePortHtml(c, b) {
-    var d = 8 * c,
-        g = '<div style="display: table-row">';
-    for (i = 0; 8 > i; i++) {
-        var e = parseInt(d + i),
-            g = g + ('<div style="display: table-cell;">  <canvas id="pin' + e + '" width="10" height="10"/> </div>');
-        0 < (1 << i & b) && (g += '<script>setPin("pin' + e + '", "#FF0000");\x3c/script>')
-    }
-    return g + "</div>"
-};

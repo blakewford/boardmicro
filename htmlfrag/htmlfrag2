@@ -9,7 +9,7 @@
             <button>Load Memory</button>
         </span>
     </details>
-    <details>
+    <details id="debug">
         <summary style="color:white">Debug</summary>
         <br/>
         <font style="color: white">Disassembly File</font><input name="debug" type="file" id="debugfile"/>
@@ -34,110 +34,102 @@
         <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
     </details>
     <script>
-      var cachedDisassembly;
-      var pointsPerLine = 16;
-      
-      function setBreakpoint(){
-        var list = document.getElementById('breakpoints');
-        var selected = list.options[list.selectedIndex].value;
-        var address = parseInt(selected.substring(0, selected.length-1), 16);
-        softBreakpoints.push(address);
-      }
-      
-      function matchTextToBreakpoint(text, address) {
-         var start = 0;
-         var lineCount = 0;
-         while(start >= 0 && start < text.length){
-            start = text.indexOf('\n', start)+1;
-            if(text.substring(start).indexOf(address) != -1)
-                lineCount++;
-         }
-         return pointsPerLine*lineCount;
-      }
-      
-      function getAddressString(address){
-        return " "+address.toString(16)+":";         
-      }
-      
-      function handleBreakpoint(address){
-        var addressString = getAddressString(parseInt(address, 16)-flashStart);
-        var textarea = document.getElementById('disassembly');
-        textarea.value = cachedDisassembly;
-        var retVal = 
-            matchTextToBreakpoint(
-                cachedDisassembly, 
-                addressString
-            ); 
-        textarea.scrollTop = retVal;
-        var line = (retVal/pointsPerLine);
-        var limit = (textarea.scrollTop/pointsPerLine);
-        if(line > limit){
-           textarea.value = cachedDisassembly.substring(cachedDisassembly.indexOf(addressString));
+        var cachedDisassembly;
+        var pointsPerLine = 16;
+        if(mobile){
+            document.getElementById("debug").style.display = "none";
         }
-        for(i = 0; i < 32; i++)
-            document.getElementById('register'+i).value = r[i].toString(16);
+        function setBreakpoint(){
+            var list = document.getElementById('breakpoints');
+            var selected = list.options[list.selectedIndex].value;
+            var address = parseInt(selected.substring(0, selected.length-1), 16);
+            softBreakpoints.push(address);
+        }
+        function matchTextToBreakpoint(text, address) {
+            var start = 0;
+            var lineCount = 0;
+            while(start >= 0 && start < text.length){
+                start = text.indexOf('\n', start)+1;
+                if(text.substring(start).indexOf(address) != -1)
+                    lineCount++;
+             }
+             return pointsPerLine*lineCount;
+        }
+        function getAddressString(address){
+            return " "+address.toString(16)+":";
+        }
+        function handleBreakpoint(address){
+            var addressString = getAddressString(parseInt(address, 16)-flashStart);
+            var textarea = document.getElementById('disassembly');
+            textarea.value = cachedDisassembly;
+            var retVal =
+                matchTextToBreakpoint(
+                    cachedDisassembly,
+                    addressString
+                );
+            textarea.scrollTop = retVal;
+            var line = (retVal/pointsPerLine);
+            var limit = (textarea.scrollTop/pointsPerLine);
+            if(line > limit){
+                textarea.value = cachedDisassembly.substring(cachedDisassembly.indexOf(addressString));
+            }
+            for(i = 0; i < 32; i++)
+                document.getElementById('register'+i).value = r[i].toString(16);
       }
-      
       function checkBreakpoint(address){
-        if(matchTextToBreakpoint(cachedDisassembly, address) > 0){
-            var option = document.createElement("OPTION");
-            option.appendChild(document.createTextNode(address));
-            document.getElementById("breakpoints").appendChild(option);
-            
-            return true;
-        }
-        
-        return false;
+          if(matchTextToBreakpoint(cachedDisassembly, address) > 0){
+              var option = document.createElement("OPTION");
+              option.appendChild(document.createTextNode(address));
+              document.getElementById("breakpoints").appendChild(option);
+              return true;
+          }
+          return false;
       }
-      
       function initializeBreakpoints(){
           softBreakpoints.push(2);
           var skips = 0;
           var endPoint = (matchTextToBreakpoint(cachedDisassembly, "__stop_program")/16);
           for(i = 0; i < endPoint; i++){
-            var address = getAddressString(i*2);
-            if(!checkBreakpoint(address)){
-                skips++;
-            }
+              var address = getAddressString(i*2);
+              if(!checkBreakpoint(address)){
+                  skips++;
+              }
           }
           for(i = endPoint; i < endPoint+skips; i++){
               var address = getAddressString(i*2);
               checkBreakpoint(address);             
           }
       }
-      
       document.querySelector('.loadMemory').addEventListener('click', function(evt) {
-        var file = document.getElementById('hexfile').files[0];
-        var debugfile = document.getElementById('debugfile').files[0];
-        if (!file) {
-          alert('Intel Hex File Required');
-          return;
-        }
-        var textarea = document.getElementById('disassembly');
-        if (!debugfile) {
-          textarea.value = "No debug file selected";
-        }else{
-            var reader = new FileReader();
-            reader.onloadend = function(evt) {
-              if (evt.target.readyState == FileReader.DONE)
-                 textarea.value = evt.target.result;
-                 cachedDisassembly = textarea.value;
-                 initializeBreakpoints();
-            };
-            reader.readAsBinaryString(debugfile.slice(0, debugfile.size));
-        }  
-  
-        var reader = new FileReader();
-        reader.onloadend = function(evt) {
-          if (evt.target.readyState == FileReader.DONE) {
-              loadMemory(evt.target.result);
-              engineInit();
-              exec();
+          var file = document.getElementById('hexfile').files[0];
+          var debugfile = document.getElementById('debugfile').files[0];
+          if (!file) {
+              alert('Intel Hex File Required');
+              return;
           }
-        };
-    
-        reader.readAsBinaryString(file.slice(0, file.size));
-      }, false);
+          var textarea = document.getElementById('disassembly');
+          if (!debugfile) {
+              textarea.value = "No debug file selected";
+          }else{
+              var reader = new FileReader();
+              reader.onloadend = function(evt) {
+              if (evt.target.readyState == FileReader.DONE)
+                  textarea.value = evt.target.result;
+                  cachedDisassembly = textarea.value;
+                  initializeBreakpoints();
+              };
+              reader.readAsBinaryString(debugfile.slice(0, debugfile.size));
+         }
+         var reader = new FileReader();
+         reader.onloadend = function(evt) {
+             if (evt.target.readyState == FileReader.DONE) {
+                 loadMemory(evt.target.result);
+                 engineInit();
+                 exec();
+             }
+         };
+         reader.readAsBinaryString(file.slice(0, file.size));
+    }, false);
     </script>
     </div>
     </body>

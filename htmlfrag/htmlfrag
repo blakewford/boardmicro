@@ -1,3 +1,51 @@
+<html>
+    <script>
+    var mobile = false;
+    if (screen.width <= 699) {
+        mobile = true;
+    }
+    function isNumber(c) {
+        return !isNaN(parseInt(c, 16))
+    }
+    function setPin(c, b) {
+        var d = document.getElementById(c).getContext("2d");
+        d.fillStyle = b;
+        d.fillRect(0, 0, 10, 10)
+    }
+    function generatePortHtml(c, b) {
+        var d = 8 * c,
+        g = '<div style="display: table-row">';
+        for (i = 0; 8 > i; i++) {
+            var e = parseInt(d + i),
+            g = g + ('<div style="display: table-cell;">  <canvas id="pin' + e + '" width="10" height="10"/> </div>');
+            0 < (1 << i & b) && (g += '<script>setPin("pin' + e + '", "#FF0000");\x3c/script>')
+        }
+        return g + "</div>"
+    }
+    function generateRegisterHtml(c) {
+        return '<textarea id="register' + c + '" rows="1" cols="4">0x00</textarea>'
+    }
+    function generateFillerHtml() {
+        return '<div style="display: table-cell;"><canvas width="10" height="10"/></div>'
+    }
+    function memoryDump() {
+        document.getElementById("uart").value = "";
+        var c = document.getElementById("memoryAddress");
+        for (i = 0; 10 > i; i++) {
+            var b = null;
+            try {
+                b = parseInt(c.value.substring(2), 16)
+            } catch (d) {} finally {
+                isNumber(b) || (b = PC), byteValue = readMemory(b - 5 + i).toString(16)
+            }
+            1 == byteValue.length && writeUARTDataRegister(48);
+            writeUARTDataRegister(byteValue.substring(0, 1).charCodeAt(0));
+            1 < byteValue.length && writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
+            writeUARTDataRegister(32)
+        }
+        c.value = "0x" + (PC - flashStart).toString(16)
+    }
+    </script>
     <style>
         html, body {
             height: 100%;
