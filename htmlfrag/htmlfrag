@@ -24,6 +24,26 @@
             document.getElementById("sources").appendChild(Dropbox.createChooseButton(options));
         </script>
     </div>
-    <table>
-        <tr>
-            <td>
+    <br/>
+    <table style="border-spacing: 0px; width:160px; height:128">
+        <script>
+            function normalize(value){
+                return value.length == 2 ? value: "0"+ value;
+            }
+            function drawPixel(x, y, color){
+                var id = normalize(x.toString(16));
+                id+=normalize(y.toString(16));
+                var element = document.getElementById(id);
+                element.style.background = color;
+            }
+            for(var j =0; j < 128; j++){
+                document.write("<tr>");
+                for(var i =0; i < 160; i++){
+                    var id = normalize(i.toString(16));
+                    id+=normalize(j.toString(16));
+                    document.write("<td id=\""+id+"\" style=\"background-color: black;\"></td>");
+                }
+                document.write("</tr>");
+            }
+        </script>
+    </table>
