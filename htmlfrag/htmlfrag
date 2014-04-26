@@ -1,10 +1,14 @@
     <body style="background-color: #00979C">
-    <div>
-        <font style="color: white">Intel Hex File</font><input text="this" type="file" id="hexfile"/>
-        <span class="loadMemory">
-            <button>Load Memory</button>
-        </span>
-        <br/>
+    <div id="sources">
+        <script>
+            var options = {
+                success: function(files) {
+                },
+                linkType: "direct",
+                extensions: ['.hex'],
+            };
+            document.getElementById("sources").appendChild(Dropbox.createChooseButton(options));
+        </script>
     </div>
     <table>
         <tr>

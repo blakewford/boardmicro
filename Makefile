@@ -51,6 +51,7 @@ $(BASENAME).bin: $(BASENAME).elf
 	echo '<script>' >> $@
 	cat js/avrcore.js >> $@
 	echo '</script>' >> $@
+	cat htmlfrag/dropbox >> $@
 	cat htmlfrag/htmlfrag >> $@
 	cat htmlfrag/$(TARGET)_port_gui >> $@
 	cat htmlfrag/htmlfrag2 >> $@

@@ -31,10 +31,13 @@
     <br/>
     <textarea id="uart" name="outputtext" rows="1" cols="32"></textarea>
     <br/>
-    <span class="loadMemory">
-      <button>Load Memory</button>
-    </span>
-    <br/>
+    <details>
+        <summary style="color:white">Local Binary</summary>
+        <font style="color: white">Intel Hex File</font><input text="this" type="file" id="hexfile"/>
+        <span class="loadMemory">
+            <button>Load Memory</button>
+        </span>
+    </details>
     <details>
         <summary style="color:white">Debug</summary>
         <br/>
