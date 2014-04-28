@@ -75,6 +75,7 @@
                         {
                             loadMemory(client.responseText);
                             engineInit();
+                            isPaused = true;
                             exec();
                         }
                     }
