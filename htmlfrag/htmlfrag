@@ -66,6 +66,19 @@
         <script>
             var options = {
                 success: function(files) {
+                    var url = files[0].link;
+                    var client = new XMLHttpRequest();
+                    client.open("GET", url, true);
+                    client.setRequestHeader("Content-Type", "text/plain");
+                    client.onreadystatechange = function(){
+                        if (client.readyState==4 && client.status==200)
+                        {
+                            loadMemory(client.responseText);
+                            engineInit();
+                            exec();
+                        }
+                    }
+                    client.send();
                 },
                 linkType: "direct",
                 extensions: ['.hex'],
