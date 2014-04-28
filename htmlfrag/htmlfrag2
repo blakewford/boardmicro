@@ -1,7 +1,7 @@
     <br/>
     <textarea id="uart" name="outputtext" rows="1" cols="32"></textarea>
     <br/>
-    <details>
+    <details id="local">
         <summary style="color:white">Local Binary</summary>
         <input text="this" type="file" id="hexfile"/>
         <br/>
@@ -38,6 +38,7 @@
         var pointsPerLine = 16;
         if(mobile){
             document.getElementById("debug").style.display = "none";
+            document.getElementById("local").style.display = "none";
         }
         function setBreakpoint(){
             var list = document.getElementById('breakpoints');
