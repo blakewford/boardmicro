@@ -272,7 +272,7 @@ function setPreEvaluationFlags(c, b) {
 function setPostEvaluationFlags(c) {
     255 < c ? (C = 1, c &= 255) : C = 0;
     Z = 0 === c ? 1 : 0;
-    N = 128 === (128 & c) ? 1 : 0;
+    N = (128 === (128 & c) ? 1 : 0) || c < 0;
     V = 127 < c ? 1 : 0;
     S = N ^ V
 }
@@ -339,7 +339,7 @@ function fetch(c, b) {
     case 7:
         H = 0;
         e = Z;
-        f = r[d] - r[g] + C;
+        f = r[d] - r[g] - C;
         setPostEvaluationFlags(f);
         Z = 0 === f ? e : 0;
         break;
@@ -371,6 +371,7 @@ function fetch(c, b) {
     case 23:
         setPreEvaluationFlags(r[d], r[g]);
         setPostEvaluationFlags(r[d] - r[g]);
+        C = Math.abs(r[g]) > Math.abs(r[d]);
         break;
     case 24:
     case 25:
