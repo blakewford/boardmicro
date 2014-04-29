@@ -15,8 +15,8 @@
  You should have received a copy of the GNU General Public License
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
- function peripheralSPIWrite(c) {}
- function drawPixel(x, y, color) {}
+ function peripheralSPIWrite(c){}
+ function drawPixel(x, y, color){}
  function setPin(c, b){}
  var SP = 95,
      SPH = 94,
@@ -800,6 +800,9 @@ function fetch(c, b) {
             break;
         case 3:
             e = !V;
+            break;
+        case 4:
+            e = !S;
             break;
         case 5:
             e = !H;

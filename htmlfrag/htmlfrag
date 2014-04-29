@@ -94,6 +94,8 @@
             function normalize(value){
                 return value.length == 2 ? value: "0"+ value;
             }
+            function peripheralSPIWrite(c){
+            }
             function drawPixel(x, y, color){
                 var id = normalize(x.toString(16));
                 id+=normalize(y.toString(16));
