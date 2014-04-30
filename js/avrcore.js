@@ -434,6 +434,7 @@ function fetch(c, b) {
     case 63:
         H = 0;
         setPostEvaluationFlags(r[getSmallDestinationRegister(c, b)] - getBigConstant(c, b));
+        C = Math.abs(getBigConstant(c, b)) > Math.abs(r[getSmallDestinationRegister(c, b)]);
         break;
     case 64:
     case 65:
@@ -778,6 +779,9 @@ function fetch(c, b) {
             break;
         case 3:
             e = V;
+            break;
+        case 4:
+            e = S;
             break;
         case 5:
             e = H;
