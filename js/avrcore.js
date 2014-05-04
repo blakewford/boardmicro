@@ -611,6 +611,7 @@ function fetch(c, b) {
         else if (184 === (b & 255) && 148 === c) V = 0;
         else if (200 === (b & 255) && 148 === c) S = 0;
         else if (216 === (b & 255) && 148 === c) H = 0;
+        else if (218 === (b & 255) && 148 === c) r[d] = r[d]-1;
         else if (232 === (b & 255) && 148 === c) T = 0;
         else if (248 === (b & 255) && 148 === c) I = 0;
         else if (8 === (b & 255) && 149 === c) f = memory[++SP], PC = f << 8 | memory[++SP];
