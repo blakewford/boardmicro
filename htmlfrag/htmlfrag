@@ -95,6 +95,14 @@
                 return value.length == 2 ? value: "0"+ value;
             }
             function peripheralSPIWrite(c){
+/*
+                if(((readMemory(portE) & 0x2) == 0)
+                   && ((readMemory(portB) & 0x10) == 0))
+                    alert("Command: "+c);
+                else if(((readMemory(portE) & 0x2) != 0)
+                   && ((readMemory(portB) & 0x10) == 0))
+                    alert("Data: "+c);
+*/
             }
             function drawPixel(x, y, color){
                 var id = normalize(x.toString(16));
