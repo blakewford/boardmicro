@@ -3,7 +3,7 @@
 #include <TFT.h>
 #include <SPI.h>
 
-TFT TFTscreen = TFT(8, 9, 0);
+TFT TFTscreen = TFT(7, 0, 0);
 
 void setup() {
   TFTscreen.begin();

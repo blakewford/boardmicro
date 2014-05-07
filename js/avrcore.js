@@ -551,7 +551,7 @@ function fetch(c, b) {
     case 137:
     case 140:
     case 141:
-        if (8 < (b & 15)) {
+        if (8 <= (b & 15)) {
             r[d] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b));
             break
         }
@@ -676,7 +676,7 @@ function fetch(c, b) {
     case 169:
     case 172:
     case 173:
-        8 < (b & 15) && (r[d] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b)));
+        8 <= (b & 15) && (r[d] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b)));
         8 > (b & 15) && 0 < (b & 15) && (r[d] = readMemory((r[31] << 8 | r[30]) + getDisplacement(c, b)));
         break;
     case 162:
