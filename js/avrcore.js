@@ -204,24 +204,34 @@ function writeSpecificPort(c) {
         b = b.shift();
     }
 }
+var offset = 0;
 function writeDMARegion(address, data){
-    if(address == DMA+9 || address == DMA+8){
+    if(address == DMA || address == DMA+1){
+        offset = 0;
+    }
+    else if(address == DMA+9 || address == DMA+8){
         var startColumn = memory[DMA+1] << 8 | memory[DMA];
         var endColumn = memory[DMA+3] << 8 | memory[DMA+2];
         var startRow = memory[DMA+5] << 8 | memory[DMA+4];
         var endRow = memory[DMA+7] << 8 | memory[DMA+6];
         var color = memory[DMA+9] << 8 | memory[DMA+8];
         color = color == 0xF800 ? "red": color == 0x001f ? "blue": "black";
-        for(i=startRow; i < endRow; i++){
-            for(j=startColumn; j < endColumn; j++){
-                drawPixel(j, i, color);
-                if(isNative()){
-                    var packet = new Object();
-                    packet.x = j;
-                    packet.y = i;
-                    packet.color = color;
-                    pixelQueue.push(packet);
-                }
+        drawPixel(startColumn+offset, startRow, color);
+        if(isNative()){
+            var packet = new Object();
+            packet.x = startColumn;
+            packet.y = startRow;
+            packet.color = color;
+            pixelQueue.push(packet);
+        }
+        if(startColumn+offset != endColumn){
+            offset++;
+        }else{
+            offset = 0;
+            if(startRow != endRow){
+                startRow++;
+                writeMemory(DMA+5, startRow >> 8);
+                writeMemory(DMA+4, startRow & 0xFF);
             }
         }
     }

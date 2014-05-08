@@ -212,20 +212,17 @@ void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
 }
 
 void platformBasedDisplayBackground(uint16_t color) {
-    if(!platformIsSimulated()){
-        uint8_t x, y;
-        for(y=127; y>0; y--) {
-          for(x=159; x>0; x--) {
+    uint8_t x, y;
+    dmaRegion* dma = (dmaRegion*)dmaAddress;
+    setupDisplayWindow(0, 0, 160, 128);
+    for(y=127; y>0; y--) {
+      for(x=159; x>0; x--) {
+        if(!platformIsSimulated()){
             platformBasedDisplaySetPixel(x, y, color);
-          }
+        }else{
+            dma->data = color;
         }
-    }else{
-        dmaRegion* dma = (dmaRegion*)dmaAddress;
-        dma->startColumn = 0;
-        dma->startRow = 0;
-        dma->endColumn = 160;
-        dma->endRow = 128;
-        dma->data = color;
+      }
     }
 }
 
