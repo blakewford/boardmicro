@@ -204,10 +204,10 @@ function writeSpecificPort(c) {
         b = b.shift();
     }
 }
-var offset = 0;
+var screenDataOffset = 0;
 function writeDMARegion(address, data){
     if(address == DMA || address == DMA+1){
-        offset = 0;
+        screenDataOffset = -1;
     }
     else if(address == DMA+9 || address == DMA+8){
         var startColumn = memory[DMA+1] << 8 | memory[DMA];
@@ -216,7 +216,7 @@ function writeDMARegion(address, data){
         var endRow = memory[DMA+7] << 8 | memory[DMA+6];
         var color = memory[DMA+9] << 8 | memory[DMA+8];
         color = color == 0xF800 ? "red": color == 0x001f ? "blue": "black";
-        drawPixel(startColumn+offset, startRow, color);
+        drawPixel(startColumn+screenDataOffset, startRow, color);
         if(isNative()){
             var packet = new Object();
             packet.x = startColumn;
@@ -224,10 +224,10 @@ function writeDMARegion(address, data){
             packet.color = color;
             pixelQueue.push(packet);
         }
-        if(startColumn+offset != endColumn){
-            offset++;
+        if(startColumn+screenDataOffset != endColumn){
+            screenDataOffset++;
         }else{
-            offset = 0;
+            screenDataOffset = 0;
             if(startRow != endRow){
                 startRow++;
                 writeMemory(DMA+5, startRow >> 8);
