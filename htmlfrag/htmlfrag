@@ -91,22 +91,73 @@
     <br/>
     <table style="border-spacing: 0px; width:160px; height:128">
         <script>
+            var colset = 0;
+            var rowset = 0;
+            var datasent = 0;
             function normalize(value){
                 return value.length == 2 ? value: "0"+ value;
             }
             function peripheralSPIWrite(c){
                 if(((readMemory(portE) & 0x40) == 0)
-                   && ((readMemory(portD) & 0x4) == 0))
-                    alert("Command: "+c);
-                else if(((readMemory(portE) & 0x40) == 0)
-                   && ((readMemory(portD) & 0x4) != 0))
-                    alert("Data: "+c);
+                   && ((readMemory(portD) & 0x4) == 0)){
+                    if(c == 0x2A){
+                        colset = 4;
+                    }else if(c == 0x2B){
+                        rowset = 4;
+                    }
+                }else if(((readMemory(portE) & 0x40) == 0)
+                   && ((readMemory(portD) & 0x4) != 0)){
+                    if(colset > 0){
+                        switch(colset){
+                            case 4:
+                                writeMemory(0x7FF7, c);
+                                break;
+                            case 3:
+                                writeMemory(0x7FF6, c);
+                                break;
+                            case 2:
+                                writeMemory(0x7FF9, c);
+                                break;
+                            case 1:
+                                writeMemory(0x7FF8, c);
+                                break;
+                        }
+                        colset--;
+                    }
+                    else if(rowset > 0){
+                        switch(rowset){
+                            case 4:
+                                writeMemory(0x7FFB, c);
+                                break;
+                            case 3:
+                                writeMemory(0x7FFA, c);
+                                break;
+                            case 2:
+                                writeMemory(0x7FFD, c);
+                                break;
+                            case 1:
+                                writeMemory(0x7FFC, c);
+                                break;
+                        }
+                        rowset--;
+                    }
+                    else{
+                        if(datasent % 2 == 0){
+                            writeMemory(0x7FFF, c);
+                        }else{
+                            writeMemory(0x7FFE, c);
+                        }
+                        datasent++;
+                    }
+                }
             }
             function drawPixel(x, y, color){
-                var id = normalize(x.toString(16));
-                id+=normalize(y.toString(16));
-                var element = document.getElementById(id);
-                element.style.background = color;
+                try{
+                    var id = normalize(x.toString(16));
+                    id+=normalize(y.toString(16));
+                    var element = document.getElementById(id);
+                    element.style.background = color;
+                }catch(e){}
             }
             for(var j =0; j < 128; j++){
                 document.write("<tr>");
