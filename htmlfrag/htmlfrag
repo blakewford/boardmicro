@@ -143,9 +143,9 @@
                     }
                     else{
                         if(datasent % 2 == 0){
-                            writeMemory(0x7FFF, c);
-                        }else{
                             writeMemory(0x7FFE, c);
+                        }else{
+                            writeMemory(0x7FFF, c);
                         }
                         datasent++;
                     }
