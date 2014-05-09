@@ -2,6 +2,11 @@
     <textarea id="uart" name="outputtext" rows="1" cols="32"></textarea>
     <br/>
     <details id="debug">
+        <summary style="color:white">Debug</summary>
+        <textarea id="memoryAddress" name="outputtext" rows="1" cols="5">0x</textarea>
+        <font style="color:white; font-weight:bold; padding-left:4em">^</font>
+        <button onClick="memoryDump();">Memory Dump</button>
+        <br/>
         <details id="local">
             <summary style="color:white">Local Binary</summary>
             <input text="this" type="file" id="hexfile"/>
@@ -12,26 +17,21 @@
             <br/>
             <font style="color: white">Disassembly File</font><input name="debug" type="file" id="debugfile"/>
             <br/>
+            <script>
+                for(j = 0; j < 4; j++){
+                    for(i = 0; i < 8; i++)
+                        document.write(generateRegisterHtml((j*8)+i));
+                    document.write("<br/>");
+                }
+            </script>
+            <select id = "breakpoints"></select>
+            <button onClick="setBreakpoint()">Set Breakpoint</button>
+            <button onClick="forceBreak = true; exec();">Step/Break</button>
+            <button onClick="softBreakpoints = [];">Clear Breakpoints</button>
+            <button onClick="exec()">Continue</button>
+            <br/>
+            <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
         </details>
-        <summary style="color:white">Debug</summary>
-        <script>
-            for(j = 0; j < 4; j++){
-                for(i = 0; i < 8; i++)
-                    document.write(generateRegisterHtml((j*8)+i));
-                document.write("<br/>");
-            }
-        </script>
-        <textarea id="memoryAddress" name="outputtext" rows="1" cols="5">0x</textarea>
-        <font style="font-weight:bold; padding-left:5em">^</font>
-        <button onClick="memoryDump();">Memory Dump</button>
-        <br/>
-        <select id = "breakpoints"></select>
-        <button onClick="setBreakpoint()">Set Breakpoint</button>
-        <button onClick="forceBreak = true; exec();">Step/Break</button>
-        <button onClick="softBreakpoints = [];">Clear Breakpoints</button>
-        <button onClick="exec()">Continue</button>
-        <br/>
-        <textarea id="disassembly" name="outputtext" rows="100" cols="90"></textarea>
     </details>
     <script>
         var cachedDisassembly;
