@@ -108,6 +108,7 @@
                 }else if(((readMemory(portE) & 0x40) == 0)
                    && ((readMemory(portD) & 0x4) != 0)){
                     if(colset > 0){
+                        optimizationEnabled = true;
                         switch(colset){
                             case 4:
                                 writeMemory(0x7FF7, c);
@@ -140,8 +141,8 @@
                                 break;
                         }
                         rowset--;
-                    }
-                    else{
+                        optimizationEnabled = false;
+                   }else{
                         if(datasent % 2 == 0){
                             writeMemory(0x7FFE, c);
                         }else{
@@ -152,12 +153,10 @@
                 }
             }
             function drawPixel(x, y, color){
-                try{
-                    var id = normalize(x.toString(16));
-                    id+=normalize(y.toString(16));
-                    var element = document.getElementById(id);
-                    element.style.background = color;
-                }catch(e){}
+                var id = normalize(x.toString(16));
+                id+=normalize(y.toString(16));
+                var element = document.getElementById(id);
+                element.style.background = color;
             }
             for(var j =0; j < 128; j++){
                 document.write("<tr>");

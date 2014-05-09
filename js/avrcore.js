@@ -15,9 +15,6 @@
  You should have received a copy of the GNU General Public License
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
- function peripheralSPIWrite(c){}
- function drawPixel(x, y, color){}
- function setPin(c, b){}
  var SP = 95,
      SPH = 94,
      SPL = 93,
@@ -43,30 +40,36 @@
      hasDeviceSignature = !1,
      simulationManufacturerID = 191,
      uartBufferLength = 32,
-     sdr, 
-     spsr, 
-     udr, 
-     ucsra, 
-     ucsrb, 
-     udri, 
-     memory, 
-     flashStart, 
-     dataStart, 
-     dataEnd, 
-     ioRegStart, 
-     portB, 
-     portC, 
-     portD, 
-     portE, 
-     portF, 
-     pllCsr, 
-     bitsPerPort, 
-     vectorBase, 
-     usbVectorBase, 
-     signatureOffset, 
-     jumpTableAddress, 
-     mainAddress, 
-     PC;
+     sdr,
+     spsr,
+     udr,
+     ucsra,
+     ucsrb,
+     udri,
+     memory,
+     flashStart,
+     dataStart,
+     dataEnd,
+     ioRegStart,
+     portB,
+     portC,
+     portD,
+     portE,
+     portF,
+     pllCsr,
+     bitsPerPort,
+     vectorBase,
+     usbVectorBase,
+     signatureOffset,
+     jumpTableAddress,
+     mainAddress,
+     PC,
+     optimizationEnabled;
+
+//Override in client
+function peripheralSPIWrite(c){}
+function drawPixel(x, y, color){}
+function setPin(c, b){}
 function initCore() {
     "attiny4" === target ?
         (
@@ -130,6 +133,7 @@ function initCore() {
     :
     alert("Failed! Unknown target");
 
+    optimizationEnabled = false;
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
@@ -196,11 +200,11 @@ function writeSpecificPort(c) {
     }
     if(isNative())
         Android.writePort(c, b[0]);
-    try{
+    if(!optimizationEnabled){
         for (i = 0; i < bitsPerPort; i++) c = "pin" + parseInt(i + d), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
         b = b.shift();
         for (i = 0; i < bitsPerPort; i++) parseInt(b) & 1 << i && setPin("pin" + parseInt(i + d), "#00FF00")
-    }catch(e){
+    }else{
         b = b.shift();
     }
 }
@@ -224,13 +228,15 @@ function writeDMARegion(address, data){
             color == 0xFFE0 ? "#FFFF00": //yellow
             color == 0xFFFF ? "white":
             "black";
-        drawPixel(startColumn+screenDataOffset, startRow, color);
-        if(isNative() && screenDataOffset != -1){
-            var packet = new Object();
-            packet.x = startColumn+screenDataOffset;
-            packet.y = startRow;
-            packet.color = color;
-            pixelQueue.push(packet);
+        if(screenDataOffset != -1){
+            drawPixel(startColumn+screenDataOffset, startRow, color);
+            if(isNative()){
+                var packet = new Object();
+                packet.x = startColumn+screenDataOffset;
+                packet.y = startRow;
+                packet.color = color;
+                pixelQueue.push(packet);
+            }
         }
         if(startColumn+screenDataOffset != endColumn){
             screenDataOffset++;
