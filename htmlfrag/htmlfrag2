@@ -1,19 +1,19 @@
     <br/>
     <textarea id="uart" name="outputtext" rows="1" cols="32"></textarea>
     <br/>
-    <details id="local">
-        <summary style="color:white">Local Binary</summary>
-        <input text="this" type="file" id="hexfile"/>
-        <br/>
-        <span class="loadMemory">
-            <button>Load Memory</button>
-        </span>
-    </details>
     <details id="debug">
+        <details id="local">
+            <summary style="color:white">Local Binary</summary>
+            <input text="this" type="file" id="hexfile"/>
+            <br/>
+            <span class="loadMemory">
+                <button>Load Memory</button>
+            </span>
+            <br/>
+            <font style="color: white">Disassembly File</font><input name="debug" type="file" id="debugfile"/>
+            <br/>
+        </details>
         <summary style="color:white">Debug</summary>
-        <br/>
-        <font style="color: white">Disassembly File</font><input name="debug" type="file" id="debugfile"/>
-        <br/>
         <script>
             for(j = 0; j < 4; j++){
                 for(i = 0; i < 8; i++)
