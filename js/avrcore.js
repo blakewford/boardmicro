@@ -215,7 +215,15 @@ function writeDMARegion(address, data){
         var startRow = memory[DMA+5] << 8 | memory[DMA+4];
         var endRow = memory[DMA+7] << 8 | memory[DMA+6];
         var color = memory[DMA+9] << 8 | memory[DMA+8];
-        color = color == 0xF800 ? "red": color == 0x001f ? "blue": "black";
+        color =
+            color == 0xF800 ? "red":
+            color == 0x001f ? "blue":
+            color == 0x07E0 ? "green":
+            color == 0x07FF ? "#00FFFF": //cyan
+            color == 0xF81F ? "#FF00FF": //magenta
+            color == 0xFFE0 ? "#FFFF00": //yellow
+            color == 0xFFFF ? "white":
+            "black";
         drawPixel(startColumn+screenDataOffset, startRow, color);
         if(isNative()){
             var packet = new Object();
