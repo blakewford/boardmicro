@@ -179,7 +179,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	}
 
 	private void wipeScreen(){
-		wipeScreen(Color.WHITE);
+		wipeScreen(Color.BLACK);
 	}
 
 	private void wipeScreen(int color){

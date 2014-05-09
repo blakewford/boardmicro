@@ -225,9 +225,9 @@ function writeDMARegion(address, data){
             color == 0xFFFF ? "white":
             "black";
         drawPixel(startColumn+screenDataOffset, startRow, color);
-        if(isNative()){
+        if(isNative() && screenDataOffset != -1){
             var packet = new Object();
-            packet.x = startColumn;
+            packet.x = startColumn+screenDataOffset;
             packet.y = startRow;
             packet.color = color;
             pixelQueue.push(packet);
