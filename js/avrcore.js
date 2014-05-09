@@ -576,7 +576,7 @@ function fetch(c, b) {
     case 139:
     case 142:
     case 143:
-        if (8 < (b & 15)) {
+        if (8 <= (b & 15)) {
             writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[d]);
             break
         }
@@ -697,7 +697,7 @@ function fetch(c, b) {
     case 171:
     case 174:
     case 175:
-        8 < (b & 15) && writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[d]);
+        8 <= (b & 15) && writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[d]);
         8 > (b & 15) && 0 < (b & 15) && writeMemory((r[31] << 8 | r[30]) + getDisplacement(c, b), r[d]);
         break;
     case 176:
