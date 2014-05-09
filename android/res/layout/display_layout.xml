@@ -1,9 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:weightSum="10"
-	android:orientation="vertical"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-<SurfaceView
+        android:weightSum="10"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00979C">
+    <SurfaceView
         android:layout_gravity="center_vertical|center_horizontal"
         android:id="@+id/display"
         android:layout_weight="4.5"

@@ -91,6 +91,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				return mGestureDetector.onTouchEvent(event);
 			}
 		});
+		findViewById(R.id.portC).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
 	}
 
 	@Override
