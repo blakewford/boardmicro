@@ -73,7 +73,9 @@
 function peripheralSPIWrite(c){}
 function uartWrite(c){}
 function drawPixel(x, y, color){}
+function popPortBuffer(b,d){b.shift()};
 function setPin(c, b){}
+
 function initCore() {
     "attiny4" === target ?
         (
@@ -202,13 +204,7 @@ function writeSpecificPort(c) {
     }
     if(isNative())
         Android.writePort(c, b[0]);
-    if(!optimizationEnabled && !forceOptimizationEnabled){
-        for (i = 0; i < bitsPerPort; i++) c = "pin" + parseInt(i + d), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
-        b = b.shift();
-        for (i = 0; i < bitsPerPort; i++) parseInt(b) & 1 << i && setPin("pin" + parseInt(i + d), "#00FF00")
-    }else{
-        b = b.shift();
-    }
+    popPortBuffer(b,d);
 }
 var screenDataOffset = 0;
 function writeDMARegion(address, data){
