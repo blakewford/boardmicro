@@ -7,19 +7,22 @@
         <font style="color:white; font-weight:bold; padding-left:0.5em">^</font>
         <button onClick="memoryDump();">Memory Dump</button>
         <br/>
-        <input style="width: 99%" type="range" name="batch" min="1" max="10000" value="1000">
+        <font style="color:white;">Batch Instructions 1 - 10000</font>
         <br/>
-        <input style="width: 99%" type="range" name="delay" min="1" max="1000" value="0">
+        <input id="batch" onchange="batchSize=this.value" style="width: 99%" type="range" min="1" max="10000" value="1000">
+        <br/>
+        <font style="color:white;">Batch Delay 0 - 1000ms</font>
+        <br/>
+        <input id="delay" onchange="batchDelay=this.value" style="width: 99%" type="range" min="0" max="1000" value="0">
         <br/>
         <details id="local">
             <summary style="color:white">Local Binary</summary>
             <input text="this" type="file" id="hexfile"/>
+            <font style="color: white">Disassembly File</font><input name="debug" type="file" id="debugfile"/>
             <br/>
             <span class="loadMemory">
                 <button>Load Memory</button>
             </span>
-            <br/>
-            <font style="color: white">Disassembly File</font><input name="debug" type="file" id="debugfile"/>
             <br/>
             <script>
                 for(j = 0; j < 4; j++){

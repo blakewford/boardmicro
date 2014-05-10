@@ -64,7 +64,9 @@
      jumpTableAddress,
      mainAddress,
      PC,
-     optimizationEnabled;
+     optimizationEnabled,
+     batchSize,
+     batchDelay;
 
 //Override in client
 function peripheralSPIWrite(c){}
@@ -134,6 +136,8 @@ function initCore() {
     alert("Failed! Unknown target");
 
     optimizationEnabled = false;
+    batchSize = 1000;
+    batchDelay = 0;
     PC = flashStart;
     SREG = ioRegStart + 63;
     vectorBase = flashStart + 172;
@@ -887,7 +891,7 @@ function isSoftBreakpoint(c) {
 }
 function loop() {
     var p, continueBatching = true;
-    for(j = 0; j < 1000; j++){
+    for(j = 0; j < batchSize; j++){
         var c = parseInt(memory[PC++], 16), b = parseInt(memory[PC++], 16);
         var isBreak = 149 == b && 152 == c || isSoftBreakpoint(PC) || forceBreak;
         if(pixelQueue.length > 0){
@@ -928,7 +932,7 @@ function loop() {
             break;
     }
     if(continueBatching)
-        setTimeout(loop, 0);
+        setTimeout(loop, batchDelay);
 }
 function engineInit() {
     for (i = 0; i < r.length; i++) r[i] = 0;
