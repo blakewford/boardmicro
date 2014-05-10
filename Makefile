@@ -61,6 +61,8 @@ android: $(TARGET).html
 	echo '<script>' >> $@.html
 	cat js/avrcore.js >> $@.html
 	echo '</script>' >> $@.html
+	echo '<script type="text/javascript">forceOptimizationEnabled = false;</script>' >> $@.html;
+	echo '<script type="text/javascript">batchSize = 1E4;</script>' >> $@.html;
 	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
