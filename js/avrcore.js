@@ -65,12 +65,13 @@
      mainAddress,
      PC,
      optimizationEnabled,
-     forceOptimizationEnabled,
+     forceOptimizationEnabled = false,
      batchSize,
      batchDelay;
 
 //Override in client
 function peripheralSPIWrite(c){}
+function uartWrite(c){}
 function drawPixel(x, y, color){}
 function setPin(c, b){}
 function initCore() {
@@ -137,7 +138,6 @@ function initCore() {
     alert("Failed! Unknown target");
 
     optimizationEnabled = false;
-    forceOptimizationEnabled = false;
     batchSize = 1000;
     batchDelay = 0;
     PC = flashStart;
@@ -168,12 +168,8 @@ function isNative() {
     return navigator.userAgent.indexOf("NativeApp") != -1;
 }
 function writeUARTDataRegister(c) {
-    try {
-        var b = document.getElementById("uart");
-        b.value.length == uartBufferLength - 1 && (b.value = "");
-        b.value += String.fromCharCode(c)
-    } catch (d) {}
-    memory[udr] = c
+    memory[udr] = c;
+    uartWrite(c);
     if(isNative())
         Android.writeUARTBuffer(c);
 }

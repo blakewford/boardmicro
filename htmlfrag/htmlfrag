@@ -97,6 +97,11 @@
             function normalize(value){
                 return value.length == 2 ? value: "0"+ value;
             }
+            function uartWrite(c){
+                var b = document.getElementById("uart");
+                b.value.length == uartBufferLength - 1 && (b.value = "");
+                b.value += String.fromCharCode(c)
+            }
             function peripheralSPIWrite(c){
                 if(((readMemory(portE) & 0x40) == 0)
                    && ((readMemory(portD) & 0x4) == 0)){
