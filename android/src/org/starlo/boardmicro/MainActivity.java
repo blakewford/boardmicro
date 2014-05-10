@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			}
 		});
 		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
-		mBackgroundWebView.loadUrl("file:///android_asset/example.html");
+		mBackgroundWebView.loadUrl("file:///android_asset/avrcore.html");
 		mBackgroundWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
 		mBackgroundWebView.getSettings().setUserAgentString(mBackgroundWebView.getSettings().getUserAgentString()+" NativeApp");
 		mBackgroundWebView.setWebViewClient(new WebViewClient() {
@@ -229,7 +229,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 		@Override
 		public void onLongPress(MotionEvent event){
-			mBackgroundWebView.loadUrl("file:///android_asset/example.html");
+			mBackgroundWebView.loadUrl("file:///android_asset/avrcore.html");
 			new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
 		}
 	}

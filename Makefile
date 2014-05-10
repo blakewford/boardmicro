@@ -56,7 +56,12 @@ $(BASENAME).bin: $(BASENAME).elf
 	cat htmlfrag/htmlfrag2 >> $@
 
 android: $(TARGET).html
-	cp $< ./android/assets/example.html
+	cat htmlfrag/license > $@.html
+	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@.html;
+	echo '<script>' >> $@.html
+	cat js/avrcore.js >> $@.html
+	echo '</script>' >> $@.html
+	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
 upload: $(BASENAME).hex
@@ -65,5 +70,5 @@ upload: $(BASENAME).hex
 	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin android/assets/example.html
+	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin android/assets/avrcore.html
 	cd android; ant clean
