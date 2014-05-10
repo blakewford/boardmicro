@@ -15,7 +15,7 @@
         <br/>
         <input id="delay" onchange="batchDelay=this.value" style="width: 99%" type="range" min="0" max="1000" value="0">
         <br/>
-        <input type="checkbox" onchange="optimizationEnabled=this.checked"><font style="color:white;">Disable Port Animation</font>
+        <input type="checkbox" onchange="forceOptimizationEnabled=this.checked"><font style="color:white;">Disable Port Animation</font>
         <br/>
         <details id="local">
             <summary style="color:white">Local Binary</summary>

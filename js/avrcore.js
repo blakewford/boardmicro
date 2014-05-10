@@ -65,6 +65,7 @@
      mainAddress,
      PC,
      optimizationEnabled,
+     forceOptimizationEnabled,
      batchSize,
      batchDelay;
 
@@ -136,6 +137,7 @@ function initCore() {
     alert("Failed! Unknown target");
 
     optimizationEnabled = false;
+    forceOptimizationEnabled = false;
     batchSize = 1000;
     batchDelay = 0;
     PC = flashStart;
@@ -204,7 +206,7 @@ function writeSpecificPort(c) {
     }
     if(isNative())
         Android.writePort(c, b[0]);
-    if(!optimizationEnabled){
+    if(!optimizationEnabled && !forceOptimizationEnabled){
         for (i = 0; i < bitsPerPort; i++) c = "pin" + parseInt(i + d), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
         b = b.shift();
         for (i = 0; i < bitsPerPort; i++) parseInt(b) & 1 << i && setPin("pin" + parseInt(i + d), "#00FF00")
