@@ -1035,7 +1035,6 @@ function loop() {
   var c, b = !0;
   for (j = 0;j < batchSize;j++) {
     var e = parseInt(memory[PC++], 16), h = parseInt(memory[PC++], 16), d = 149 == h && 152 == e || isSoftBreakpoint(PC) || forceBreak;
-    0 < pixelQueue.length && (Android.writePixelBuffer(JSON.stringify(pixelQueue)), pixelQueue.length = 0);
     if (207 == h && 255 == e || d) {
       b = !1, d ? (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : isNative() && Android.endProgram();
     }
@@ -1065,6 +1064,7 @@ function loop() {
       break;
     }
   }
+  0 < pixelQueue.length && (Android.writePixelBuffer(JSON.stringify(pixelQueue)), pixelQueue.length = 0);
   b && setTimeout(loop, batchDelay);
 }
 function engineInit() {

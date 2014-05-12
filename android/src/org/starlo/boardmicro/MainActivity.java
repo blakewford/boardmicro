@@ -105,6 +105,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
 		findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
 		findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	@Override
