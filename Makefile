@@ -53,6 +53,7 @@ $(BASENAME).bin: $(BASENAME).elf
 	cat htmlfrag/dropbox >> $@
 	cat htmlfrag/htmlfrag >> $@
 	cat htmlfrag/$(TARGET)_port_gui >> $@
+	cat js/tft_spi_driver.js >> $@
 	cat htmlfrag/htmlfrag2 >> $@
 
 android: $(TARGET).html
