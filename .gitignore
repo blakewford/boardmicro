@@ -1,6 +1,7 @@
 *.ignore
 android/build.xml
 android/local.properties
+android/boardmicro.keystore
 android/src/org/starlo/boardmicro/DropboxConstants.java
 prebuilt
 htmlfrag/dropbox
