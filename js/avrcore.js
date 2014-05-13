@@ -89,7 +89,7 @@ function writeSpecificPort(c) {
     case 4:
       b = dataQueueF;
   }
-  isNative() && !forceOptimizationEnabled && Android.writePort(c, b[0]);
+  isNative() && !(forceOptimizationEnabled && (e == 16 || e == 24)) && Android.writePort(c, b[0]);
   popPortBuffer(b, e);
 }
 var screenDataOffset = 0;
