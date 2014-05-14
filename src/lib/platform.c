@@ -214,7 +214,7 @@ void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
 void platformBasedDisplayBackground(uint16_t color) {
     uint8_t x, y;
     dmaRegion* dma = (dmaRegion*)dmaAddress;
-    setupDisplayWindow(0, 0, 160, 128);
+    setupDisplayWindow(0, 0, 159, 127);
     for(y=127; y>0; y--) {
       for(x=159; x>0; x--) {
         if(!platformIsSimulated()){
