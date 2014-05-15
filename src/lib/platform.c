@@ -211,6 +211,34 @@ void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
     }
 }
 
+void platformBasedVerticalLine(uint8_t x, uint8_t y, uint8_t height, uint16_t color) {
+    dmaRegion* dma = (dmaRegion*)dmaAddress;
+    setupDisplayWindow(x, y, x, y+height);
+    uint8_t i = 0;
+    for(i; i < height; i++) {
+        if(!platformIsSimulated()){
+            writeDisplayData(color >> 8);
+            writeDisplayData(color);
+        }else{
+            dma->data = color;
+        }
+    }
+}
+
+void platformBasedHorizontalLine(uint8_t x, uint8_t y, uint8_t width, uint16_t color) {
+    dmaRegion* dma = (dmaRegion*)dmaAddress;
+    setupDisplayWindow(x, y, x+width, y);
+    uint8_t i = 0;
+    for(i; i < width; i++) {
+        if(!platformIsSimulated()){
+            writeDisplayData(color >> 8);
+            writeDisplayData(color);
+        }else{
+            dma->data = color;
+        }
+    }
+}
+
 void platformBasedDisplayBackground(uint16_t color) {
     uint8_t x, y;
     dmaRegion* dma = (dmaRegion*)dmaAddress;
