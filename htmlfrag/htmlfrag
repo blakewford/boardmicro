@@ -28,22 +28,15 @@
     function generateFillerHtml() {
         return '<div style="display: table-cell;"><canvas width="10" height="10"/></div>'
     }
-    function memoryDump() {
+    function doDebugCommand() {
         document.getElementById("uart").value = "";
-        var c = document.getElementById("memoryAddress");
-        for (i = 0; 10 > i; i++) {
-            var b = null;
-            try {
-                b = parseInt(c.value.substring(2), 16)
-            } catch (d) {} finally {
-                isNumber(b) || (b = PC), byteValue = readMemory(b - 5 + i).toString(16)
-            }
-            1 == byteValue.length && writeUARTDataRegister(48);
-            writeUARTDataRegister(byteValue.substring(0, 1).charCodeAt(0));
-            1 < byteValue.length && writeUARTDataRegister(byteValue.substring(1, 2).charCodeAt(0));
+        var c = document.getElementById("gdb").value;
+        if(c.substring(0, 1) == "x"){
+            var b = readMemory(parseInt(c.substring(2), 16)).toString(16);
+            writeUARTDataRegister(b.substring(0, 1).charCodeAt(0));
+            writeUARTDataRegister(b.substring(1, 2).charCodeAt(0));
             writeUARTDataRegister(32)
         }
-        c.value = "0x" + (PC - flashStart).toString(16)
     }
     </script>
     <style>

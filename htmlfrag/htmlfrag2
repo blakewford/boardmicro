@@ -3,9 +3,8 @@
     <br/>
     <details id="debug">
         <summary style="color:white">Debug</summary>
-        <input type="search" size="7" id="memoryAddress" value="0x"/>
-        <font style="color:white; font-weight:bold; padding-left:0.5em">^</font>
-        <button onClick="memoryDump();">Memory Dump</button>
+        <button onClick="doDebugCommand();">(gdb)</button>
+        <input type="search" size="7" id="gdb" value=""/>
         <br/>
         <font style="color:white;">Batch Instructions 1 - 10000</font>
         <br/>
