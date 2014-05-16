@@ -33,10 +33,10 @@
         var c = document.getElementById("gdb").value;
         if(c.substring(0, 1) == "x"){
             var b = readMemory(parseInt(c.substring(2), 16)).toString(16);
-            writeUARTDataRegister(b.substring(0, 1).charCodeAt(0));
-            writeUARTDataRegister(b.substring(1, 2).charCodeAt(0));
-            writeUARTDataRegister(32)
+            document.getElementById("gdbshell").textContent =
+                c.substring(1)+": 0x"+b.substring(0, 2);
         }
+        document.getElementById("gdb").value = "";
     }
     </script>
     <style>

@@ -5,6 +5,7 @@
         <summary style="color:white">Debug</summary>
         <button onClick="doDebugCommand();">(gdb)</button>
         <input type="search" size="7" id="gdb" value=""/>
+        <font id="gdbshell"style="color:white;"></font>
         <br/>
         <font style="color:white;">Batch Instructions 1 - 10000</font>
         <br/>
