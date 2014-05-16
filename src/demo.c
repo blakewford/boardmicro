@@ -45,10 +45,7 @@ int main(){
     platformBasedHorizontalLine(106, 86, 10, graphics_text_color);
     platformBasedVerticalLine(117, 45, 40, graphics_text_color);
 
-    int i = 0;
-    while(i != strlen(message)){
-        platformBasedSerialWrite(message[i++]);
-    }
+    platformBasedSerialPrint(message);
     return 0;
 }
 

@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <platform.h>
 #include <stdbool.h>
+#include <string.h>
 
 #ifndef attiny4
     #include <avr/boot.h>
@@ -162,6 +163,14 @@ void platformBasedSerialWrite(uint8_t data)
 #endif
     /* Put data into buffer, sends the data */
     UDR = data;
+}
+
+void platformBasedSerialPrint(const char* message)
+{
+    int i = 0;
+    while(i != strlen(message)){
+        platformBasedSerialWrite(message[i++]);
+    }
 }
 
 void setupDisplayWindow(uint8_t startX, uint8_t startY, uint8_t endX, uint8_t endY){
