@@ -19,93 +19,36 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.util.Log;
-import org.apache.http.*;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.client.methods.HttpGet;
-import java.io.ByteArrayOutputStream;
-import android.os.AsyncTask;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
-	static final int DBX_CHOOSER_REQUEST = 0;
-	private WebView mBackgroundWebView;
-	private boolean mDropboxCalled = false;
-
+	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final int SCREEN_WIDTH = 160;
 	private static final int SCREEN_HEIGHT = 128;
+	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
+
+	private WebView mBackgroundWebView;
 	private SurfaceHolder mHolder;
 	private Bitmap mBitmap;
 	private Bitmap mScaledBitmap;
+	private Thread mRefreshThread = null;
+	private GestureDetector mGestureDetector = null;
+
 	private int mScreenWidth;
 	private int mScreenHeight;
 	private	int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
 	private boolean mScreenDirty = true;
 	private boolean mProgramEnded = false;
-	private Thread mRefreshThread = null;
-	private GestureDetector mGestureDetector = null;
+	private boolean mDropboxCalled = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_layout);
-		SurfaceView surfaceView = (SurfaceView)findViewById(R.id.display);
-		mHolder = surfaceView.getHolder();
-		mHolder.addCallback(this);
-		mBitmap = Bitmap.createBitmap(SCREEN_WIDTH, SCREEN_HEIGHT, Config.ARGB_8888);
-		Resources r = surfaceView.getResources();
-		mScreenWidth =
-			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenWidthDp, r.getDisplayMetrics())).intValue();
-		mScreenHeight =
-			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenHeightDp, r.getDisplayMetrics())).intValue();
-		mBackgroundWebView = new WebView(this);
-		mRefreshThread = new Thread(new Runnable(){
-			public void run(){
-				while(!mProgramEnded){
-					refreshScreenLoop();
-					try{
-						Thread.yield();
-					}catch(Exception e){}
-				}
-			}
-		});
-		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
-		mBackgroundWebView.loadUrl("file:///android_asset/avrcore.html");
-		mBackgroundWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
-		mBackgroundWebView.getSettings().setUserAgentString(mBackgroundWebView.getSettings().getUserAgentString()+" NativeApp");
-		mBackgroundWebView.setWebViewClient(new WebViewClient() {
-			public void onPageFinished(WebView view, String loc) {
-				if(DropboxConstants.USE_DROPBOX && !mDropboxCalled){
-					mDropboxCalled = true;
-					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
-				}else if(!DropboxConstants.USE_DROPBOX){
-					startProcess("javascript:loadDefault()");
-				}
-			}
-		});
-		mGestureDetector = new GestureDetector(getApplicationContext(), new LongPressListener());
-		surfaceView.setOnTouchListener(new OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				return mGestureDetector.onTouchEvent(event);
-			}
-		});
-		findViewById(R.id.portC).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		setupUI();
+		startBackgroundWebApp();
 	}
 
 	@Override
@@ -113,45 +56,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		if (requestCode == DBX_CHOOSER_REQUEST) {
 			if (resultCode == Activity.RESULT_OK) {
 				final DbxChooser.Result result = new DbxChooser.Result(data);
-				new AsyncTask<Void, Void, String>(){
-					protected String doInBackground(Void... param) {
-						try{
-							HttpResponse response = new DefaultHttpClient().execute(new HttpGet(result.getLink().toString()));
-							if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-								ByteArrayOutputStream stream = new ByteArrayOutputStream();
-								response.getEntity().writeTo(stream);
-								stream.close();
-								return stream.toString();
-							} else{
-								response.getEntity().getContent().close();
-							}
-						} catch (Exception e) {
-							Log.v("Exception", e.toString());
-						}
-
-						return "";
-					}
-
-					protected void onPostExecute(String result) {
-						startProcess("javascript:loadMemory('"+result.replace("\r\n", "|")+"', true)");
-					}
-				}.execute();
-			};
+				new DropboxTask(result.getLink().toString(), this).execute();
+			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
-
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
-
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		wipeScreen();
-	}
-
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {}
 
 	@Override
         public void writeToUARTBuffer(String buffer) {
@@ -179,10 +89,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	}
 
 	@Override
-        public void endProgram(){
-		mProgramEnded = true;
-	}
-
 	public void startProcess(String javascriptUrl){
 		try{
 			mProgramEnded = false;
@@ -192,6 +98,22 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			mRefreshThread.start();
 		}catch(Exception e){}
 	}
+
+	@Override
+        public void endProgram(){
+		mProgramEnded = true;
+	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		wipeScreen();
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {}
 
 	private void wipeScreen(){
 		wipeScreen(Color.BLACK);
@@ -221,17 +143,80 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		}
 	}
 
-	private class LongPressListener extends GestureDetector.SimpleOnGestureListener {
+	private void setupUI(){
+		SurfaceView surfaceView = (SurfaceView)findViewById(R.id.display);
+		mHolder = surfaceView.getHolder();
+		mHolder.addCallback(this);
+		mBitmap = Bitmap.createBitmap(SCREEN_WIDTH, SCREEN_HEIGHT, Config.ARGB_8888);
+		Resources r = surfaceView.getResources();
+		mScreenWidth =
+			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenWidthDp, r.getDisplayMetrics())).intValue();
+		mScreenHeight =
+			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenHeightDp, r.getDisplayMetrics())).intValue();
+		mBackgroundWebView = new WebView(this);
+		mGestureDetector = new GestureDetector(getApplicationContext(),
+			new GestureDetector.SimpleOnGestureListener() {
+				@Override
+				public boolean onDown(MotionEvent event){
+					return true;
+				}
 
-		@Override
-		public boolean onDown(MotionEvent event){
-			return true;
-		}
+				@Override
+				public void onLongPress(MotionEvent event){
+					mBackgroundWebView.loadUrl(ASSET_URL);
+					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+				}
+			});
+		surfaceView.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				return mGestureDetector.onTouchEvent(event);
+			}
+		});
+		filterOutUnsupportedPins();
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
 
-		@Override
-		public void onLongPress(MotionEvent event){
-			mBackgroundWebView.loadUrl("file:///android_asset/avrcore.html");
-			new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
-		}
+	private void startBackgroundWebApp(){
+		mRefreshThread = new Thread(new Runnable(){
+			public void run(){
+				while(!mProgramEnded){
+					refreshScreenLoop();
+					try{
+						Thread.yield();
+					}catch(Exception e){}
+				}
+			}
+		});
+		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
+		mBackgroundWebView.loadUrl(ASSET_URL);
+		mBackgroundWebView.addJavascriptInterface(new PichaiJavascriptInterface(this), "Android");
+		mBackgroundWebView.getSettings().setUserAgentString(mBackgroundWebView.getSettings().getUserAgentString()+" NativeApp");
+		mBackgroundWebView.setWebViewClient(new WebViewClient() {
+			public void onPageFinished(WebView view, String loc) {
+				if(DropboxConstants.USE_DROPBOX && !mDropboxCalled){
+					mDropboxCalled = true;
+					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+				}else if(!DropboxConstants.USE_DROPBOX){
+					startProcess("javascript:loadDefault()");
+				}
+			}
+		});
+	}
+
+	private void filterOutUnsupportedPins(){
+		findViewById(R.id.portC).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portC).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
+		findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
 	}
 }

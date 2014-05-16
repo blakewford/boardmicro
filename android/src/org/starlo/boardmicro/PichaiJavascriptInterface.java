@@ -7,12 +7,12 @@ import java.util.LinkedList;
 import android.graphics.Color;
 import com.google.gson.*;
 
-public class WebAppInterface {
+public class PichaiJavascriptInterface {
 
 	private LimitedQueue<String> mUARTBuffer = new LimitedQueue<String>(32);
 	private BoardMicroInterface mBoardMicro;
 
-	public WebAppInterface(BoardMicroInterface boardMicro){
+	public PichaiJavascriptInterface(BoardMicroInterface boardMicro){
 		mBoardMicro = boardMicro;
 	}
 
