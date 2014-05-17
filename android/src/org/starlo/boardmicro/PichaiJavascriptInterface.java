@@ -3,7 +3,7 @@ package org.starlo.boardmicro;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 import android.content.Context;
-import java.util.LinkedList;
+import java.util.*;
 import android.graphics.Color;
 import com.google.gson.*;
 
@@ -19,7 +19,11 @@ public class PichaiJavascriptInterface {
 	@JavascriptInterface
 	public void writeUARTBuffer(int value) {
 		mUARTBuffer.add(new Character((char)value).toString());
-		mBoardMicro.writeToUARTBuffer(mUARTBuffer.toString());
+		StringBuilder builder = new StringBuilder();
+		ListIterator<String> bufferIterator = mUARTBuffer.listIterator(0);
+		while(bufferIterator.hasNext())
+			builder.append(bufferIterator.next());
+		mBoardMicro.writeToUARTBuffer(builder.toString());
 	}
 
 	@JavascriptInterface

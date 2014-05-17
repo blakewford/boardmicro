@@ -17,33 +17,61 @@ along with pichai; see the file LICENSE.  If not see
 #include "platform.h"
 #include <stdbool.h>
 
-const char* message = "Demo";
-uint16_t graphics_text_color = 0x001F;
+const char* message = "Welcome";
+uint16_t graphics_text_color1 = 0x001F;
+uint16_t graphics_text_color2 = 0xFFE0;
 
 int main(){
     platformBasedDisplayBegin();
-    //M
-    platformBasedVerticalLine(37, 44, 42, graphics_text_color);
-    basicLine(38, 45, graphics_text_color, 8, true);
-    basicLine(46, 52, graphics_text_color, 9, false);
-    platformBasedVerticalLine(54, 44, 42, graphics_text_color);
-    //I
-    platformBasedVerticalLine(62, 44, 42, graphics_text_color);
-    //C
-    platformBasedVerticalLine(71, 45, 39, graphics_text_color);
-    platformBasedHorizontalLine(72, 44, 10, graphics_text_color);
-    platformBasedHorizontalLine(72, 86, 10, graphics_text_color);
-    //R
-    platformBasedVerticalLine(88, 45, 41, graphics_text_color);
-    platformBasedHorizontalLine(89, 44, 10, graphics_text_color);
-    platformBasedHorizontalLine(89, 74, 10, graphics_text_color);
-    platformBasedVerticalLine(100, 45, 28, graphics_text_color);
-    basicLine(89, 75, graphics_text_color, 12, true);
+    //B
+    platformBasedVerticalLine(40, 25, 15, graphics_text_color1);
+    platformBasedHorizontalLine(41, 24, 10, graphics_text_color1);
+    platformBasedHorizontalLine(41, 32, 10, graphics_text_color1);
+    platformBasedHorizontalLine(41, 41, 10, graphics_text_color1);
+    platformBasedVerticalLine(52, 25, 15, graphics_text_color1);
     //O
-    platformBasedVerticalLine(105, 45, 40, graphics_text_color);
-    platformBasedHorizontalLine(106, 44, 10, graphics_text_color);
-    platformBasedHorizontalLine(106, 86, 10, graphics_text_color);
-    platformBasedVerticalLine(117, 45, 40, graphics_text_color);
+    platformBasedVerticalLine(54, 25, 15, graphics_text_color1);
+    platformBasedHorizontalLine(55, 24, 10, graphics_text_color1);
+    platformBasedHorizontalLine(55, 41, 10, graphics_text_color1);
+    platformBasedVerticalLine(66, 25, 15, graphics_text_color1);
+    //A
+    platformBasedVerticalLine(68, 25, 15, graphics_text_color1);
+    platformBasedHorizontalLine(69, 24, 10, graphics_text_color1);
+    platformBasedHorizontalLine(69, 32, 10, graphics_text_color1);
+    platformBasedVerticalLine(80, 25, 15, graphics_text_color1);
+    //R
+    platformBasedVerticalLine(82, 25, 15, graphics_text_color1);
+    platformBasedHorizontalLine(83, 24, 10, graphics_text_color1);
+    platformBasedHorizontalLine(83, 32, 10, graphics_text_color1);
+    platformBasedVerticalLine(94, 25, 6, graphics_text_color1);
+    basicLine(84, 32, graphics_text_color1, 9, true);
+    //D
+    platformBasedVerticalLine(96, 25, 15, graphics_text_color1);
+    platformBasedHorizontalLine(97, 24, 10, graphics_text_color1);
+    platformBasedHorizontalLine(97, 41, 10, graphics_text_color1);
+    platformBasedVerticalLine(108, 25, 15, graphics_text_color1);
+    //M
+    platformBasedVerticalLine(37, 44, 22, graphics_text_color2);
+    basicLine(38, 45, graphics_text_color2, 8, true);
+    basicLine(46, 52, graphics_text_color2, 9, false);
+    platformBasedVerticalLine(54, 44, 22, graphics_text_color2);
+    //I
+    platformBasedVerticalLine(62, 44, 22, graphics_text_color2);
+    //C
+    platformBasedVerticalLine(71, 45, 20, graphics_text_color2);
+    platformBasedHorizontalLine(72, 44, 10, graphics_text_color2);
+    platformBasedHorizontalLine(72, 66, 10, graphics_text_color2);
+    //R
+    platformBasedVerticalLine(88, 45, 22, graphics_text_color2);
+    platformBasedHorizontalLine(89, 44, 10, graphics_text_color2);
+    platformBasedHorizontalLine(89, 54, 10, graphics_text_color2);
+    platformBasedVerticalLine(100, 45, 8, graphics_text_color2);
+    basicLine(89, 55, graphics_text_color2, 12, true);
+    //O
+    platformBasedVerticalLine(105, 45, 20, graphics_text_color2);
+    platformBasedHorizontalLine(106, 44, 10, graphics_text_color2);
+    platformBasedHorizontalLine(106, 66, 10, graphics_text_color2);
+    platformBasedVerticalLine(117, 45, 20, graphics_text_color2);
 
     platformBasedSerialPrint(message);
     return 0;
