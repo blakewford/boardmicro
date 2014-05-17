@@ -36,6 +36,20 @@
             document.getElementById("gdbshell").textContent =
                 c.substring(1)+": 0x"+b.substring(0, 2);
         }
+        else if(c.substring(0, 1) == "p"){
+            var retVal = 0;
+            if(c.substring(2) == "$PC"){
+                retVal = (PC - flashStart).toString(16);
+            }else if(c.substring(2) == "$SREG"){
+                retVal = readMemory(SREG).toString(16);
+            }else if(c.substring(2) == "$SP"){
+                retVal = readMemory(SPH).toString(16)+readMemory(SPL).toString(16);
+            }else if(c.substring(2, 4) == "$r"){
+                retVal = r[parseInt(c.substring(4), 10)].toString(16);
+            }
+            document.getElementById("gdbshell").textContent =
+                c.substring(2)+" = 0x"+retVal;
+        }
         document.getElementById("gdb").value = "";
     }
     </script>
