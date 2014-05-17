@@ -91,11 +91,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	@Override
 	public void startProcess(String javascriptUrl){
 		try{
-			mProgramEnded = false;
 			mBackgroundWebView.loadUrl(javascriptUrl);
 			mBackgroundWebView.loadUrl("javascript:engineInit()");
 			mBackgroundWebView.loadUrl("javascript:exec()");
-			mRefreshThread.start();
+			startRefreshThread();
 		}catch(Exception e){}
 	}
 
@@ -114,6 +113,25 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {}
+
+	private void startRefreshThread(){
+		endProgram();
+		mRefreshThread = new Thread(new Runnable(){
+			public void run(){
+				while(!mProgramEnded){
+					refreshScreenLoop();
+					try{
+						Thread.yield();
+					}catch(Exception e){}
+				}
+			}
+		});
+		int i = Short.MAX_VALUE*1000;
+		while(i-- > 0)
+			refreshScreenLoop();
+		mProgramEnded = false;
+		mRefreshThread.start();
+	}
 
 	private void wipeScreen(){
 		wipeScreen(Color.BLACK);
@@ -177,16 +195,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	}
 
 	private void startBackgroundWebApp(){
-		mRefreshThread = new Thread(new Runnable(){
-			public void run(){
-				while(!mProgramEnded){
-					refreshScreenLoop();
-					try{
-						Thread.yield();
-					}catch(Exception e){}
-				}
-			}
-		});
 		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
 		mBackgroundWebView.loadUrl(ASSET_URL);
 		mBackgroundWebView.addJavascriptInterface(new PichaiJavascriptInterface(this), "Android");
