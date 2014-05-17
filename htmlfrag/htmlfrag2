@@ -72,16 +72,18 @@
             var addressString = getAddressString(parseInt(address, 16)-flashStart);
             var textarea = document.getElementById('disassembly');
             textarea.value = cachedDisassembly;
-            var retVal =
-                matchTextToBreakpoint(
-                    cachedDisassembly,
-                    addressString
-                );
-            textarea.scrollTop = retVal;
-            var line = (retVal/pointsPerLine);
-            var limit = (textarea.scrollTop/pointsPerLine);
-            if(line > limit){
-                textarea.value = cachedDisassembly.substring(cachedDisassembly.indexOf(addressString));
+            if(typeof(cachedDisassembly) != "undefined"){
+                var retVal =
+                    matchTextToBreakpoint(
+                        cachedDisassembly,
+                        addressString
+                    );
+                textarea.scrollTop = retVal;
+                var line = (retVal/pointsPerLine);
+                var limit = (textarea.scrollTop/pointsPerLine);
+                if(line > limit){
+                    textarea.value = cachedDisassembly.substring(cachedDisassembly.indexOf(addressString));
+                }
             }
             for(i = 0; i < 32; i++)
                 document.getElementById('register'+i).value = r[i].toString(16);
