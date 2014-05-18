@@ -652,9 +652,6 @@ function fetch(c, b) {
                                             if (216 === (b & 255) && 148 === c) {
                                               H = 0;
                                             } else {
-                                              if (218 === (b & 255) && 148 === c) {
-                                                r[e] -= 1;
-                                              } else {
                                                 if (232 === (b & 255) && 148 === c) {
                                                   T = 0;
                                                 } else {
@@ -670,7 +667,7 @@ function fetch(c, b) {
                                                         if (168 === (b & 255) && 149 === c) {
                                                           break;
                                                         } else {
-                                                          9 === (b & 255) ? (writeMemory(SP--, PC & 255), writeMemory(SP--, PC >> 8), PC = 2 * (r[31] << 8 | r[30]) + flashStart) : 10 === (b & 255) ? r[e] -= 1 : 12 === (b & 15) || 13 === (b & 15) ? PC = flashStart + 2 * ((c & 1) << 20 | (b & 240) << 17 | (b & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16)) : 14 === (b & 15) || 15 === (b & 15) ? (writeMemory(SP--, PC + 2 & 255), writeMemory(SP--, PC + 2 >> 8), PC = flashStart + 
+                                                          9 === (b & 255) ? (writeMemory(SP--, PC & 255), writeMemory(SP--, PC >> 8), PC = 2 * (r[31] << 8 | r[30]) + flashStart) : 10 === (b & 15) ? (r[e] -= 1, Z = r[e] == 0) : 12 === (b & 15) || 13 === (b & 15) ? PC = flashStart + 2 * ((c & 1) << 20 | (b & 240) << 17 | (b & 1) << 16 | parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16)) : 14 === (b & 15) || 15 === (b & 15) ? (writeMemory(SP--, PC + 2 & 255), writeMemory(SP--, PC + 2 >> 8), PC = flashStart + 
                                                           2 * (parseInt(memory[PC + 1], 16) << 8 | parseInt(memory[PC], 16))) : 24 === (b & 255) && 149 === c && (PC = readMemory(++SP) | readMemory(++SP) << 8);
                                                         }
                                                       }
@@ -696,7 +693,6 @@ function fetch(c, b) {
               }
             }
           }
-        }
       }
       break;
     case 150:
