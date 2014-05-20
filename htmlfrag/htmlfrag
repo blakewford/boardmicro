@@ -64,6 +64,7 @@
             }
         }
         document.getElementById("gdb").value = "";
+        document.getElementById("gdb").focus();
     }
     </script>
     <style>
