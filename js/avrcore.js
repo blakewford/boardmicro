@@ -15,7 +15,7 @@
  You should have received a copy of the GNU General Public License
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
-var SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, 
+var ADCSRA = 0x7A, ADCH = 0x79, ADCL = 0x78, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, 
 vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1E3, batchDelay = 0;
 function peripheralSPIWrite(c) {
 }
@@ -128,7 +128,7 @@ function writeMemory(c, b) {
   c >= DMA && writeDMARegion(c, b);
 }
 function readMemory(c) {
-  return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : memory[c];
+  return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : c === ADCL ? Math.floor(Math.random()*256) : c === ADCH ? Math.floor(Math.random()*4) : memory[c];
 }
 function loadMemory(c, b) {
   initCore();
@@ -508,7 +508,7 @@ function fetch(c, b) {
     case 128:
     ;
     case 129:
-      if (8 < (b & 15)) {
+      if (8 <= (b & 15)) {
         r[e] = readMemory((r[29] << 8 | r[28]) + getDisplacement(c, b));
         break;
       }
@@ -521,7 +521,7 @@ function fetch(c, b) {
     case 130:
     ;
     case 131:
-      if (8 < (b & 15)) {
+      if (8 <= (b & 15)) {
         writeMemory((r[29] << 8 | r[28]) + getDisplacement(c, b), r[e]);
         break;
       }
@@ -1013,6 +1013,7 @@ function fetch(c, b) {
   }
   r[e] &= 255;
   r[h] &= 255;
+  memory[ADCSRA] &= 191;
   memory[ucsrb] |= 32;
   memory[spsr] |= 128;
 }
