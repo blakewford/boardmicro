@@ -15,6 +15,10 @@
         <br/>
         <input id="delay" onchange="batchDelay=this.value" style="width: 99%" type="range" min="0" max="1000" value="0">
         <br/>
+        <font style="color:white;">ADC Value 0 - 1023</font>
+        <br/>
+        <input id="adc" onchange="adcValue=this.value" style="width: 99%" type="range" min="0" max="1023" value="9">
+        <br/>
         <input type="checkbox" onchange="forceOptimizationEnabled=this.checked"><font style="color:white;">Disable SPI Port Animation</font>
         <br/>
 <!--
