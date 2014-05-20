@@ -575,8 +575,8 @@ function fetch(c, b) {
     case 144:
     ;
     case 145:
-      15 === (b & 15) ? r[e] = memory[++SP] : 4 === (b & 15) || 5 === (b & 15) ? (d = r[31] << 8 | r[30], g = 2 * (d >> 1) + flashStart, f = parseInt(memory[g], 16), g = parseInt(memory[g + 1], 16), r[e] = 0 === (d & 1) ? f : g, 5 === (b & 15) && (r[30]++, 256 === r[30] && (r[30] = 0, r[31]++))) : 1 === (b & 15) ? (r[e] = readMemory(r[31] << 8 | r[30]), r[30] += 1, 256 == r[30] && (r[30] = 0, r[31] += 1)) : 2 === (b & 15) ? (r[30] -= 1, 0 > r[30] && (r[30] = 0, r[31] -= 1), r[e] = readMemory(r[31] << 
-      8 | r[30])) : 13 === (b & 15) ? (r[e] = readMemory(r[27] << 8 | r[26]), r[26] += 1, 256 == r[26] && (r[26] = 0, r[27] += 1)) : 14 === (b & 15) ? (r[26] -= 1, 0 > r[26] && (r[26] = 0, r[27] -= 1), r[e] = readMemory(r[27] << 8 | r[26])) : r[e] = 12 === (b & 15) ? readMemory(r[27] << 8 | r[26]) : memory[parseInt(memory[PC++], 16) | parseInt(memory[PC++], 16) << 8];
+      15 === (b & 15) ? r[e] = readMemory(++SP) : 4 === (b & 15) || 5 === (b & 15) ? (d = r[31] << 8 | r[30], g = 2 * (d >> 1) + flashStart, f = parseInt(readMemory(g), 16), g = parseInt(readMemory(g + 1), 16), r[e] = 0 === (d & 1) ? f : g, 5 === (b & 15) && (r[30]++, 256 === r[30] && (r[30] = 0, r[31]++))) : 1 === (b & 15) ? (r[e] = readMemory(r[31] << 8 | r[30]), r[30] += 1, 256 == r[30] && (r[30] = 0, r[31] += 1)) : 2 === (b & 15) ? (r[30] -= 1, 0 > r[30] && (r[30] = 0, r[31] -= 1), r[e] = readMemory(r[31] << 
+      8 | r[30])) : 13 === (b & 15) ? (r[e] = readMemory(r[27] << 8 | r[26]), r[26] += 1, 256 == r[26] && (r[26] = 0, r[27] += 1)) : 14 === (b & 15) ? (r[26] -= 1, 0 > r[26] && (r[26] = 0, r[27] -= 1), r[e] = readMemory(r[27] << 8 | r[26])) : r[e] = 12 === (b & 15) ? readMemory(r[27] << 8 | r[26]) : readMemory(parseInt(readMemory(PC++), 16) | parseInt(readMemory(PC++), 16) << 8);
       break;
     case 146:
     ;
