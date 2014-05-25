@@ -604,7 +604,7 @@ function fetch(c, b) {
             if (5 === (b & 255)) {
               d = r[e], g = d & 1, d = d >> 1 | d & 128, setPostEvaluationFlags(d), r[e] = d, C = g, V = N ^ C;
             } else {
-              if (6 === (b & 255)) {
+              if (6 === (b & 15)) {
                 C = r[e] & 1, r[e] >>= 1;
               } else {
                 if (8 === (b & 255) && 148 === c) {
