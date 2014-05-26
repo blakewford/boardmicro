@@ -217,8 +217,10 @@ function fetch(c, b) {
       H = 0;
       d = Z;
       f = r[e] - r[h] - C;
+      var cache = C;
       setPostEvaluationFlags(f);
       Z = 0 === f ? d : 0;
+      C = Math.abs(r[h]+cache) > Math.abs(r[e]);
       break;
     case 8:
     ;
@@ -271,7 +273,10 @@ function fetch(c, b) {
     case 27:
       setPreEvaluationFlags(r[e], r[h]);
       r[e] -= r[h];
+      r[e] < 0 ? (r[e]+=0xFF, C=1): C=0;
+      var cache = C;
       setPostEvaluationFlags(r[e]);
+      C = cache;
       break;
     case 28:
     ;
