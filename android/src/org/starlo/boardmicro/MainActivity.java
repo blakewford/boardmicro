@@ -21,6 +21,8 @@ import android.view.SurfaceHolder;
 import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
+import android.hardware.SensorManager;
+import android.content.Context;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
@@ -29,6 +31,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private static final int SCREEN_HEIGHT = 128;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
+	private SurfaceView mSurfaceView;
 	private WebView mBackgroundWebView;
 	private SurfaceHolder mHolder;
 	private Bitmap mBitmap;
@@ -99,6 +102,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	}
 
 	@Override
+	public void updateADCRegister(final int value){
+                mSurfaceView.post(new Runnable(){
+                        public void run(){
+				mBackgroundWebView.loadUrl("javascript:writeADCDataRegister("+value+")");
+                        }
+                });
+	}
+
+	@Override
         public void endProgram(){
 		mProgramEnded = true;
 	}
@@ -162,11 +174,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	}
 
 	private void setupUI(){
-		SurfaceView surfaceView = (SurfaceView)findViewById(R.id.display);
-		mHolder = surfaceView.getHolder();
+		mSurfaceView = (SurfaceView)findViewById(R.id.display);
+		mHolder = mSurfaceView.getHolder();
 		mHolder.addCallback(this);
 		mBitmap = Bitmap.createBitmap(SCREEN_WIDTH, SCREEN_HEIGHT, Config.ARGB_8888);
-		Resources r = surfaceView.getResources();
+		Resources r = mSurfaceView.getResources();
 		mScreenWidth =
 			Float.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, r.getConfiguration().screenWidthDp, r.getDisplayMetrics())).intValue();
 		mScreenHeight =
@@ -185,7 +197,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
 				}
 			});
-		surfaceView.setOnTouchListener(new OnTouchListener() {
+		mSurfaceView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				return mGestureDetector.onTouchEvent(event);
 			}
@@ -197,7 +209,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private void startBackgroundWebApp(){
 		mBackgroundWebView.getSettings().setJavaScriptEnabled(true);
 		mBackgroundWebView.loadUrl(ASSET_URL);
-		mBackgroundWebView.addJavascriptInterface(new PichaiJavascriptInterface(this), "Android");
+		mBackgroundWebView.addJavascriptInterface(
+			new PichaiJavascriptInterface(this, new ADCSensorManager((SensorManager)getSystemService(Context.SENSOR_SERVICE))), "Android");
 		mBackgroundWebView.getSettings().setUserAgentString(mBackgroundWebView.getSettings().getUserAgentString()+" NativeApp");
 		mBackgroundWebView.setWebViewClient(new WebViewClient() {
 			public void onPageFinished(WebView view, String loc) {

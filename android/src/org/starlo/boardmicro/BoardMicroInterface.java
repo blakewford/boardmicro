@@ -8,5 +8,6 @@ public interface BoardMicroInterface {
 	public void setPinState(char port, byte pin, boolean status);
 	public void setPixel(int x, int y, int color);
 	public void startProcess(String javascriptUrl);
+	public void updateADCRegister(int value);
 	public void endProgram();
 }

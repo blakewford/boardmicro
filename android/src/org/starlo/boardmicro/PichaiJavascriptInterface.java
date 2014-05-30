@@ -11,9 +11,11 @@ public class PichaiJavascriptInterface {
 
 	private LimitedQueue<String> mUARTBuffer = new LimitedQueue<String>(32);
 	private BoardMicroInterface mBoardMicro;
+	private ADCSensorManager mADCSensor;
 
-	public PichaiJavascriptInterface(BoardMicroInterface boardMicro){
+	public PichaiJavascriptInterface(BoardMicroInterface boardMicro, ADCSensorManager adcSensor){
 		mBoardMicro = boardMicro;
+		mADCSensor = adcSensor;
 	}
 
 	@JavascriptInterface
@@ -71,6 +73,11 @@ public class PichaiJavascriptInterface {
 			PixelPacket packet = packetData[i];
 			drawPixel(packet.x, packet.y, packet.color);
 		}
+	}
+
+	@JavascriptInterface
+	public void updateADCRegister() {
+		mBoardMicro.updateADCRegister(mADCSensor.getValue());
 	}
 
 	private class LimitedQueue<E> extends LinkedList<E> {

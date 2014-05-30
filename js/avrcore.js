@@ -57,6 +57,11 @@ function writeControlRegister(c) {
 function isNative() {
   return-1 != navigator.userAgent.indexOf("NativeApp");
 }
+function writeADCDataRegister(c) {
+  if(isNative()){
+    adcValue = c;
+  }
+}
 function writeUARTDataRegister(c) {
   memory[udr] = c;
   uartWrite(c);
@@ -128,6 +133,8 @@ function writeMemory(c, b) {
   c >= DMA && writeDMARegion(c, b);
 }
 function readMemory(c) {
+  if(c === ADCH && isNative())
+      Android.updateADCRegister();
   return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : c === ADCL ? adcValue & 0xFF : c === ADCH ? adcValue >> 8 : memory[c];
 }
 function loadMemory(c, b) {
