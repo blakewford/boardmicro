@@ -43,7 +43,6 @@
         }
     }
     function doDebugCommand() {
-        document.getElementById("uart").value = "";
         var c = document.getElementById("gdb").value;
         history.push(c);
         historyIndex = history.length-1;
