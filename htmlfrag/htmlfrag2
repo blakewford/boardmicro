@@ -28,6 +28,10 @@
             document.getElementById("local").style.display = "none";
         }
         function handleBreakpoint(address){
+            var index = softBreakpoints.indexOf(parseInt(address, 16)-flashStart+2);
+            if(index >= 0){
+                alert("Breakpoint at 0x" + softBreakpoints[index].toString(16));
+            }
         }
     </script>
     </div>
