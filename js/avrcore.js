@@ -103,7 +103,14 @@ function writeDMARegion(c, b) {
     screenDataOffset = -1;
   } else {
     if (c == DMA + 9 || c == DMA + 8) {
-      var e = memory[DMA + 1] << 8 | memory[DMA], h = memory[DMA + 3] << 8 | memory[DMA + 2], d = memory[DMA + 5] << 8 | memory[DMA + 4], f = memory[DMA + 7] << 8 | memory[DMA + 6], g = memory[DMA + 9] << 8 | memory[DMA + 8], g = 63488 == g ? "red" : 31 == g ? "blue" : 2016 == g ? "green" : 2047 == g ? "#00FFFF" : 63519 == g ? "#FF00FF" : 65504 == g ? "#FFFF00" : 65535 == g ? "white" : "black";
+      var e = memory[DMA + 1] << 8 | memory[DMA], h = memory[DMA + 3] << 8 | memory[DMA + 2], d = memory[DMA + 5] << 8 | memory[DMA + 4], f = memory[DMA + 7] << 8 | memory[DMA + 6], g = memory[DMA + 9] << 8 | memory[DMA + 8];
+      var color = ((g >> 11)*8) << 16;
+      color += (((g >> 5) & 0x3F)*4) << 8;
+      color += ((g & 0x1F)*8);
+      color = color.toString(16);
+      while( color.length < 6)
+          color = "0"+color;
+      g = "#"+color;
       if (-1 != screenDataOffset && (drawPixel(e + screenDataOffset, d, g), isNative())) {
         var k = {};
         k.x = e + screenDataOffset;
