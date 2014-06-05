@@ -69,29 +69,6 @@
 #define CYCLES_PER_MS CPU_CLK/1000
 #define SIMULATED_PLATFORM_SIGNATURE 0xBF
 
-#ifdef attiny4
-    #define dmaAddress 0x41F6
-#endif
-#ifdef atmega8
-    #define dmaAddress 0x1FF6
-#endif
-#ifdef atmega32u4
-    #define dmaAddress 0x7FF6
-#endif
-
-#ifdef attiny4
-    #define SPDR _SFR_MEM8(dmaAddress-2)
-    #define UDR _SFR_MEM8(dmaAddress-1)
-#endif
-
-typedef struct dmaRegion {
-    uint16_t startColumn;
-    uint16_t endColumn;
-    uint16_t startRow;
-    uint16_t endRow;
-    uint16_t data;
-} dmaRegion;
-
 void writeDisplayCommand(uint8_t data);
 void writeDisplayData(uint8_t data);
 
@@ -132,9 +109,9 @@ void platformBasedSPIBegin()
 
 void platformBasedSPITransmit(uint8_t data)
 {
+#ifndef attiny4
     /* Start transmission */
     SPDR = data;
-#ifndef attiny4
     /* Wait for transmission complete */
     while(!(SPSR & (1<<SPIF)))
     ;
@@ -160,9 +137,9 @@ void platformBasedSerialWrite(uint8_t data)
     /* Wait for empty transmit buffer */
     while ( !( UCSRA & (1<<UDRE)) )
         ;
-#endif
     /* Put data into buffer, sends the data */
     UDR = data;
+#endif
 }
 
 void platformBasedSerialPrint(const char* message)
@@ -174,25 +151,17 @@ void platformBasedSerialPrint(const char* message)
 }
 
 void setupDisplayWindow(uint8_t startX, uint8_t startY, uint8_t endX, uint8_t endY){
-    if(!platformIsSimulated()){
-        writeDisplayCommand(0x2A);
-        writeDisplayData(0x00);
-        writeDisplayData(startX);
-        writeDisplayData(0x00);
-        writeDisplayData(endX);
-        writeDisplayCommand(0x2B);
-        writeDisplayData(0x00);
-        writeDisplayData(startY);
-        writeDisplayData(0x00);
-        writeDisplayData(endY);
-        writeDisplayCommand(0x2C);
-    }else{
-        dmaRegion* dma = (dmaRegion*)dmaAddress;
-        dma->startColumn = startX;
-        dma->startRow = startY;
-        dma->endColumn = endX;
-        dma->endRow = endY;
-    }
+    writeDisplayCommand(0x2A);
+    writeDisplayData(0x00);
+    writeDisplayData(startX);
+    writeDisplayData(0x00);
+    writeDisplayData(endX);
+    writeDisplayCommand(0x2B);
+    writeDisplayData(0x00);
+    writeDisplayData(startY);
+    writeDisplayData(0x00);
+    writeDisplayData(endY);
+    writeDisplayCommand(0x2C);
 }
 
 void writeDisplayCommand(uint8_t data) {
@@ -211,60 +180,39 @@ void writeDisplayData(uint8_t data) {
 
 void platformBasedDisplaySetPixel(uint8_t x, uint8_t y, uint16_t color) {
     setupDisplayWindow(x, y, x+1, y+1);
-    if(!platformIsSimulated()){
-        writeDisplayData(color >> 8);
-        writeDisplayData(color);
-    }else{
-        dmaRegion* dma = (dmaRegion*)dmaAddress;
-        dma->data = color;
-    }
+    writeDisplayData(color >> 8);
+    writeDisplayData(color);
 }
 
 void platformBasedVerticalLine(uint8_t x, uint8_t y, uint8_t height, uint16_t color) {
-    dmaRegion* dma = (dmaRegion*)dmaAddress;
     setupDisplayWindow(x, y, x, y+height);
     uint8_t i = 0;
     for(i; i < height; i++) {
-        if(!platformIsSimulated()){
-            writeDisplayData(color >> 8);
-            writeDisplayData(color);
-        }else{
-            dma->data = color;
-        }
+        writeDisplayData(color >> 8);
+        writeDisplayData(color);
     }
 }
 
 void platformBasedHorizontalLine(uint8_t x, uint8_t y, uint8_t width, uint16_t color) {
-    dmaRegion* dma = (dmaRegion*)dmaAddress;
     setupDisplayWindow(x, y, x+width, y);
     uint8_t i = 0;
     for(i; i < width; i++) {
-        if(!platformIsSimulated()){
-            writeDisplayData(color >> 8);
-            writeDisplayData(color);
-        }else{
-            dma->data = color;
-        }
+        writeDisplayData(color >> 8);
+        writeDisplayData(color);
     }
 }
 
 void platformBasedDisplayBackground(uint16_t color) {
     uint8_t x, y;
-    dmaRegion* dma = (dmaRegion*)dmaAddress;
     setupDisplayWindow(0, 0, 159, 127);
     for(y=127; y>0; y--) {
-      for(x=159; x>0; x--) {
-        if(!platformIsSimulated()){
+        for(x=159; x>0; x--) {
             platformBasedDisplaySetPixel(x, y, color);
-        }else{
-            dma->data = color;
         }
-      }
     }
 }
 
 void platformBasedDisplayBegin() {
-    if(!platformIsSimulated()){
         SPI_CMD_DIRECTION = _BV (6);
         SPI_DATA_DIRECTION = _BV (2);
 
@@ -372,5 +320,4 @@ void platformBasedDisplayBegin() {
         platformBasedDelay(100);
         writeDisplayCommand(0x36);
         writeDisplayData(0xA8);
-    }
 }
