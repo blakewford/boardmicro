@@ -24,6 +24,8 @@ function uartWrite(c) {
 function drawPixel(c, b, e) {
 }
 function popPortBuffer(c, b) {
+  if(isNode())
+      console.log(c[0]);
   c.shift();
 }
 function setPin(c, b) {
@@ -55,7 +57,10 @@ function writeControlRegister(c) {
   memory[spmCr] = c;
 }
 function isNative() {
-  return-1 != navigator.userAgent.indexOf("NativeApp");
+  return !isNode() && -1 != navigator.userAgent.indexOf("NativeApp");
+}
+function isNode() {
+  return typeof navigator === 'undefined';
 }
 function writeADCDataRegister(c) {
   if(isNative()){
@@ -81,18 +86,23 @@ function writeSpecificPort(c) {
   switch(c) {
     case 0:
       b = dataQueueB;
+      isNode() && console.log("PortB");
       break;
     case 1:
       b = dataQueueC;
+      isNode() && console.log("PortC");
       break;
     case 2:
       b = dataQueueD;
+      isNode() && console.log("PortD");
       break;
     case 3:
       b = dataQueueE;
+      isNode() && console.log("PortE");
       break;
     case 4:
       b = dataQueueF;
+      isNode() && console.log("PortF");
   }
   isNative() && !(forceOptimizationEnabled && (e == 16 || e == 24)) && Android.writePort(c, b[0]);
   popPortBuffer(b, e);
@@ -1040,7 +1050,10 @@ function fetch(c, b) {
   memory[spsr] |= 128;
 }
 function handleBreakpoint(c) {
-  alert("Breakpoint at 0x" + c);
+  if(!isNode())
+      alert("Breakpoint at 0x" + c);
+  else
+      console.log("Breakpoint at 0x" + c);
 }
 function isSoftBreakpoint(c) {
   for (i = 0;i < softBreakpoints.length;i++) {

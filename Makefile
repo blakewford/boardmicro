@@ -68,11 +68,21 @@ android: $(TARGET).html
 	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
+desktop.js: $(TARGET).html
+	cat js/avrcore.js > $@
+	echo 'var target = "$(TARGET)";' >> $@;
+	printf 'var hex = "' >> $@
+	tr '\r\n' '\\n' < $(BASENAME).hex >> $@
+	printf '";\n' >> $@
+	echo 'loadMemory(hex);' >> $@
+	echo 'engineInit();' >> $@
+	echo 'exec();' >> $@
+
 upload: $(BASENAME).hex
 	python reset.py /dev/ttyACM0
 	sleep 2
 	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin android/assets/avrcore.html
+	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html
 	cd android; ant clean
