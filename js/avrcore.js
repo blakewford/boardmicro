@@ -1069,6 +1069,8 @@ function loop() {
     var e = parseInt(memory[PC++], 16), h = parseInt(memory[PC++], 16), d = 149 == h && 152 == e || isSoftBreakpoint(PC) || forceBreak;
     if (207 == h && 255 == e || d) {
       b = !1, d ? (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : isNative() && Android.endProgram();
+      if(isNode())
+        console.log("Exit "+((r[25] << 8)+r[24]));
     }
     fetch(h, e);
     for (i = 0;5 > i;i++) {
