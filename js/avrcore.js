@@ -1041,7 +1041,7 @@ function fetch(c, b) {
       16 <= d | 0 == d && 146 == f | 147 == f && (PC += 2);
       break;
     default:
-      forceBreak = !0, alert("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b);
+      forceBreak = !0, isNode() ? console.log("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b): alert("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b);
   }
   r[e] &= 255;
   r[h] &= 255;
