@@ -16,7 +16,7 @@
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 var ADCSRA = 0x7A, ADCH = 0x79, ADCL = 0x78, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, 
-vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1E3, batchDelay = 0, adcValue = 9;
+vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1E3, batchDelay = 0, adcValue = 9, disableHardware = false;
 function peripheralSPIWrite(c) {
 }
 function uartWrite(c) {
@@ -42,7 +42,9 @@ function initCore() {
   jumpTableAddress = usbVectorBase + 64;
   mainAddress = usbVectorBase + 72;
   for (a = 0;a < memory.length;a++) {
+    disableHardware = true;
     a != sdr && writeMemory(a, 0);
+    disableHardware = false;
   }
   memory[ucsra] = 32;
   memory[ucsrb] = 32;
@@ -134,20 +136,23 @@ function writeDMARegion(c, b) {
 }
 function writeMemory(c, b) {
   memory[c] = b;
-  c == portB && dataQueueB.push(b);
-  c == portC && dataQueueC.push(b);
-  c == portD && dataQueueD.push(b);
-  c == portE && dataQueueE.push(b);
-  c == portF && dataQueueF.push(b);
+  if(!disableHardware)
+  {
+      c == portB && dataQueueB.push(b);
+      c == portC && dataQueueC.push(b);
+      c == portD && dataQueueD.push(b);
+      c == portE && dataQueueE.push(b);
+      c == portF && dataQueueF.push(b);
+      c == udr && writeUARTDataRegister(b);
+      c == sdr && writeSPIDataRegister(b);
+      c == ucsra && memory[ucsrb] & 32 && b & 64 && callUARTInterrupt();
+      c >= DMA && writeDMARegion(c, b);
+  }
   c == pllCsr && writeClockRegister(b);
   c == spmCr && writeControlRegister(b);
-  c == udr && writeUARTDataRegister(b);
-  c == sdr && writeSPIDataRegister(b);
-  c == ucsra && memory[ucsrb] & 32 && b & 64 && callUARTInterrupt();
   if (c == SPH || c == SPL) {
     SP = memory[SPH] << 8 | memory[SPL];
   }
-  c >= DMA && writeDMARegion(c, b);
 }
 function readMemory(c) {
   if(c === ADCH && isNative())
