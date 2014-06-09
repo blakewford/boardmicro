@@ -427,12 +427,13 @@ function fetch(c, b) {
     case 78:
     ;
     case 79:
-      d = getBigConstant(c, b);
       f = getSmallDestinationRegister(c, b);
-      for (0 < r[f] ^ 0 < d && (r[f] = r[f] - d - C);0 > r[f];) {
-        r[f] = 256 + r[f];
+      r[f] -= (getBigConstant(c, b)+C);
+      if(r[f] != 0)
+          Z = 0;
+      for (C = 0;0 > r[f];) {
+        r[f] = 256 + r[f], C = 1;
       }
-      C = Math.abs(r[f]) < d + C;
       break;
     case 80:
     ;
