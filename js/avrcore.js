@@ -15,7 +15,7 @@
  You should have received a copy of the GNU General Public License
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
-var ADCSRA = 0x7A, ADCH = 0x79, ADCL = 0x78, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, 
+var timerInterrupt = 0x5C, TCNT0 = 0x46, TIFR0 = 0x35, ADCSRA = 0x7A, ADCH = 0x79, ADCL = 0x78, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, 
 vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1E3, batchDelay = 0, adcValue = 9, disableHardware = false;
 function peripheralSPIWrite(c) {
 }
@@ -82,6 +82,11 @@ function callUARTInterrupt() {
   writeMemory(SP--, PC >> 8);
   writeMemory(SP--, PC & 255);
   PC = udri + flashStart;
+}
+function callTOV0Interrupt() {
+  writeMemory(SP--, PC >> 8);
+  writeMemory(SP--, PC & 255);
+  PC = timerInterrupt + flashStart;
 }
 function writeSpecificPort(c) {
   var b, e = 8 * c;
@@ -155,6 +160,10 @@ function writeMemory(c, b) {
   }
 }
 function readMemory(c) {
+  if(c === TCNT0)
+      callTOV0Interrupt();
+  if(c === TIFR0)
+      return 1; //TOV0
   if(c === ADCH && isNative())
       Android.updateADCRegister();
   return c === SREG ? C | Z << 1 | N << 2 | V << 3 | S << 4 | H << 5 | T << 6 | I << 7 : c === SPH ? SP >> 8 : c === SPL ? SP & 255 : c === ADCL ? adcValue & 0xFF : c === ADCH ? adcValue >> 8 : memory[c];
@@ -768,7 +777,7 @@ function fetch(c, b) {
       writeMemory(d, memory[d] | 1 << getRegisterValue(c, b));
       break;
     case 155:
-      0 < (memory[getRegister(c, b)] & 1 << getRegisterValue(c, b)) && (PC += 2);
+      0 < (readMemory(getRegister(c, b)) & 1 << getRegisterValue(c, b)) && (PC += 2);
       d = parseInt(memory[PC - 2], 16);
       f = parseInt(memory[PC - 1], 16);
       12 <= d && 148 == f | 149 == f && (PC += 2);
