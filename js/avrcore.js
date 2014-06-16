@@ -984,6 +984,9 @@ function fetch(c, b) {
         case 1:
           e = Z;
           break;
+        case 2:
+          e = N;
+          break;
         case 3:
           e = V;
           break;
@@ -1012,6 +1015,9 @@ function fetch(c, b) {
           break;
         case 1:
           e = !Z;
+          break;
+        case 2:
+          e = !N;
           break;
         case 3:
           e = !V;
