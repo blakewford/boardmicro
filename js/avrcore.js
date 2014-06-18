@@ -648,7 +648,7 @@ function fetch(c, b) {
           if (3 === (b & 255)) {
             V = 127 == r[d], r[d] += 1;
           } else {
-            if (5 === (b & 255)) {
+            if (5 === (b & 15)) {
               e = r[d], g = e & 1, e = e >> 1 | e & 128, setPostEvaluationFlags(e), r[d] = e, C = g, V = N ^ C;
             } else {
               if (6 === (b & 15)) {
