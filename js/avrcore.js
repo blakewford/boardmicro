@@ -1047,7 +1047,7 @@ function fetch(c, b) {
     ;
     case 253:
       0 === (r[d] & 1 << (b & 7)) && (PC += 2);
-      e = parseInt(memory[PC - 2], 16);
+      e = parseInt(memory[PC - 2], 16) & 15;
       f = parseInt(memory[PC - 1], 16);
       12 <= e && 148 == f | 149 == f && (PC += 2);
       16 <= e | 0 == e && 144 == f | 145 == f && (PC += 2);
