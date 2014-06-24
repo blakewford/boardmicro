@@ -645,7 +645,7 @@ function fetch(c, b) {
         if (2 === (b & 255)) {
           r[d] = r[d] << 4 | r[d] >> 4;
         } else {
-          if (3 === (b & 255)) {
+          if (3 === (b & 15)) {
             V = 127 == r[d], r[d] += 1;
           } else {
             if (5 === (b & 15)) {
