@@ -71,6 +71,8 @@ public class PichaiJavascriptInterface {
 		PixelPacket[] packetData = gson.fromJson(buffer, PixelPacket[].class);
 		for(int i = 0; i < packetData.length; i++){
 			PixelPacket packet = packetData[i];
+			if(packet.x > 159 || packet.y > 127)
+				continue;
 			drawPixel(packet.x, packet.y, packet.color);
 		}
 	}

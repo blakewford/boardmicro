@@ -148,6 +148,8 @@
                 b.value += String.fromCharCode(c)
             }
             function drawPixel(x, y, color){
+                if( x > 159 || y > 127 )
+                    return;
                 var id = normalize(x.toString(16));
                 id+=normalize(y.toString(16));
                 var element = document.getElementById(id);
