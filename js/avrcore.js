@@ -642,7 +642,7 @@ function fetch(c, b) {
       if (7 === (b & 15)) {
         e = r[d] & 1, r[d] >>= 1, C && (r[d] |= 128), C = e;
       } else {
-        if (2 === (b & 255)) {
+        if (2 === (b & 15)) {
           r[d] = r[d] << 4 | r[d] >> 4;
         } else {
           if (3 === (b & 15)) {
