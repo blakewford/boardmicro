@@ -59,7 +59,7 @@ function writeControlRegister(c) {
 function isNative() {
   if(!isNode() && typeof nativeFlag == "undefined")
       nativeFlag = navigator.userAgent.indexOf("NativeApp");
-  !isNode() && -1 != nativeFlag;
+  return !isNode() && -1 != nativeFlag;
 }
 function isNode() {
   return "undefined" === typeof navigator;
