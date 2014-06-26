@@ -166,7 +166,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			if(canvas != null){
 				canvas.drawColor(Color.BLACK);
 				mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, mScreenWidth, false);
+				mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (mScreenHeight/5)*2 + mScreenHeight/20, false);
 				canvas.drawBitmap(mScaledBitmap, 0, 0, null);
 				mHolder.unlockCanvasAndPost(canvas);
 			}
