@@ -211,6 +211,7 @@ function getDisplacement(c, b) {
 }
 function fetch(c, b) {
   var d = 16 * (c & 1) + ((b & 240) >> 4), h = 16 * ((c & 2) >> 1) + (b & 15);
+  if(c < 128){
   switch(c) {
     case 0:
       break;
@@ -551,6 +552,10 @@ function fetch(c, b) {
       setPostEvaluationFlags(r[f]);
       V = C = 0;
       break;
+    }
+    }
+    else if(c >= 128 && c < 256){
+    switch(c){
     case 128:
     ;
     case 129:
@@ -1063,7 +1068,9 @@ function fetch(c, b) {
       16 <= e | 0 == e && 144 == f | 145 == f && (PC += 2);
       16 <= e | 0 == e && 146 == f | 147 == f && (PC += 2);
       break;
-    default:
+    }
+  }
+  else{
       forceBreak = !0, isNode() ? console.log("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b) : alert("unknown 0x" + (PC - 2).toString(16).toUpperCase() + " " + c + " " + b);
   }
   r[d] &= 255;
