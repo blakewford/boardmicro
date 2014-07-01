@@ -21,6 +21,45 @@
     <LinearLayout style="@style/keyboard_row" android:id="@+id/portD">
         <include layout="@layout/pins"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:weightSum="10"
+        android:layout_height="0dp"
+        android:layout_weight="1.1"
+        android:orientation="horizontal"
+        android:background="#000000"
+        android:id="@+id/debug">
+        <Button
+            android:id="@+id/gdb"
+            android:text="gdb"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical">
+        </Button>
+        <EditText
+            android:id="@+id/command"
+            android:hint="command"
+            android:lines="1"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:maxLength="15"
+            android:gravity="center"
+            android:layout_gravity="center_vertical">
+        </EditText>
+        <TextView
+            android:id="@+id/result"
+            android:hint="result"
+            android:lines="1"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical">
+        </TextView>
+    </LinearLayout>
     <include layout="@layout/horizontal_divider"/>
     <LinearLayout style="@style/keyboard_row" android:id="@+id/portE">
         <include layout="@layout/pins"/>

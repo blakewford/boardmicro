@@ -5,7 +5,7 @@ import org.starlo.boardmicro.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.webkit.WebView;
-import android.widget.Toast;
+import android.widget.*;
 import android.content.Intent;
 import android.webkit.WebViewClient;
 import android.view.*;
@@ -23,6 +23,7 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
 import android.hardware.SensorManager;
 import android.content.Context;
+import android.view.View.*;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
@@ -204,6 +205,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		});
 		filterOutUnsupportedPins();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		findViewById(R.id.gdb).setOnClickListener(new OnClickListener(){
+			public void onClick(View view){
+				TextView commandView = (TextView)findViewById(R.id.command);
+				String command = commandView.getText().toString().trim();
+				commandView.setText("");
+				((TextView)findViewById(R.id.result))
+					.setText(command.length() > 6 ? command.subSequence(0, 6): command);
+			}
+		});
 	}
 
 	private void startBackgroundWebApp(){
@@ -239,5 +249,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
 		findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
 		findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
+
+		findViewById(R.id.portD).setVisibility(View.GONE);
 	}
 }
