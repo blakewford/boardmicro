@@ -32,5 +32,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:theme="@android:style/Theme.Dialog"
+            android:windowIsTranslucent="true"
+            android:windowBackground="@null"
+            android:screenOrientation="portrait"
+            android:name="org.starlo.boardmicro.DebugActivity">
+        </activity>
     </application>
 </manifest>
