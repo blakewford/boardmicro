@@ -20,10 +20,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.View.OnTouchListener;
+import android.view.View.*;
 import android.hardware.SensorManager;
 import android.content.Context;
-import android.view.View.*;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
@@ -207,6 +206,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 					mBackgroundWebView.loadUrl(ASSET_URL);
 					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
 				}
+
+				@Override
+				public boolean onDoubleTap(MotionEvent event){
+					startActivity(new Intent(getApplicationContext(), DebugActivity.class));
+					return true;
+				}
 			});
 		mSurfaceView.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
@@ -215,14 +220,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		});
 		filterOutUnsupportedPins();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		findViewById(R.id.gdb).setOnClickListener(new OnClickListener(){
-			public void onClick(View view){
-				TextView commandView = (TextView)findViewById(R.id.command);
-				String command = commandView.getText().toString().trim();
-				commandView.setText("");
-				mBackgroundWebView.loadUrl("javascript:handleDebugCommandString('"+command+"')");
-			}
-		});
 	}
 
 	private void startBackgroundWebApp(){
@@ -258,7 +255,5 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
 		findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
 		findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-
-		findViewById(R.id.portD).setVisibility(View.GONE);
 	}
 }
