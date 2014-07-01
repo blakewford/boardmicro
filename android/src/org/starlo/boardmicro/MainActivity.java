@@ -112,6 +112,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	}
 
 	@Override
+	public void setDebugResult(final String result){
+                mSurfaceView.post(new Runnable(){
+                        public void run(){
+				((TextView)findViewById(R.id.result))
+					.setText(result.length() > 12 ? result.subSequence(0, 12): result);
+                        }
+                });
+	}
+
+	@Override
         public void endProgram(){
 		mProgramEnded = true;
 	}
@@ -210,8 +220,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				TextView commandView = (TextView)findViewById(R.id.command);
 				String command = commandView.getText().toString().trim();
 				commandView.setText("");
-				((TextView)findViewById(R.id.result))
-					.setText(command.length() > 6 ? command.subSequence(0, 6): command);
+				mBackgroundWebView.loadUrl("javascript:handleDebugCommandString('"+command+"')");
 			}
 		});
 	}

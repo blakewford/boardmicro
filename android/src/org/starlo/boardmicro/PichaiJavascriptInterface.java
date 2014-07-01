@@ -82,6 +82,11 @@ public class PichaiJavascriptInterface {
 		mBoardMicro.updateADCRegister(mADCSensor.getValue());
 	}
 
+	@JavascriptInterface
+	public void setDebugResult(String result) {
+		mBoardMicro.setDebugResult(result);
+	}
+
 	private class LimitedQueue<E> extends LinkedList<E> {
 		private final int mLimit;
 

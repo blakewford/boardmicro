@@ -27,7 +27,7 @@
         android:layout_height="0dp"
         android:layout_weight="1.1"
         android:orientation="horizontal"
-        android:background="#000000"
+        android:background="#006666"
         android:id="@+id/debug">
         <Button
             android:id="@+id/gdb"

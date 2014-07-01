@@ -31,6 +31,7 @@ function popPortBuffer(c, b) {
 function setPin(c, b) {
 }
 function setDebugResult(c) {
+  isNative() && Android.setDebugResult(c);
 }
 function handleDebugCommandString(c) {
   if(c.substring(0, 1) == "x"){
