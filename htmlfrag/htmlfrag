@@ -46,40 +46,12 @@
         var c = document.getElementById("gdb").value;
         history.push(c);
         historyIndex = history.length-1;
-        if(c.substring(0, 1) == "x"){
-            var b = readMemory(parseInt(c.substring(2), 16)).toString(16);
-            document.getElementById("gdbshell").textContent =
-                c.substring(1)+": 0x"+b.substring(0, 2);
-        }else if(c.substring(0, 1) == "p"){
-            var retVal = 0;
-            if(c.substring(2) == "$PC"){
-                retVal = (PC - flashStart).toString(16);
-            }else if(c.substring(2) == "$SREG"){
-                retVal = readMemory(SREG).toString(16);
-            }else if(c.substring(2) == "$SP"){
-                retVal = readMemory(SPH).toString(16)+readMemory(SPL).toString(16);
-            }else if(c.substring(2, 4) == "$r"){
-                retVal = r[parseInt(c.substring(4), 10)].toString(16);
-            }
-            document.getElementById("gdbshell").textContent =
-                c.substring(2)+" = 0x"+retVal;
-        }else if(c.substring(0, 1) == "c"){
-            document.getElementById("gdbshell").textContent = "Continuing";
-            exec();
-        }else if(c.substring(0, 1) == "s"){
-            forceBreak = true;
-            exec();
-            document.getElementById("gdbshell").textContent = "$PC = 0x"+(PC - flashStart).toString(16);
-        }else if(c == "delete"){
-            softBreakpoints = [];
-            document.getElementById("gdbshell").textContent = "Cleared Breakpoints";
-        }else if(c.substring(0, 5) == "break"){
-            if(c.substring(6, 7) == "*"){
-                softBreakpoints.push(parseInt(c.substring(7), 16));
-            }
-        }
+        handleDebugCommandString(c);
         document.getElementById("gdb").value = "";
         document.getElementById("gdb").focus();
+    }
+    function setDebugResult(c) {
+        document.getElementById("gdbshell").textContent = c;
     }
     </script>
     <style>

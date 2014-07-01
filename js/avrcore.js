@@ -30,6 +30,41 @@ function popPortBuffer(c, b) {
 }
 function setPin(c, b) {
 }
+function setDebugResult(c) {
+}
+function handleDebugCommandString(c) {
+  if(c.substring(0, 1) == "x"){
+       var b = readMemory(parseInt(c.substring(2), 16)).toString(16);
+       setDebugResult(c.substring(1)+": 0x"+b.substring(0, 2));
+  }else if(c.substring(0, 1) == "p"){
+       var retVal = 0;
+       if(c.substring(2) == "$PC"){
+            retVal = (PC - flashStart).toString(16);
+       }else if(c.substring(2) == "$SREG"){
+            retVal = readMemory(SREG).toString(16);
+       }else if(c.substring(2) == "$SP"){
+            retVal = readMemory(SPH).toString(16)+readMemory(SPL).toString(16);
+       }else if(c.substring(2, 4) == "$r"){
+            retVal = r[parseInt(c.substring(4), 10)].toString(16);
+       }
+       setDebugResult(c.substring(2)+" = 0x"+retVal);
+  }else if(c.substring(0, 1) == "c"){
+       setDebugResult("Continuing");
+       exec();
+  }else if(c.substring(0, 1) == "s"){
+       forceBreak = true;
+       exec();
+       setDebugResult("$PC = 0x"+(PC - flashStart).toString(16));
+  }else if(c == "delete"){
+       softBreakpoints = [];
+       setDebugResult("Cleared Breakpoints");
+  }else if(c.substring(0, 5) == "break"){
+       if(c.substring(6, 7) == "*"){
+           softBreakpoints.push(parseInt(c.substring(7), 16));
+       }
+  }
+}
+
 function initCore() {
   "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spr = 16894, udr = 16895, bitsPerPort = 4, SPH = 62, SPL = 61, spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, sdr = 47, spsr = 46, udr = 44, udri = 24, ucsra = 43, ucsrb = 
   42, bitsPerPort = 8, pllCsr = portF = portE = 57005) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, DMA = 32758) : alert("Failed! Unknown target");
