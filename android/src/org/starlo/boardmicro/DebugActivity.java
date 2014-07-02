@@ -6,6 +6,7 @@ import android.view.Window;
 import android.view.View.*;
 import android.widget.*;
 import android.view.View;
+import android.content.Intent;
 
 public class DebugActivity extends Activity {
 
@@ -19,7 +20,8 @@ public class DebugActivity extends Activity {
 				TextView commandView = (TextView)findViewById(R.id.command);
 				String command = commandView.getText().toString().trim();
 				commandView.setText("");
-				//mBackgroundWebView.loadUrl("javascript:handleDebugCommandString('"+command+"')");
+				setResult(Activity.RESULT_OK, new Intent().putExtra("command", command));
+				finish();
 			}
 		});
 	}

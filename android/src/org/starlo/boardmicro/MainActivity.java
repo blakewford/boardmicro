@@ -27,6 +27,7 @@ import android.content.Context;
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
 	private static final int DBX_CHOOSER_REQUEST = 0;
+	private static final int DEBUG_COMMAND_REQUEST = 1;
 	private static final int SCREEN_WIDTH = 160;
 	private static final int SCREEN_HEIGHT = 128;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
@@ -56,13 +57,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == DBX_CHOOSER_REQUEST) {
-			if (resultCode == Activity.RESULT_OK) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode != Activity.RESULT_OK)
+			return;
+		switch(requestCode)
+		{
+			case DBX_CHOOSER_REQUEST:
 				final DbxChooser.Result result = new DbxChooser.Result(data);
 				new DropboxTask(result.getLink().toString(), this).execute();
-			}
-		} else {
-			super.onActivityResult(requestCode, resultCode, data);
+				break;
+			case DEBUG_COMMAND_REQUEST:
+				mBackgroundWebView.loadUrl("javascript:handleDebugCommandString('"+data.getStringExtra("command")+"')");
+				break;
 		}
 	}
 
@@ -112,12 +118,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	@Override
 	public void setDebugResult(final String result){
-                mSurfaceView.post(new Runnable(){
-                        public void run(){
-				((TextView)findViewById(R.id.result))
-					.setText(result.length() > 12 ? result.subSequence(0, 12): result);
-                        }
-                });
+		Toast.makeText(this, result, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -209,7 +210,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 				@Override
 				public boolean onDoubleTap(MotionEvent event){
-					startActivity(new Intent(getApplicationContext(), DebugActivity.class));
+					startActivityForResult(new Intent(getApplicationContext(), DebugActivity.class), DEBUG_COMMAND_REQUEST);
 					return true;
 				}
 			});
