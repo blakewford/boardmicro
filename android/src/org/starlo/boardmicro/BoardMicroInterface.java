@@ -9,6 +9,7 @@ public interface BoardMicroInterface {
 	public void setPixel(int x, int y, int color);
 	public void startProcess(String javascriptUrl);
 	public void updateADCRegister(int value);
+	public void sendDebugCommand(String command);
 	public void setDebugResult(String result);
 	public void endProgram();
 }

@@ -20,8 +20,12 @@ public class DebugActivity extends Activity {
 				TextView commandView = (TextView)findViewById(R.id.command);
 				String command = commandView.getText().toString().trim();
 				commandView.setText("");
-				setResult(Activity.RESULT_OK, new Intent().putExtra("command", command));
-				finish();
+				if(command.equals("c")){
+					setResult(Activity.RESULT_OK, new Intent().putExtra("command", command));
+					finish();
+				}else{
+					MainActivity.getBoardMicro().sendDebugCommand(command);
+				}
 			}
 		});
 	}

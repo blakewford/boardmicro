@@ -47,8 +47,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private boolean mProgramEnded = false;
 	private boolean mDropboxCalled = false;
 
+	private static BoardMicroInterface mInterface;
+
+	public static BoardMicroInterface getBoardMicro(){
+		return mInterface;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		mInterface = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_layout);
 		setupUI();
@@ -67,7 +74,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				new DropboxTask(result.getLink().toString(), this).execute();
 				break;
 			case DEBUG_COMMAND_REQUEST:
-				mBackgroundWebView.loadUrl("javascript:handleDebugCommandString('"+data.getStringExtra("command")+"')");
+				sendDebugCommand(data.getStringExtra("command"));
 				break;
 		}
 	}
@@ -114,6 +121,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				mBackgroundWebView.loadUrl("javascript:writeADCDataRegister("+value+")");
                         }
                 });
+	}
+
+	@Override
+	public void sendDebugCommand(final String command){
+		mBackgroundWebView.loadUrl("javascript:handleDebugCommandString('"+command+"')");
 	}
 
 	@Override
