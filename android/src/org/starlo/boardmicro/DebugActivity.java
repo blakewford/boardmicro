@@ -6,9 +6,18 @@ import android.view.Window;
 import android.view.View.*;
 import android.widget.*;
 import android.view.View;
-import android.content.Intent;
+import android.content.*;
 
 public class DebugActivity extends Activity {
+
+	public static final String SEND_RESULT_ACTION = "sendResult";
+
+        private BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+			((TextView)findViewById(R.id.result)).setText(intent.getStringExtra("result"));
+                }
+        };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -19,14 +28,28 @@ public class DebugActivity extends Activity {
 			public void onClick(View view){
 				TextView commandView = (TextView)findViewById(R.id.command);
 				String command = commandView.getText().toString().trim();
-				commandView.setText("");
+				Intent intent = new Intent(MainActivity.SEND_COMMAND_ACTION).putExtra("command", command);
 				if(command.equals("c")){
-					setResult(Activity.RESULT_OK, new Intent().putExtra("command", command));
+					setResult(Activity.RESULT_OK, intent);
 					finish();
 				}else{
-					MainActivity.getBoardMicro().sendDebugCommand(command);
+					sendBroadcast(intent);
 				}
 			}
 		});
+	}
+
+	@Override
+	protected void onResume() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(SEND_RESULT_ACTION);
+		registerReceiver(receiver, filter);
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		unregisterReceiver(receiver);
+		super.onPause();
 	}
 }

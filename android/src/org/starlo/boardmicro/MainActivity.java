@@ -22,9 +22,11 @@ import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.*;
 import android.hardware.SensorManager;
-import android.content.Context;
+import android.content.*;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
+
+	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
 	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final int DEBUG_COMMAND_REQUEST = 1;
@@ -46,20 +48,43 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private boolean mScreenDirty = true;
 	private boolean mProgramEnded = false;
 	private boolean mDropboxCalled = false;
+	private boolean mPaused = false;
+	private boolean mShouldToastResult = false;
 
-	private static BoardMicroInterface mInterface;
-
-	public static BoardMicroInterface getBoardMicro(){
-		return mInterface;
-	}
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			sendDebugCommand(intent.getStringExtra("command"));
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		mInterface = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_layout);
 		setupUI();
 		startBackgroundWebApp();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(SEND_COMMAND_ACTION);
+		registerReceiver(receiver, filter);
+	}
+
+	@Override
+	protected void onResume() {
+		mPaused = false;
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		mPaused = true;
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(receiver);
+		super.onDestroy();
 	}
 
 	@Override
@@ -74,6 +99,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				new DropboxTask(result.getLink().toString(), this).execute();
 				break;
 			case DEBUG_COMMAND_REQUEST:
+				mShouldToastResult = false;
 				sendDebugCommand(data.getStringExtra("command"));
 				break;
 		}
@@ -116,6 +142,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	@Override
 	public void updateADCRegister(final int value){
+		if(mPaused)
+			return;
                 mSurfaceView.post(new Runnable(){
                         public void run(){
 				mBackgroundWebView.loadUrl("javascript:writeADCDataRegister("+value+")");
@@ -130,7 +158,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	@Override
 	public void setDebugResult(final String result){
-		Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+		if(mShouldToastResult)
+			Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+		sendBroadcast(new Intent(DebugActivity.SEND_RESULT_ACTION).putExtra("result", result));
+		mShouldToastResult = false;
 	}
 
 	@Override
