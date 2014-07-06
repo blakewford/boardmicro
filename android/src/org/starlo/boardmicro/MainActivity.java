@@ -99,7 +99,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				new DropboxTask(result.getLink().toString(), this).execute();
 				break;
 			case DEBUG_COMMAND_REQUEST:
-				mShouldToastResult = false;
+				mShouldToastResult = true;
 				sendDebugCommand(data.getStringExtra("command"));
 				break;
 		}
