@@ -30,6 +30,16 @@ function popPortBuffer(c, b) {
 }
 function setPin(c, b) {
 }
+function getStackDump() {
+  var dump = " ";
+  var pointer = SP;
+  while(pointer < flashStart)
+  {
+    dump += "0x" + readMemory(pointer).toString(16).toUpperCase() + " ";
+    pointer++;
+  }
+  return dump;
+}
 function setDebugResult(c) {
   isNative() && Android.setDebugResult(c);
 }
