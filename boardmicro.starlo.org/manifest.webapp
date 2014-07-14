@@ -1,5 +1,5 @@
 {
-  "name": "pichai",
+  "name": "BoardMicro",
   "description": "AVR Virtual Platform",
   "launch_path": "/index.html",
   "developer": {
@@ -13,15 +13,15 @@
   "messages": [],
   "locales": {
     "en-US": {
-      "name": "pichai",
+      "name": "BoardMicro",
       "description": "AVR Virtual Platform"
     }
   },
   "default_locale": "en-US",
   "icons": {
-    "60": "/style/icons/60/pichai.png",
-    "120": "/style/icons/pichai.png",
-    "128": "/style/icons/128/pichai.png"
+    "60": "/style/icons/60/icon.png",
+    "120": "/style/icons/icon.png",
+    "128": "/style/icons/128/icon.png"
   },
   "orientation": "portrait-primary"
 }

@@ -55,6 +55,9 @@ $(BASENAME).bin: $(BASENAME).elf
 	cat htmlfrag/$(TARGET)_port_gui >> $@
 	cat js/tft_spi_driver.js >> $@
 	cat htmlfrag/htmlfrag2 >> $@
+	cp $@ boardmicro.starlo.org/index.html
+	cp android/res/drawable-mdpi/icon.png icon_48.png
+	cp boardmicro.starlo.org/style/icons/128/icon.png icon_128.png
 
 android: $(TARGET).html
 	cat htmlfrag/license > $@.html
@@ -84,5 +87,5 @@ upload: $(BASENAME).hex
 	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html
+	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html icon_48.png icon_128.png
 	cd android; ant clean

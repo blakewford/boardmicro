@@ -1,0 +1,7 @@
+{
+  "manifest_version": 2,
+  "name": "BoardMicro",
+  "version": "1.0",
+  "description": "AVR Simulator",
+  "icons": { "128": "icon_128.png", "48": "icon_48.png", "16": "icon_16.png" },
+}
