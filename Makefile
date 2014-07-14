@@ -71,6 +71,9 @@ android: $(TARGET).html
 	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
+firefox: $(TARGET).html
+	cd boardmicro.starlo.org; zip -r boardmicro.zip .
+
 desktop.js: $(TARGET).html
 	cat js/avrcore.js > $@
 	echo 'var target = "$(TARGET)";' >> $@;
@@ -89,3 +92,4 @@ upload: $(BASENAME).hex
 clean: 
 	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html icon_48.png icon_128.png
 	cd android; ant clean
+	-@rm boardmicro.starlo.org/boardmicro.zip
