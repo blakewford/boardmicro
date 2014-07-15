@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "BoardMicro",
+  "version": "1.0",
+  "description": "AVR Simulator",
+  "icons": { "128": "/style/icons/128/icon.png", "48": "/style/icons/48/icon.png", "16": "/style/icons/16/icon.png" },
+  "permissions":["*.dropbox.com"],
+  "app": {
+    "background": {
+      "scripts": ["/js/main.js"]
+    }
+  }
+}
