@@ -65,11 +65,11 @@
         body {
             display: table-cell;
             vertical-align: middle;
-            background-color: black;
+            background-color: gray;
         }
     </style>
     <body>
-    <div style="padding: 2px; border: 2px solid white; background-color: #00979C;" id="sources">
+    <div style="background-color: #00979C;" id="sources">
     <div id="sources">
         <script>
             var options = {

@@ -1,6 +1,5 @@
     <br/>
-    <input type="search" id="uart" size="40"/>
-    <br/>
+    <input type="search" id="uart" size="33"/>
     <details id="debug">
         <summary style="color:white">Debug</summary>
         <button onClick="doDebugCommand();">(gdb)</button>
@@ -25,7 +24,6 @@
     <script>
         if(mobile){
             document.getElementById("debug").style.display = "none";
-            document.getElementById("local").style.display = "none";
         }
         function handleBreakpoint(address){
             var index = softBreakpoints.indexOf(parseInt(address, 16)-flashStart+2);

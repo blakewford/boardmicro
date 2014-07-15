@@ -1,21 +1,17 @@
     <br/>
-    <div style="width: 160px; display: table;">
+    <div style="width: 160px; display: table; border-spacing: 7px;">
         <script>
         document.write(generatePortHtml(0, 0xFF));
         </script>
-        <br/>
         <script>
         document.write(generatePortHtml(1, 0xC0));
         </script>
-        <br/>
         <script>
         document.write(generatePortHtml(2, 0xFF));
         </script>
-        <br/>
         <script>
         document.write(generatePortHtml(3, 0x44));
         </script>
-        <br/>
         <script>
         document.write(generatePortHtml(4, 0xF3));
         </script>
