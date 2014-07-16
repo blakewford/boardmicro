@@ -49,7 +49,9 @@ $(BASENAME).bin: $(BASENAME).elf
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@;
 	cat htmlfrag/dropbox >> $@
 	cat htmlfrag/htmlfrag >> $@
-	cat htmlfrag/$(TARGET)_port_gui >> $@
+	node js/screen.js >> $@
+	echo '</table>' >> $@;
+	node js/$(TARGET)_port_gui.js >> $@
 	cat htmlfrag/htmlfrag2 >> $@
 	cp $@ boardmicro.starlo.org/index.html
 	cp js/avrcore.js boardmicro.starlo.org/js
