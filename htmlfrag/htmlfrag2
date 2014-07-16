@@ -1,3 +1,4 @@
+    <script src="js/tft_spi_driver.js"></script>
     <br/>
     <input type="search" id="uart" size="33"/>
     <details id="debug">

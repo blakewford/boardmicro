@@ -1,4 +1,3 @@
-<script type="text/javascript">
 var colset = 0, rowset = 0, datasent = 0;
 function peripheralSPIWrite(a) {
   if (0 == (readMemory(portE) & 64) && 0 == (readMemory(portD) & 4)) {
@@ -45,5 +44,3 @@ function peripheralSPIWrite(a) {
     }
   }
 }
-;
-</script>

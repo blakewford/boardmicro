@@ -114,9 +114,6 @@
        extensions: ['.hex'],
     };
     document.getElementById("sources").appendChild(Dropbox.createChooseButton(options));
-    var colset = 0;
-    var rowset = 0;
-    var datasent = 0;
     if(mobile){
         document.getElementById("debug").style.display = "none";
     }

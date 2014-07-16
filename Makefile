@@ -47,15 +47,14 @@ $(BASENAME).bin: $(BASENAME).elf
 .PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@;
-	echo '<script>' >> $@
-	cat js/avrcore.js >> $@
-	echo '</script>' >> $@
 	cat htmlfrag/dropbox >> $@
 	cat htmlfrag/htmlfrag >> $@
 	cat htmlfrag/$(TARGET)_port_gui >> $@
-	cat js/tft_spi_driver.js >> $@
 	cat htmlfrag/htmlfrag2 >> $@
 	cp $@ boardmicro.starlo.org/index.html
+	cp js/avrcore.js boardmicro.starlo.org/js
+	cp js/tft_spi_driver.js boardmicro.starlo.org/js
+	cp js/ui.js boardmicro.starlo.org/js
 	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
 
 android: $(TARGET).html
@@ -91,4 +90,4 @@ upload: $(BASENAME).hex
 clean: 
 	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html
 	cd android; ant clean
-	-@rm boardmicro.starlo.org/boardmicro.zip
+	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/ui.js boardmicro.starlo.org/js/tft_spi_driver.js
