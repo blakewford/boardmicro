@@ -52,11 +52,13 @@ $(BASENAME).bin: $(BASENAME).elf
 	node js/screen.js >> $@
 	echo '</table>' >> $@;
 	node js/$(TARGET)_port_gui.js >> $@
+	node js/$(TARGET)_port_state.js >> js/scratch.js
 	cat htmlfrag/htmlfrag2 >> $@
 	cp $@ boardmicro.starlo.org/index.html
 	cp js/avrcore.js boardmicro.starlo.org/js
 	cp js/tft_spi_driver.js boardmicro.starlo.org/js
-	cp js/ui.js boardmicro.starlo.org/js
+	cp js/lib.js boardmicro.starlo.org/js
+	cp js/scratch.js boardmicro.starlo.org/js
 	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
 
 android: $(TARGET).html
@@ -90,6 +92,6 @@ upload: $(BASENAME).hex
 	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html
+	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html js/scratch.js
 	cd android; ant clean
-	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/ui.js boardmicro.starlo.org/js/tft_spi_driver.js
+	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/scratch.js

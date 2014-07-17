@@ -3,15 +3,23 @@
     }
 
 module.exports = {
-    generatePortHtml: function(c, b) {
+    generatePortHtml: function(c) {
         var d = 8 * c,
         g = '<div style="display: table-row">';
         for (i = 0; 8 > i; i++) {
             var e = parseInt(d + i),
             g = g + ('<div style="display: table-cell;">  <canvas id="pin' + e + '" width="10" height="10"/> </div>');
-            0 < (1 << i & b) && (g += '<script>setPin("pin' + e + '", "#FF0000");\x3c/script>')
         }
         return g + "</div>"
+    },
+    resetPortPins: function(c, b) {
+        var d = 8 * c;
+	g = '';
+        for (i = 0; 8 > i; i++) {
+            var e = parseInt(d + i);
+            0 < (1 << i & b) && (g += 'setPin("pin' + e + '", "#FF0000");');
+        }
+        return g
     },
     generateRegisterHtml: function (c) {
         return '<textarea id="register' + c + '" rows="1" cols="4">0x00</textarea>'
