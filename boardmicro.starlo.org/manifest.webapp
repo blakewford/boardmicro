@@ -17,6 +17,7 @@
       "description": "AVR Virtual Platform"
     }
   },
+  "type": "privileged",
   "default_locale": "en-US",
   "icons": {
     "60": "/style/icons/60/icon.png",
