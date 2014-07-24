@@ -7,6 +7,10 @@ chrome.app.runtime.onLaunched.addListener(function() {
     bounds: {
       width: width,
       height: height,
-    }
+    },
+    minWidth: width,
+    minHeight: height,
+    maxWidth: width,
+    maxHeight: height
   });
 });
