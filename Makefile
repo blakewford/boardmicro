@@ -23,6 +23,7 @@ SRC = blink
 SRC_DIR = src/
 LIB_DIR = src/lib
 BASENAME = $(SRC)_$(TARGET)
+DROPBOX = cat htmlfrag/dropbox >> $@
 
 all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).bin $(TARGET).html
 
@@ -47,7 +48,7 @@ $(BASENAME).bin: $(BASENAME).elf
 .PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
 	echo 'var target = "$(TARGET)";' > js/scratch.js
-	cat htmlfrag/dropbox >> $@
+	$(DROPBOX)
 	cat htmlfrag/htmlfrag >> $@
 	node js/screen.js >> $@
 	echo '</table>' >> $@;

@@ -66,27 +66,49 @@
     if (screen.width <= 699) {
         mobile = true;
     }
-    var options = {
+    var useDropbox = (typeof Dropbox != "undefined");
+    if(useDropbox){
+      var options = {
         success: function(files) {
-            var url = files[0].link;
-            var client = new XMLHttpRequest();
-            client.open("GET", url, true);
-            client.setRequestHeader("Content-Type", "text/plain");
-            client.onreadystatechange = function(){
-                if (client.readyState==4 && client.status==200)
-                {
-                    loadMemory(client.responseText);
-                    engineInit();
-                    isPaused = true;
-                    exec();
-                }
-           }
-           client.send();
-       },
-       linkType: "direct",
-       extensions: ['.hex'],
-    };
-    document.getElementById("sources").appendChild(Dropbox.createChooseButton(options));
+          var url = files[0].link;
+          var client = new XMLHttpRequest();
+          client.open("GET", url, true);
+          client.setRequestHeader("Content-Type", "text/plain");
+          client.onreadystatechange = function(){
+            if (client.readyState==4 && client.status==200)
+            {
+              loadMemory(client.responseText);
+              engineInit();
+              isPaused = true;
+              exec();
+            }
+          }
+          client.send();
+        },
+        linkType: "direct",
+        extensions: ['.hex'],
+      };
+      document.getElementById("hexfile").style.display = "none";
+      document.getElementById("sources").appendChild(Dropbox.createChooseButton(options));
+    }
+    else{
+      document.getElementById('hexfile').addEventListener('change', function(evt) {
+        var file = document.getElementById('hexfile').files[0];
+        if (!file) {
+          alert('Intel Hex File Required');
+          return;
+        }
+        var reader = new FileReader();
+        reader.onloadend = function(evt) {
+          if (evt.target.readyState == FileReader.DONE) {
+            loadMemory(evt.target.result);
+            engineInit();
+            exec();
+          }
+        };
+        reader.readAsBinaryString(file.slice(0, file.size));
+      }, false);
+    }
     if(mobile){
         document.getElementById("debug").style.display = "none";
     }

@@ -5,3 +5,4 @@ android/boardmicro.keystore
 android/src/org/starlo/boardmicro/DropboxConstants.java
 prebuilt
 htmlfrag/dropbox
+js/gdrive.js

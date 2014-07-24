@@ -15,8 +15,9 @@
     </style>
     <body>
     <script src="js/avrcore.js"></script>
-    <div style="background-color: #00979C;" id="sources">
+    <div style="background-color: #00979C;">
     <div id="sources">
+        <input text="this" type="file" id="hexfile"/>
     </div>
     <br/>
     <script src="js/lib.js"></script>
