@@ -54,6 +54,9 @@ $(BASENAME).bin: $(BASENAME).elf
 	echo '</table>' >> $@;
 	node js/$(TARGET)_port_gui.js >> $@
 	node js/$(TARGET)_port_state.js >> js/scratch.js
+ifeq ($(DEBUG),yes)
+	cat js/debug.js >> js/scratch.js
+endif
 	cat htmlfrag/htmlfrag2 >> $@
 	cp $@ boardmicro.starlo.org/index.html
 	cp js/avrcore.js boardmicro.starlo.org/js

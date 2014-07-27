@@ -60,12 +60,8 @@
             alert("Breakpoint at 0x" + softBreakpoints[index].toString(16));
         }
     }
-    var mobile = false;
     var history = [];
     var historyIndex = -1;
-    if (screen.width <= 699) {
-        mobile = true;
-    }
     var useDropbox = (typeof Dropbox != "undefined");
     if(useDropbox){
       var options = {
@@ -108,7 +104,4 @@
         };
         reader.readAsBinaryString(file.slice(0, file.size));
       }, false);
-    }
-    if(mobile){
-        document.getElementById("debug").style.display = "none";
     }
