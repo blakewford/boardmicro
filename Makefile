@@ -97,5 +97,5 @@ upload: $(BASENAME).hex
 
 clean: 
 	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html js/scratch.js
-	cd android; ant clean
 	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/scratch.js
+	cd android; ant clean
