@@ -16,23 +16,33 @@
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 
+PC = 0x0;
 memory = Array(262144);
 
 function loadMemory(c, b) {
   c = b ? c.split(/["|"]/) : c.split(/["\n"]/);
   for (var d = 0;c[d];) {
     var h = c[d].substring(1), e = parseInt(h.substring(2, 6), 16), f = 0;
+    var type = h.substring(6, 8);
+    var shift = 4;
     for (j = 4;j < parseInt(h.substring(0, 2), 16) + 4;j += 2) {
       var g = 2 * j, g = h.substring(g, g + 4);
-      //Write Memory
-      memory[e+f] = g.substring(0, 2);
-      memory[e+f+1] = g.substring(2);
+      if(type == 0){
+        //Write Memory
+        memory[e+f] = g.substring(0, 2);
+        memory[e+f+1] = g.substring(2);
+        console.log((e+f).toString(16)+": "+memory[e+f]+memory[e+f+1]);
+      }
       //Handle new segment types; Start Segment Address
-      console.log((e+f).toString(16)+": "+memory[e+f]+memory[e+f+1]);
+      if(type == 3){
+        PC = parseInt(g.substring(0, 2)+g.substring(2)) << shift;
+        shift -= 4;
+      }
       f += 2;
     }
     d++;
   }
+  console.log(PC);
 }
 function fetch(c) {
   if(c < 128){
