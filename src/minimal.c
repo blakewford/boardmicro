@@ -15,6 +15,11 @@ You should have received a copy of the GNU General Public License
 along with pichai; see the file LICENSE.  If not see
 <http://www.gnu.org/licenses/>.  */
 
+void _exit(int status){
+loop:
+    goto loop;
+}
+
 void _start(void)
 {
   asm ("NOP;");
