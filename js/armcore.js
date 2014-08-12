@@ -18,6 +18,7 @@
 
 PC = 0x0;
 memory = Array(262144);
+r = Array(16);
 
 function loadMemory(c, b) {
   c = b ? c.split(/["|"]/) : c.split(/["\n"]/);
@@ -29,20 +30,20 @@ function loadMemory(c, b) {
       var g = 2 * j, g = h.substring(g, g + 4);
       if(type == 0){
         //Write Memory
-        memory[e+f] = g.substring(0, 2);
-        memory[e+f+1] = g.substring(2);
-        console.log((e+f).toString(16)+": "+memory[e+f]+memory[e+f+1]);
+        memory[e+f] = parseInt(g.substring(0, 2), 16);
+        memory[e+f+1] = parseInt(g.substring(2), 16);
+        console.log((e+f).toString(16)+": "+memory[e+f].toString(16)+memory[e+f+1].toString(16));
       }
       //Handle new segment types; Start Segment Address
       if(type == 3){
-        PC = parseInt(g.substring(0, 2)+g.substring(2)) << shift;
+        PC = parseInt(g.substring(0, 2)+g.substring(2), 16) << shift;
         shift -= 4;
       }
       f += 2;
     }
     d++;
   }
-  console.log(PC);
+  console.log(PC.toString(16));
 }
 
 //0 0 0 Op Offset5 Rs Rd Move shifted register
@@ -66,17 +67,33 @@ function loadMemory(c, b) {
 function offsetStack(byte){
   //S SWord7 Add offset to stack pointer
 }
-function pushpop(){
-  //Rlist
+function pushpop(options, rlist){
+  var pop = false;
+  var lrpc = false;
   switch(options){
-    case 4:
-      break;
     case 5:
+      lrpc = true;
       break;
     case 12:
+      pop = true;
       break;
     case 13:
+      pop = lrpc = true;
       break;
+  }
+  for(var i = 0; i < 8; i++){
+    var inlist = rlist & 1 << i;
+    if(pop && inlist){
+      var str = "Pop r"+i.toString();
+      if(lrpc)
+        str += " PC"
+      console.log(str);
+    }else if(inlist){
+      var str = "Push r"+i.toString();
+      if(lrpc)
+        str += " LR"
+      console.log(str);
+    }
   }
 }
 
@@ -94,17 +111,22 @@ function fetch(c, data) {
       case 181:
       case 188:
       case 189:
-        pushpop(op & 0xF, data);
+        pushpop(c & 0xF, data);
         break;
     }
   }
   else{
-      console.log("Unknown");
+      console.log("Unknown" + c);
   }
 }
+var i = 1;
 function loop() {
-    fetch(0);
+  while(PC < 0x8004){
+    fetch(memory[PC], memory[PC-1]);
     setTimeout(loop, 1000);
+    PC += i*2;
+    i++;
+  }
 }
 function engineInit() {
 
