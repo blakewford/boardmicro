@@ -48,7 +48,6 @@ function loadMemory(c, b) {
 }
 
 //0 0 0 Op Offset5 Rs Rd Move shifted register
-//0 0 0 1 1 I Op Rn/offset3 Rs Rd Add/subtract
 //0 0 1 Op Rd Offset8 Move/compare/add/subtract immediate
 //0 1 0 0 0 0 Op Rs Rd ALU operations
 //0 1 0 0 0 1 Op H1 H2 Rs/Hs Rd/Hd Hi register operations/branch exchange
@@ -58,15 +57,31 @@ function loadMemory(c, b) {
 //0 1 1 B L Offset5 Rb Rd Load/store with immediate offset
 //1 0 0 0 L Offset5 Rb Rd Load/store halfword
 //1 0 0 1 L Rd Word8 SP-relative load/store
-//1 0 1 0 SP Rd Word8 Load address
 //1 1 0 0 L Rb Rlist Multiple load/store
 //1 1 0 1 Cond Soffset8 Conditional branch
 //1 1 0 1 1 1 1 1 Value8 Software Interrupt
 //1 1 1 0 0 Offset11 Unconditional branch
 //1 1 1 1 H Offset Long branch with link
 
+function loadAddress(nibble, data){
+  var SP = (nibble & 8) >> 3;
+  var rd = (nibble & 7);
+  console.log("r"+rd+" SP:"+SP+" "+data);
+}
+function addSubtract(options, data){
+  if(!options & 8)
+    return; //Move
+  var I = options & 4;
+  var subtract = options & 2;
+  var index = ((data & 0xF) >> 2) + ((options & 1) << 2);
+  var value = I ? index: r[index];
+  console.log(index);
+}
 function offsetStack(byte){
-  //S SWord7 Add offset to stack pointer
+  var subtract = byte >> 7;
+  var value = (byte & 127)*4;
+  value = subtract ? -value: value;
+  console.log(value +" from SP");
 }
 function pushpop(options, rlist){
   var pop = false;
@@ -101,10 +116,31 @@ function pushpop(options, rlist){
 function fetch(c, data) {
   if(c < 128){
     switch(c) {
+      case 1:
+        addSubtract(c & 0xF, data);
+        break;
     }
   }
   else if(c >= 128 && c < 256){
     switch(c){
+      case 160:
+      case 161:
+      case 162:
+      case 163:
+      case 164:
+      case 165:
+      case 166:
+      case 167:
+      case 168:
+      case 169:
+      case 170:
+      case 171:
+      case 172:
+      case 173:
+      case 174:
+      case 175:
+        loadAddress(c & 0xF, data);
+        break;
       case 176:
         offsetStack(data);
         break;
