@@ -16,9 +16,10 @@
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 
-PC = 0x0;
 memory = Array(262144);
 r = Array(16);
+PSR = 0x01000000;
+CONTROL= 0x00000000;
 
 function loadMemory(c, b) {
   c = b ? c.split(/["|"]/) : c.split(/["\n"]/);
@@ -36,14 +37,14 @@ function loadMemory(c, b) {
       }
       //Handle new segment types; Start Segment Address
       if(type == 3){
-        PC = parseInt(g.substring(0, 2)+g.substring(2), 16) << shift;
+        r[15] = parseInt(g.substring(0, 2)+g.substring(2), 16) << shift;
         shift -= 4;
       }
       f += 2;
     }
     d++;
   }
-  console.log(PC.toString(16));
+  console.log(r[15].toString(16));
 }
 
 //0 0 0 Op Offset5 Rs Rd Move shifted register
@@ -121,15 +122,18 @@ function fetch(c, data) {
 }
 var i = 1;
 function loop() {
-  while(PC < 0x8004){
-    fetch(memory[PC], memory[PC-1]);
+  while(r[15] < 0x8004){
+    fetch(memory[r[15]], memory[r[15]-1]);
     setTimeout(loop, 1000);
-    PC += i*2;
+    r[15] += i*2;
     i++;
   }
 }
 function engineInit() {
-
+  PSR = 0x01000000;
+  CONTROL= 0x00000000;
+  r[13] = memory[0];
+  r[14] = 0xFFFFFFFF;
 }
 function exec() {
     loop();
