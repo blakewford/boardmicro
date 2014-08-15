@@ -23,4 +23,5 @@ loop:
 void _start(void)
 {
   asm ("NOP;");
+  _exit(0);
 }

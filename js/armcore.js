@@ -20,6 +20,7 @@ memory = Array(262144);
 r = Array(16);
 PSR = 0x01000000;
 CONTROL= 0x00000000;
+forceBreak = false;
 
 function loadMemory(c, b) {
   c = b ? c.split(/["|"]/) : c.split(/["\n"]/);
@@ -50,7 +51,6 @@ function loadMemory(c, b) {
 //0 0 0 Op Offset5 Rs Rd Move shifted register
 //0 0 1 Op Rd Offset8 Move/compare/add/subtract immediate
 //0 1 0 0 0 0 Op Rs Rd ALU operations
-//0 1 0 0 0 1 Op H1 H2 Rs/Hs Rd/Hd Hi register operations/branch exchange
 //0 1 0 0 1 Rd Word8 PC-relative load
 //0 1 0 1 L B 0 Ro Rb Rd Load/store with register offset
 //0 1 0 1 H S 1 Ro Rb Rd Load/store sign-extended byte/halfword
@@ -63,6 +63,28 @@ function loadMemory(c, b) {
 //1 1 1 0 0 Offset11 Unconditional branch
 //1 1 1 1 H Offset Long branch with link
 
+function RegOps(op, data){
+  var Rs = (data >> 3) & 7;
+  var Rd = (data & 7);
+  if(data >> 7)
+    Rd += 8;
+  if((data >> 6) & 1)
+    Rs += 8;
+  switch(op){
+    case 0:
+      console.log("Add r"+Rd+" r"+Rs);
+      break;
+    case 1:
+      console.log("Compare r"+Rd+" r"+Rs);
+      break;
+    case 2:
+      console.log("Move r"+Rd+" r"+Rs);
+      break;
+    case 3:
+      console.log("Branch r"+Rs);
+      break;
+  }
+}
 function loadAddress(nibble, data){
   var SP = (nibble & 8) >> 3;
   var rd = (nibble & 7);
@@ -119,6 +141,12 @@ function fetch(c, data) {
       case 1:
         addSubtract(c & 0xF, data);
         break;
+      case 68:
+      case 69:
+      case 70:
+      case 71:
+        RegOps(c & 0x3, data);
+        break;
     }
   }
   else if(c >= 128 && c < 256){
@@ -153,16 +181,15 @@ function fetch(c, data) {
     }
   }
   else{
-      console.log("Unknown" + c);
+      forceBreak = true;
+      console.log("Unknown " + c);
   }
 }
-var i = 1;
 function loop() {
-  while(r[15] < 0x8004){
+  while(!forceBreak){
     fetch(memory[r[15]], memory[r[15]-1]);
     setTimeout(loop, 1000);
-    r[15] += i*2;
-    i++;
+    r[15] += 2;
   }
 }
 function engineInit() {
@@ -175,6 +202,6 @@ function exec() {
     loop();
 }
 
-loadMemory(":1080000080B500AFC046BD4680BC01BC0047C0463D\n:040000030000800178\n:00000001FF");
+loadMemory(":1080000080B582B000AF7860FEE7C04680B500AFB3\n:08801000C0460020FFF7F4FF59\n:040000030000800D6C\n:00000001FF");
 engineInit()
 exec();
