@@ -10,6 +10,9 @@
 #ifdef atmega8
     #define SIGRD 5
 #endif
+#ifdef atmega328
+    #define SIGRD 5
+#endif
 
 #define SPI_PORT PORTB
 #define DDR_SPI DDRB
@@ -37,6 +40,20 @@
     #define UDR UDR1
 #endif
 
+#ifdef atmega328
+    #define UBRRH UBRR0H
+    #define UBRRL UBRR0L
+    #define UCSRB UCSR0B
+    #define RXEN RXEN0
+    #define TXEN TXEN0
+    #define UCSRC UCSR0C
+    #define USBS USBS0
+    #define UCSZ0 UCSZ00
+    #define UCSRA UCSR0A
+    #define UDRE UDRE0
+    #define UDR UDR0
+#endif
+
 #ifdef atmega32u4
     #define SPI_SELECT_CMD PORTE
     #define SPI_CMD_DIRECTION DDRE
@@ -47,6 +64,15 @@
 #endif
 
 #ifdef atmega8
+    #define SPI_SELECT_CMD PORTD
+    #define SPI_CMD_DIRECTION DDRD
+    #define SPI_SELECT_DATA PORTD
+    #define SPI_DATA_DIRECTION DDRD
+    #define SPI_SELECT_CMD_ACTIVE 0x80
+    #define SPI_SELECT_DATA_ACTIVE 0x1
+#endif
+
+#ifdef atmega328
     #define SPI_SELECT_CMD PORTD
     #define SPI_CMD_DIRECTION DDRD
     #define SPI_SELECT_DATA PORTD

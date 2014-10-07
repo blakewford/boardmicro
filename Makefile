@@ -16,7 +16,7 @@
 #along with pichai; see the file LICENSE.  If not see
 #<http://www.gnu.org/licenses/>.
 
-#SUPPORTED TARGETS: attiny4 atmega8 atmega32u4
+#SUPPORTED TARGETS: attiny4 atmega8 atmega32u4 atmega328
 TARGET = atmega32u4
 
 SRC = blink
