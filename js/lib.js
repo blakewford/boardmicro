@@ -14,14 +14,14 @@
                 break;
             case 38:
                 document.getElementById("gdb").value = historyIndex >= 0 ?
-                    history[historyIndex--]: "";
+                    commandHistory[historyIndex--]: "";
                 break;
         }
     }
     function doDebugCommand() {
         var c = document.getElementById("gdb").value;
-        history.push(c);
-        historyIndex = history.length-1;
+        commandHistory.push(c);
+        historyIndex = commandHistory.length-1;
         handleDebugCommandString(c);
         document.getElementById("gdb").value = "";
         document.getElementById("gdb").focus();
@@ -60,7 +60,7 @@
             alert("Breakpoint at 0x" + softBreakpoints[index].toString(16));
         }
     }
-    var history = [];
+    var commandHistory = [];
     var historyIndex = -1;
     var useDropbox = (typeof Dropbox != "undefined");
     if(useDropbox){
