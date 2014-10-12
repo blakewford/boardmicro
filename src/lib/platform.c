@@ -20,9 +20,15 @@
     #define DD_MOSI PB3
     #define DD_SCK PB5
     #define DD_SS PB0
-#else
+#endif
+#ifdef atmega32u4
     #define DD_MOSI PB2
     #define DD_SCK PB1
+    #define DD_SS PB0
+#endif
+#ifdef atmega328
+    #define DD_MOSI PB3
+    #define DD_SCK PB5
     #define DD_SS PB0
 #endif
 
@@ -123,30 +129,26 @@ void platformBasedDelay(uint32_t milliseconds) {
     delay(milliseconds);
 }
 
+#ifndef attiny4
 void platformBasedSPIBegin()
 {
-#ifndef attiny4
     SPI_PORT = 0x1;
     DDR_SPI = (1<<DD_SS)|(1<<DD_MOSI)|(1<<DD_SCK);
     /* Enable SPI, Master, set clock rate fck/16 */
     SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
-#endif
 }
 
 void platformBasedSPITransmit(uint8_t data)
 {
-#ifndef attiny4
     /* Start transmission */
     SPDR = data;
     /* Wait for transmission complete */
     while(!(SPSR & (1<<SPIF)))
     ;
-#endif
 }
 
 void platformBasedSerialBegin()
 {
-#ifndef attiny4
     /* Set baud rate */
     UBRRH = (uint8_t)(BAUD>>8);
     UBRRL = (uint8_t)BAUD;
@@ -154,18 +156,15 @@ void platformBasedSerialBegin()
     UCSRB = (1<<RXEN)|(1<<TXEN);
     /* Set frame format: 8data, 2stop bit */
     UCSRC = (1<<USBS)|(3<<UCSZ0);
-#endif
 }
 
 void platformBasedSerialWrite(uint8_t data)
 {
-#ifndef attiny4
     /* Wait for empty transmit buffer */
     while ( !( UCSRA & (1<<UDRE)) )
         ;
     /* Put data into buffer, sends the data */
     UDR = data;
-#endif
 }
 
 void platformBasedSerialPrint(const char* message)
@@ -243,14 +242,13 @@ void platformBasedDisplayBegin() {
         SPI_DATA_DIRECTION = _BV (2);
 
         platformBasedSPIBegin();
-#ifndef attiny4
         SPCR = (SPCR & ~0x3);
         SPSR = (SPSR & ~0x1);
 
         SPCR &= ~(_BV(DORD));
 
         SPCR = (SPCR & ~0xC);
-#endif
+
         SPI_SELECT_CMD &= ~SPI_SELECT_CMD_ACTIVE;
 
         writeDisplayCommand(0x1);
@@ -347,3 +345,4 @@ void platformBasedDisplayBegin() {
         writeDisplayCommand(0x36);
         writeDisplayData(0xA8);
 }
+#endif
