@@ -54,6 +54,15 @@
         var element = document.getElementById(id);
         element.style.background = color;
     }
+    function fillScreen(color){
+        for(var y = 0; y < 128; y++)
+        {
+          for(var x = 0; x < 160; x++)
+          {
+              drawPixel( x, y, color );
+          }
+        }
+    }
     function handleBreakpoint(address){
         var index = softBreakpoints.indexOf(parseInt(address, 16)-flashStart+2);
         if(index >= 0){

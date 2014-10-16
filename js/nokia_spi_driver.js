@@ -1,5 +1,6 @@
 var x=0, y=0;
 var IsImportant = false;
+fillScreen("#FFFFFF");
 function peripheralSPIWrite(a) {
   var LCDHEIGHT_NOROT = 48;
   var LCDWIDTH_NOROT = 84;
