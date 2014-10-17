@@ -17,7 +17,7 @@
  <http://www.gnu.org/licenses/>.  */
 
 var timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, 
-dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1E3, batchDelay = 0, adcValue = 9, disableHardware = !1, nativeFlag;
+dataStart, dataEnd, ioRegStart, portB, portC, portD, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1E3, batchDelay = 0, adcValue = 9, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
 function peripheralSPIWrite(c) {
 }
 function uartWrite(c) {
@@ -78,7 +78,7 @@ function handleDebugCommandString(c) {
 
 function initCore() {
   "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spr = 16894, udr = 16895, bitsPerPort = 4, SPH = 62, SPL = 61, spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, sdr = 47, spsr = 46, udr = 44, udri = 24, ucsra = 43, ucsrb = 
-  42, bitsPerPort = 8, pllCsr = portF = portE = 57005) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, DMA = 32758) : "atmega328" === target ? (memory = Array(32768), timerInterrupt = 64, flashStart = 2304, dataStart = 256, dataEnd = 2304, SP = 2303, DMA = 32758, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = portF = 57005, spmCr = 87, sdr = 78, spsr = 77, udr = 198, udri = 76, ucsra = 192, ucsrb = 193, pllCsr = 57005, bitsPerPort = 8) : alert("Failed! Unknown target");
+  42, bitsPerPort = 8, pllCsr = portF = portE = 57005) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = 46, portF = 49, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, spipinport1=2, spipinport2=3,  DMA = 32758) : "atmega328" === target ? (memory = Array(32768), spipinport1=1, spipinport2=1, timerInterrupt = 64, flashStart = 2304, dataStart = 256, dataEnd = 2304, SP = 2303, DMA = 32758, ioRegStart = 32, portB = 37, portC = 40, portD = 43, portE = portF = 57005, spmCr = 87, sdr = 78, spsr = 77, udr = 198, udri = 76, ucsra = 192, ucsrb = 193, pllCsr = 57005, bitsPerPort = 8) : alert("Failed! Unknown target");
   optimizationEnabled = !1;
   PC = flashStart;
   SREG = ioRegStart + 63;
@@ -154,7 +154,7 @@ function writeSpecificPort(c) {
     case 4:
       b = dataQueueF, isNode() && console.log("PortF");
   }
-  isNative() && (!forceOptimizationEnabled || 16 != d && 24 != d) && Android.writePort(c, b[0]);
+  isNative() && (!forceOptimizationEnabled || spipinport1*8 != d && spipinport2*8 != d) && Android.writePort(c, b[0]);
   popPortBuffer(b, d);
 }
 var screenDataOffset = 0;

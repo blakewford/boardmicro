@@ -33,7 +33,7 @@
         return value.length == 2 ? value: "0"+ value;
     }
     function popPortBuffer(b, d){
-        if(!optimizationEnabled && !(forceOptimizationEnabled && (d == 16 || d == 24))){
+        if(!optimizationEnabled && !(forceOptimizationEnabled && (d == spipinport1*8 || d == spipinport2*8))){
             for (i = 0; i < bitsPerPort; i++)c = "pin" + parseInt(i + d), 0 < document.getElementById(c).getContext("2d").getImageData(0, 0, 10, 10).data[1] && setPin(c, "#FF0000");
                 b = b.shift();
             for (i = 0; i < bitsPerPort; i++) parseInt(b) & 1 << i && setPin("pin" + parseInt(i + d), "#00FF00")
