@@ -8,7 +8,7 @@ module.exports = {
         g = '<div style="display: table-row">';
         for (i = 0; 8 > i; i++) {
             var e = parseInt(d + i),
-            g = g + ('<div style="display: table-cell;">  <canvas id="pin' + e + '" width="10" height="10"/> </div>');
+            g = g + ('<div style="display: table-cell;">  <canvas onclick="handlePinInput()" id="pin' + e + '" width="10" height="10"/> </div>');
         }
         return g + "</div>"
     },

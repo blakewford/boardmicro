@@ -6,6 +6,10 @@
         d.fillStyle = b;
         d.fillRect(0, 0, 10, 10)
     }
+    function handlePinInput()
+    {
+        alert("Pin Input");
+    }
     function filterRelevantKeypress()
     {
         switch(event.which){
