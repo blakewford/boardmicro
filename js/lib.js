@@ -8,7 +8,8 @@
     }
     function handlePinInput()
     {
-        alert("Pin Input");
+        pinDTimer = batchSize;
+        writeMemory( pinD, 0x0 );
     }
     function filterRelevantKeypress()
     {
