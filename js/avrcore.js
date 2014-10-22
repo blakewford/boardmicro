@@ -17,7 +17,7 @@
  <http://www.gnu.org/licenses/>.  */
 
 var primeTimer, timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, 
-dataStart, dataEnd, ioRegStart, portB, portC, portD, pinD = 57005, pinDTimer, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1024, batchDelay = 0, adcValue = 9, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
+dataStart, dataEnd, ioRegStart, portB, portC, portD, pinD = 57005, pinDTimer, portE, portF, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1024, batchDelay = 0, adcValue = 42, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
 function peripheralSPIWrite(c) {
 }
 function uartWrite(c) {

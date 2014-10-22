@@ -8,7 +8,7 @@
         <br/>
         <font style="color:white;">Batch Instructions 1 - 10000</font>
         <br/>
-        <input id="batch" onchange="batchSize=this.value" style="width: 99%" type="range" min="1" max="10000" value="1000">
+        <input id="batch" onchange="batchSize=this.value" style="width: 99%" type="range" min="1" max="10000" value="1024">
         <br/>
         <font style="color:white;">Batch Delay 0 - 1000ms</font>
         <br/>
@@ -16,7 +16,7 @@
         <br/>
         <font style="color:white;">ADC Value 0 - 1023</font>
         <br/>
-        <input id="adc" onchange="adcValue=this.value" style="width: 99%" type="range" min="0" max="1023" value="9">
+        <input id="adc" onchange="adcValue=this.value" style="width: 99%" type="range" min="0" max="1023" value="42">
         <br/>
         <input type="checkbox" onchange="forceOptimizationEnabled=this.checked"><font style="color:white;">Disable SPI Port Animation</font>
         <br/>
