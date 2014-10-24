@@ -6,7 +6,7 @@
         d.fillStyle = b;
         d.fillRect(0, 0, 10, 10)
     }
-    function handlePinInput()
+    function handlePinInput( pinNumber )
     {
         pinDTimer = batchSize;
         writeMemory( pinD, 0x0 );
