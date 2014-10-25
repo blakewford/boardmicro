@@ -8,8 +8,31 @@
     }
     function handlePinInput( pinNumber )
     {
-        pinDTimer = batchSize;
-        writeMemory( pinD, 0x0 );
+        if( pinNumber >= 0 && pinNumber < 8 )
+        {
+            pinBTimer = batchSize;
+            writeMemory( pinB, 0x0 );
+        }
+        if( pinNumber >= 8 && pinNumber < 16 )
+        {
+            pinCTimer = batchSize;
+            writeMemory( pinC, 0x0 );
+        }
+        if( pinNumber >= 16 && pinNumber < 24 )
+        {
+            pinDTimer = batchSize;
+            writeMemory( pinD, 0x0 );
+        }
+        if( pinNumber >= 24 && pinNumber < 32 )
+        {
+            pinETimer = batchSize;
+            writeMemory( pinE, 0x0 );
+        }
+        if( pinNumber >= 32 && pinNumber < 40 )
+        {
+            pinFTimer = batchSize;
+            writeMemory( pinF, 0x0 );
+        }
     }
     function filterRelevantKeypress()
     {
