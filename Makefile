@@ -50,7 +50,11 @@ $(BASENAME).bin: $(BASENAME).elf
 	echo 'var target = "$(TARGET)";' > js/scratch.js
 	$(DROPBOX)
 	cat htmlfrag/htmlfrag >> $@
-	node js/screen.js >> $@
+ifeq ($(TARGET),atmega328)
+	node js/nokia_screen.js >> $@
+else
+	node js/arduino_screen.js >> $@
+endif
 	echo '</table>' >> $@;
 	node js/$(TARGET)_port_gui.js >> $@
 	node js/$(TARGET)_port_state.js >> js/scratch.js

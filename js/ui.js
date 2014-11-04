@@ -27,10 +27,12 @@ module.exports = {
     generateFillerHtml: function () {
         return '<div style="display: table-cell;"><canvas width="10" height="10"/></div>'
     },
-    generateScreen: function (){
-        for(var j =0; j < 128; j++){
+    generateScreen: function (type){
+        var width = type == "arduino" ? 160: 84;
+        var height = type == "arduino" ? 128: 48;
+        for(var j =0; j < height; j++){
             console.log("<tr>");
-            for(var i =0; i < 160; i++){
+            for(var i =0; i < width; i++){
                 var id = normalize(i.toString(16));
                 id+=normalize(j.toString(16));
                 console.log("<td id=\""+id+"\" style=\"background-color: black;\"></td>");
