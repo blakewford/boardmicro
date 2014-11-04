@@ -59,6 +59,7 @@ ifeq ($(DEBUG),yes)
 endif
 ifeq ($(TARGET),atmega328)
 	echo '<script src="js/nokia_spi_driver.js"></script>' >> $@
+	echo 'fillScreen("#FFFFFF");' >> js/scratch.js
 else
 	echo '<script src="js/tft_spi_driver.js"></script>' >> $@
 endif
@@ -79,8 +80,8 @@ android: $(TARGET).html
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@.html;
 	echo '<script>' >> $@.html
 	cat js/avrcore.js >> $@.html
-	echo '</script>' >> $@.html
 	cat js/tft_spi_driver.js >> $@.html
+	echo '</script>' >> $@.html
 	echo '<script type="text/javascript">forceOptimizationEnabled = true;</script>' >> $@.html;
 	echo '<script type="text/javascript">batchSize = 1E4;</script>' >> $@.html;
 	cp $@.html ./android/assets/avrcore.html

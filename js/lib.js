@@ -75,7 +75,10 @@
         b.value += String.fromCharCode(c)
     }
     function drawPixel(x, y, color){
-        if( x > 159 || y > 127 )
+        var nokiaScreen = target == "atmega328";
+        var height = nokiaScreen ? 48: 128;
+        var width  = nokiaScreen ? 84: 160;
+        if( x > width || y > height )
             return;
         var id = normalize(x.toString(16));
         id+=normalize(y.toString(16));
@@ -83,9 +86,12 @@
         element.style.background = color;
     }
     function fillScreen(color){
-        for(var y = 0; y < 128; y++)
+        var nokiaScreen = target == "atmega328";
+        var height = nokiaScreen ? 48: 128;
+        var width  = nokiaScreen ? 84: 160;
+        for(var y = 0; y < height; y++)
         {
-          for(var x = 0; x < 160; x++)
+          for(var x = 0; x < width; x++)
           {
               drawPixel( x, y, color );
           }
