@@ -56,6 +56,9 @@ else
 	node js/arduino_screen.js >> $@
 endif
 	echo '</table>' >> $@;
+ifeq ($(TARGET),atmega328)
+	cat htmlfrag/gamebuino_pad >> $@
+endif
 	node js/$(TARGET)_port_gui.js >> $@
 	node js/$(TARGET)_port_state.js >> js/scratch.js
 ifeq ($(DEBUG),yes)

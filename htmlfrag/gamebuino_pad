@@ -1,14 +1,14 @@
+<br/>
 <div style="margin-left: 10px;">
-<canvas width="30" height="30" style="margin-left: 72px; background-color: yellow;"></canvas>
+<canvas onclick=handlePinInput(11) width="30" height="30" style="margin-left: 72px; background-color: yellow;"></canvas>
 <br/>
-<canvas width="30" height="30" style="margin-left: 32px; background-color: blue;"></canvas>
+<canvas onclick=handlePinInput(1) width="30" height="30" style="margin-left: 32px; background-color: blue;"></canvas>
 <br/>
-<canvas width="30" height="30" style="margin-left: 5px; background-color: blue;"></canvas>
-<canvas width="30" height="30" style="margin-left: 20px; background-color: blue;"></canvas>
+<canvas onclick=handlePinInput(22) width="30" height="30" style="margin-left: 5px; background-color: blue;"></canvas>
+<canvas onclick=handlePinInput(23) width="30" height="30" style="margin-left: 20px; background-color: blue;"></canvas>
 <br/>
-<canvas width="30" height="30" style="margin-left: 32px; background-color: blue;"></canvas>
+<canvas onclick=handlePinInput(0) width="30" height="30" style="margin-left: 32px; background-color: blue;"></canvas>
 <br/>
-<canvas width="30" height="30" style="margin-left: 92px; background-color: green;"></canvas>
-<canvas width="30" height="30" style="background-color: red;"></canvas>
+<canvas onclick=handlePinInput(20) width="30" height="30" style="margin-left: 92px; background-color: green;"></canvas>
+<canvas onclick=handlePinInput(18) width="30" height="30" style="background-color: red;"></canvas>
 </div>
-<br/>
