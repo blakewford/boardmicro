@@ -186,7 +186,10 @@ function writeMemory(c, b) {
   }
 }
 function readMemory(c) {
-  c === TCNT0 && callTOV0Interrupt();
+  if( c === TCNT0 ){
+    for(var i = 0; i < 1; i++)
+      callTOV0Interrupt();
+  }
   if (c === TIFR0) {
     return 1;
   }
