@@ -78,7 +78,7 @@
         var nokiaScreen = target == "atmega328";
         var height = nokiaScreen ? 48: 128;
         var width  = nokiaScreen ? 84: 160;
-        if( x > width || y > height )
+        if( x > width-1 || y > height-1 )
             return;
         var id = normalize(x.toString(16));
         id+=normalize(y.toString(16));
