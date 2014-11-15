@@ -187,7 +187,7 @@ function writeMemory(c, b) {
 }
 function readMemory(c) {
   if( c === TCNT0 ){
-    for(var i = 0; i < 1; i++)
+    for(var i = 0; i < 50; i++)
       callTOV0Interrupt();
   }
   if (c === TIFR0) {

@@ -8,29 +8,30 @@
     }
     function handlePinInput( pinNumber )
     {
+        var inputCycles = batchSize*50;
         if( pinNumber >= 0 && pinNumber < 8 )
         {
-            pinBTimer = batchSize;
+            pinBTimer = inputCycles;
             writeMemory( pinB, 0x0 );
         }
         if( pinNumber >= 8 && pinNumber < 16 )
         {
-            pinCTimer = batchSize;
+            pinCTimer = inputCycles;
             writeMemory( pinC, 0x0 );
         }
         if( pinNumber >= 16 && pinNumber < 24 )
         {
-            pinDTimer = batchSize;
+            pinDTimer = inputCycles;
             writeMemory( pinD, 0x0 );
         }
         if( pinNumber >= 24 && pinNumber < 32 )
         {
-            pinETimer = batchSize;
+            pinETimer = inputCycles;
             writeMemory( pinE, 0x0 );
         }
         if( pinNumber >= 32 && pinNumber < 40 )
         {
-            pinFTimer = batchSize;
+            pinFTimer = inputCycles;
             writeMemory( pinF, 0x0 );
         }
     }
