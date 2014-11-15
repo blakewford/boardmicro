@@ -87,7 +87,11 @@ android: $(TARGET).html
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@.html;
 	echo '<script>' >> $@.html
 	cat js/avrcore.js >> $@.html
+ifeq ($(TARGET),atmega328)
+	cat js/nokia_spi_driver.js >> $@.html
+else
 	cat js/tft_spi_driver.js >> $@.html
+endif
 	echo '</script>' >> $@.html
 	echo '<script type="text/javascript">forceOptimizationEnabled = true;</script>' >> $@.html;
 	echo '<script type="text/javascript">batchSize = 1E4;</script>' >> $@.html;
