@@ -18,6 +18,10 @@
 
 var primeTimer, timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, flashStart, 
 dataStart, dataEnd, ioRegStart, portB, pinB = 57005, pinBTimer, portC, pinC = 57005, pinCTimer, portD, pinD = 57005, pinDTimer, portE, pinE = 57005, pinETimer, portF, pinF = 57005, pinFTimer, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1024, batchDelay = 0, adcValue = 42, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
+function initScreen() {
+}
+function writeDMARegion(c, b) {
+}
 function peripheralSPIWrite(c) {
 }
 function uartWrite(c) {
@@ -157,24 +161,6 @@ function writeSpecificPort(c) {
   }
   isNative() && (!forceOptimizationEnabled || spipinport1*8 != d && spipinport2*8 != d) && Android.writePort(c, b[0]);
   popPortBuffer(b, d);
-}
-var screenDataOffset = 0;
-function writeDMARegion(c, b) {
-  if (c == DMA || c == DMA + 1) {
-    screenDataOffset = -1;
-  } else {
-    if (c == DMA + 9 || c == DMA + 8) {
-      var d = memory[DMA + 1] << 8 | memory[DMA], h = memory[DMA + 3] << 8 | memory[DMA + 2], e = memory[DMA + 5] << 8 | memory[DMA + 4], f = memory[DMA + 7] << 8 | memory[DMA + 6], g = memory[DMA + 9] << 8 | memory[DMA + 8], k;
-      k = (8 * (g >> 11) << 16) + (4 * (g >> 5 & 63) << 8);
-      k += 8 * (g & 31);
-      for (k = k.toString(16);6 > k.length;) {
-        k = "0" + k;
-      }
-      g = "#" + k;
-      -1 != screenDataOffset && (drawPixel(d + screenDataOffset, e, g), isNative()) && (k = {}, k.x = d + screenDataOffset, k.y = e, k.color = g, pixelQueue.push(k));
-      d + screenDataOffset != h ? screenDataOffset++ : (screenDataOffset = 0, e != f && (e++, writeMemory(DMA + 5, e >> 8), writeMemory(DMA + 4, e & 255)));
-    }
-  }
 }
 function writeMemory(c, b) {
   memory[c] = b;
@@ -1232,8 +1218,8 @@ function engineInit() {
     case "Arduino Micro   ":
       hasDeviceSignature = !0;
   }
+  initScreen();
 }
 function exec() {
   isPaused && (isPaused = !1, loop());
 }
-;

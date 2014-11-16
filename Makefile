@@ -66,7 +66,6 @@ ifeq ($(DEBUG),yes)
 endif
 ifeq ($(TARGET),atmega328)
 	echo '<script src="js/nokia_spi_driver.js"></script>' >> $@
-	echo 'fillScreen("#FFFFFF");' >> js/scratch.js
 else
 	echo '<script src="js/tft_spi_driver.js"></script>' >> $@
 endif
