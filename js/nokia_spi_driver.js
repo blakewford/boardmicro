@@ -13,12 +13,21 @@ function initScreen(){
 }
 var x=0, y=0;
 function writeDMARegion(c, b){
-  if(isNative()){
-    var k = {};
-    k.x = memory[32766];
-    k.y = memory[c];
-    k.color = b === 0 ? "#000000":"#FFFFFF";
-    pixelQueue.push(k);
+  if( c === 32766 ){
+    var x = memory[32766];
+    for(var i = 0; i < 8; i++)
+    {
+      var base = y+i;
+      var color = memory[32758+i] === 0 ? "#000000":"#FFFFFF";
+      drawPixel( x, base, color );
+      if(isNative()){
+        var k = {};
+        k.x = x;
+        k.y = base;
+        k.color = color;
+        pixelQueue.push(k);
+      }
+    }
   }
 }
 function peripheralSPIWrite(a) {
@@ -31,8 +40,6 @@ function peripheralSPIWrite(a) {
       for(var i=0; i < 8; i++)
       {
         var bit = a & (1 << i);
-        var color = bit == 0 ? "#000000":"#FFFFFF"
-        drawPixel(x, y+i, color);
         writeMemory(32758+i, bit);
       }
       writeMemory(32766, x++);
