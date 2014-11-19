@@ -23,15 +23,18 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.*;
 import android.hardware.SensorManager;
 import android.content.*;
+import android.graphics.Matrix;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
 	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
+	private static final boolean mGamebuino = false;
+
 	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final int DEBUG_COMMAND_REQUEST = 1;
-	private static final int SCREEN_WIDTH = 160;
-	private static final int SCREEN_HEIGHT = 128;
+	private static final int SCREEN_WIDTH = mGamebuino ? 84: 160;
+	private static final int SCREEN_HEIGHT = mGamebuino ? 48: 128;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
 	private SurfaceView mSurfaceView;
@@ -61,7 +64,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.display_layout);
+		if(mGamebuino)
+			setContentView(R.layout.gamebuino);
+		else
+			setContentView(R.layout.display_layout);
 		setupUI();
 		startBackgroundWebApp();
 		IntentFilter filter = new IntentFilter();
@@ -220,7 +226,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			if(canvas != null){
 				canvas.drawColor(Color.BLACK);
 				mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (mScreenHeight/5)*2 + mScreenHeight/20, false);
+				if(mGamebuino)
+					mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3, false);
+				else
+					mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (mScreenHeight/5)*2 + mScreenHeight/20, false);
 				canvas.drawBitmap(mScaledBitmap, 0, 0, null);
 				mHolder.unlockCanvasAndPost(canvas);
 			}
@@ -262,7 +271,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				return mGestureDetector.onTouchEvent(event);
 			}
 		});
-		filterOutUnsupportedPins();
+		if(!mGamebuino)
+			filterOutUnsupportedPins();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
