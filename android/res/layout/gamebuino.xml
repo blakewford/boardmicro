@@ -5,12 +5,50 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<LinearLayout
-    android:orientation="horizontal"
+<RelativeLayout
     android:layout_width="0dp"
     android:layout_height="fill_parent"
     android:background="#38382E"
-    android:layout_weight="1.5"/>
+    android:layout_weight="1.5">
+<Button
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:background="#FFFF00"
+    android:layout_alignParentRight="true"
+    android:layout_marginRight="24dp"
+    android:layout_marginTop="48dp"/>
+<Button
+    android:id="@+id/btnDown"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_centerHorizontal="true"
+    android:background="#0000FF"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="24dp"/>
+<Button
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_above="@id/btnDown"
+    android:layout_toLeftOf="@id/btnDown"
+    android:background="#0000FF"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"/>
+<Button
+    android:id="@+id/btnRight"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_above="@id/btnDown"
+    android:layout_toRightOf="@id/btnDown"
+    android:background="#0000FF"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"/>
+<Button
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_centerHorizontal="true"
+    android:background="#0000FF"
+    android:layout_above="@id/btnRight"/>
+</RelativeLayout>
 <LinearLayout
     android:weightSum="5"
     android:orientation="vertical"
@@ -37,11 +75,27 @@
     android:background="#38382E"
     android:layout_weight="1"/>
 </LinearLayout>
-<LinearLayout                                                           
-    android:orientation="horizontal"
+<RelativeLayout
     android:layout_width="0dp"
     android:layout_height="fill_parent"
     android:background="#38382E"
-    android:layout_weight="1.5"/>
+    android:layout_weight="1.5">
+<Button
+    android:id="@+id/btnA"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_alignParentLeft="true"
+    android:background="#00FF00"
+    android:layout_alignParentBottom="true"
+    android:layout_marginLeft="24dp"
+    android:layout_marginBottom="24dp"/>
+<Button
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_alignParentRight="true"
+    android:background="#FF0000"
+    android:layout_above="@id/btnA"
+    android:layout_marginRight="24dp"/>
+</RelativeLayout>
 </LinearLayout>
 
