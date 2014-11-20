@@ -188,6 +188,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {}
 
+	public void handleButtonPress(View view) {
+		Toast.makeText(this, "Button Pressed", Toast.LENGTH_SHORT).show();
+	}
+
 	private void startRefreshThread(){
 		endProgram();
 		mRefreshThread = new Thread(new Runnable(){
