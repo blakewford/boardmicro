@@ -16,8 +16,8 @@
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 
-var primeTimer, timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, 
-flashStart, dataStart, dataEnd, ioRegStart, portB, pinB = 57005, pinBTimer, portC, pinC = 57005, pinCTimer, portD, pinD = 57005, pinDTimer, portE, pinE = 57005, pinETimer, portF, pinF = 57005, pinFTimer, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1024, batchDelay = 0, adcValue = 42, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
+var timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, 
+flashStart, dataStart, dataEnd, ioRegStart, portB, pinB = 57005, pinBTimer, portC, pinC = 57005, pinCTimer, portD, pinD = 57005, pinDTimer, portE, pinE = 57005, pinETimer, portF, pinF = 57005, pinFTimer, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1024, inputCycles = 100000, batchDelay = 0, adcValue = 42, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
 function initScreen() {
 }
 function writeDMARegion(c, b) {
@@ -70,7 +70,6 @@ function initCore() {
   memory[ucsra] = 32;
   memory[ucsrb] = 32;
   memory[spsr] = 128;
-  primeTimer = !0;
   "attiny4" === target && (memory[16320] = simulationManufacturerID, memory[16321] = 143, memory[16322] = 10);
 }
 function writeClockRegister(c) {
@@ -1128,7 +1127,6 @@ function isSoftBreakpoint(c) {
 function loop() {
   var c, b = !0;
   for (j = 0;j < batchSize;j++) {
-    primeTimer && 0 == j % 256 && callTOV0Interrupt();
     var d = parseInt(memory[PC++], 16), h = parseInt(memory[PC++], 16), e = 149 == h && 152 == d || isSoftBreakpoint(PC) || forceBreak;
     if (207 == h && 255 == d || e) {
       b = !1, e ? (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : isNative() && Android.endProgram(), isNode() && console.log("Exit " + ((r[25] << 8) + r[24]));
@@ -1159,7 +1157,6 @@ function loop() {
       break;
     }
   }
-  primeTimer = !1;
   0 < pixelQueue.length && (Android.writePixelBuffer(JSON.stringify(pixelQueue)), pixelQueue.length = 0);
   b && setTimeout(loop, batchDelay);
 }

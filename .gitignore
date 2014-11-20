@@ -3,6 +3,7 @@ android/build.xml
 android/local.properties
 android/boardmicro.keystore
 android/src/org/starlo/boardmicro/DropboxConstants.java
+android/src/org/starlo/boardmicro/ConfigConstants.java
 prebuilt
 htmlfrag/dropbox
 js/gdrive.js

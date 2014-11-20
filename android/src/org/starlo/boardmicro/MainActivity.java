@@ -29,7 +29,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
-	private static final boolean mGamebuino = false;
+	private static final boolean mGamebuino = ConfigConstants.USE_GAMEBUINO_LAYOUT;
 
 	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final int DEBUG_COMMAND_REQUEST = 1;

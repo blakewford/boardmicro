@@ -8,7 +8,6 @@
     }
     function handlePinInput( pinNumber )
     {
-        var inputCycles = batchSize*50;
         if( pinNumber >= 0 && pinNumber < 8 )
         {
             pinBTimer = inputCycles;
