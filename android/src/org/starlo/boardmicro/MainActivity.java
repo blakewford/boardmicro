@@ -189,7 +189,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	public void surfaceDestroyed(SurfaceHolder holder) {}
 
 	public void handleButtonPress(View view) {
-		Toast.makeText(this, "Button Pressed", Toast.LENGTH_SHORT).show();
+		int pinNumber = -1;
+		switch(view.getId())
+		{
+			case R.id.btnA:
+				pinNumber = 20;
+				break;
+		}
+		if(pinNumber >= 0)
+			mBackgroundWebView.loadUrl("javascript:handlePinInput("+pinNumber+")");
 	}
 
 	private void startRefreshThread(){
