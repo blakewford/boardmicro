@@ -227,28 +227,25 @@ function getDisplacement(c, b) {
 }
 function handleInput(c) {
   if (57005 != c) {
-    var b = !1, d;
+    var b = !1;
     switch(c) {
       case pinB:
-        d = portB;
         b = pinBTimer ? pinBTimer-- : !1;
         break;
       case pinC:
-        d = portC;
         b = pinCTimer ? pinCTimer-- : !1;
         break;
       case pinD:
-        d = portD;
         b = pinDTimer ? pinDTimer-- : !1;
         break;
       case pinE:
-        d = portE;
         b = pinETimer ? pinETimer-- : !1;
         break;
       case pinF:
-        d = portF, b = pinFTimer ? pinFTimer-- : !1;
+        b = pinFTimer ? pinFTimer-- : !1;
     }
-    b && writeMemory(c, readMemory(d));
+    if(b == 1)
+      writeMemory(c, 0);
   }
 }
 function fetch(c, b) {
