@@ -73,6 +73,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(SEND_COMMAND_ACTION);
 		registerReceiver(receiver, filter);
+		//WebView.setWebContentsDebuggingEnabled(true);
 	}
 
 	@Override

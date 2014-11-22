@@ -15,7 +15,7 @@
         <screen android:screenSize="normal" android:screenDensity="xhdpi" />
         <screen android:screenSize="normal" android:screenDensity="480" />
     </compatible-screens>
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="18" />
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:allowBackup="true"
