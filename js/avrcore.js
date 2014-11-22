@@ -34,6 +34,42 @@ function popPortBuffer(c, b) {
 }
 function setPin(c, b) {
 }
+function handlePinInput( pinNumber )
+{
+    var mask = 0x00;
+    var inputPort = 0;
+    if( pinNumber >= 0 && pinNumber < 8 )
+    {
+        inputPort = pinB;
+        mask = 1 << pinNumber;
+        pinBTimer = inputCycles;
+    }
+    if( pinNumber >= 8 && pinNumber < 16 )
+    {
+        inputPort = pinC;
+        mask = 1 << (pinNumber - 8);
+        pinCTimer = inputCycles;
+    }
+    if( pinNumber >= 16 && pinNumber < 24 )
+    {
+        inputPort = pinD;
+        mask = 1 << (pinNumber - 16);
+        pinDTimer = inputCycles;
+    }
+    if( pinNumber >= 24 && pinNumber < 32 )
+    {
+        inputPort = pinE;
+        mask = 1 << (pinNumber - 24);
+        pinETimer = inputCycles;
+    }
+    if( pinNumber >= 32 && pinNumber < 40 )
+    {
+        inputPort = pinF;
+        mask = 1 << (pinNumber - 32);
+        pinFTimer = inputCycles;
+     }
+     writeMemory(inputPort, mask);
+}
 function getStackDump() {
   for (var c = " ", b = SP;b < flashStart;) {
     c += "0x" + readMemory(b).toString(16).toUpperCase() + " ", b++;
