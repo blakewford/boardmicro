@@ -196,13 +196,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
                                 pinNumber = 1;
                                 break;
                         case R.id.btnRight:
-                                pinNumber = 23;
+                                pinNumber = 0;
                                 break;
                         case R.id.btnDown:
                                 pinNumber = 22;
                                 break;
                         case R.id.btnLeft:
-                                pinNumber = 0;
+                                pinNumber = 23;
                                 break;
 			case R.id.btnA:
 				pinNumber = 20;
