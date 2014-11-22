@@ -192,9 +192,27 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 		int pinNumber = -1;
 		switch(view.getId())
 		{
+                        case R.id.btnUp:
+                                pinNumber = 1;
+                                break;
+                        case R.id.btnRight:
+                                pinNumber = 23;
+                                break;
+                        case R.id.btnDown:
+                                pinNumber = 22;
+                                break;
+                        case R.id.btnLeft:
+                                pinNumber = 0;
+                                break;
 			case R.id.btnA:
 				pinNumber = 20;
 				break;
+                        case R.id.btnB:
+                                pinNumber = 18;
+                                break;
+                        case R.id.btnC:
+                                pinNumber = 11;
+                                break;
 		}
 		if(pinNumber >= 0)
 			mBackgroundWebView.loadUrl("javascript:handlePinInput("+pinNumber+")");

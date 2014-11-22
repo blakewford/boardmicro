@@ -93,7 +93,7 @@ else
 endif
 	echo '</script>' >> $@.html
 	echo '<script type="text/javascript">forceOptimizationEnabled = true;</script>' >> $@.html;
-	echo '<script type="text/javascript">batchSize = 1E4;</script>' >> $@.html;
+	echo '<script type="text/javascript">batchSize = 1E6;</script>' >> $@.html;
 	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
