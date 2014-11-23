@@ -189,7 +189,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {}
 
-	protected abstract void handleButtonPress(View view);
+	public abstract void handleButtonPress(View view);
 	protected abstract Bitmap getScaledBitmap();
 
 	protected void setConfiguration( int layout, int width, int height, boolean usePins, boolean useGDB ){

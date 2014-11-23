@@ -19,6 +19,6 @@ public class BoardMicroActivity extends MainActivity
 		return Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (mScreenHeight/5)*2 + mScreenHeight/20, false);
 	}
 
-	protected void handleButtonPress(View view) {
+	public void handleButtonPress(View view) {
 	}
 }

@@ -22,7 +22,7 @@ public class GamebuinoActivity extends MainActivity
 		return Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3, false);
         }
 
-        protected void handleButtonPress(View view) {
+	public void handleButtonPress(View view) {
                 int pinNumber = -1;
                 switch(view.getId())
                 {
