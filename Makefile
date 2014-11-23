@@ -31,10 +31,10 @@ libplatform.a: platform.o
 	avr-ar rcs $@ $<
 
 platform.o: $(LIB_DIR)/platform.c
-	avr-gcc -D$(TARGET) -I$(LIB_DIR) -c $< -o $@ -mmcu=$(TARGET)
+	avr-gcc -gdwarf-4 -D$(TARGET) -I$(LIB_DIR) -c $< -o $@ -mmcu=$(TARGET)
 
 $(BASENAME).elf: $(SRC_DIR)$(SRC).c libplatform.a
-	avr-gcc -I$(LIB_DIR) $< -o $(BASENAME).elf -D$(TARGET) -L. -lplatform -mmcu=$(TARGET)
+	avr-gcc -gdwarf-4 -I$(LIB_DIR) $< -o $(BASENAME).elf -D$(TARGET) -L. -lplatform -mmcu=$(TARGET)
 
 $(BASENAME).dis: $(BASENAME).elf
 	avr-objdump -d $(BASENAME).elf > $(BASENAME).hex.dis
