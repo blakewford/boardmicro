@@ -29,12 +29,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
-	private static final boolean mGamebuino = ConfigConstants.USE_GAMEBUINO_LAYOUT;
-
 	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final int DEBUG_COMMAND_REQUEST = 1;
-	private static final int SCREEN_WIDTH = mGamebuino ? 84: 160;
-	private static final int SCREEN_HEIGHT = mGamebuino ? 48: 128;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
 	private SurfaceView mSurfaceView;
@@ -47,12 +43,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	private int mScreenWidth;
 	private int mScreenHeight;
-	private	int[] mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
 	private boolean mScreenDirty = true;
 	private boolean mProgramEnded = false;
 	private boolean mDropboxCalled = false;
 	private boolean mPaused = false;
 	private boolean mShouldToastResult = false;
+
+	private int SCREEN_WIDTH;
+	private int SCREEN_HEIGHT;
+	private int[] mPixelArray;
+	private boolean mUsePins;
+	private boolean mUseGDB;
+	private int mLayout;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -64,10 +66,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(mGamebuino)
-			setContentView(R.layout.gamebuino);
-		else
-			setContentView(R.layout.display_layout);
+		setContentView(mLayout);
 		setupUI();
 		startBackgroundWebApp();
 		IntentFilter filter = new IntentFilter();
@@ -120,7 +119,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 	@Override
         public void setPinState(char port, byte pin, boolean status) {
-		if(!mGamebuino){
+		if(mUsePins){
 			Resources r = getResources();
 			final boolean finalStatus = status;
 			final View view = findViewById(r.getIdentifier("port"+new Character(port).toString(), "id", this.getPackageName()))
@@ -219,6 +218,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			mBackgroundWebView.loadUrl("javascript:handlePinInput("+pinNumber+")");
 	}
 
+	protected void setConfiguration( int layout, int width, int height, boolean usePins, boolean useGDB ){
+		mLayout = layout;
+		mUsePins = usePins;
+		mUseGDB = useGDB;
+		SCREEN_WIDTH = width;
+		SCREEN_HEIGHT = height;
+		mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
+	}
+
 	private void startRefreshThread(){
 		endProgram();
 		mRefreshThread = new Thread(new Runnable(){
@@ -259,7 +267,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			if(canvas != null){
 				canvas.drawColor(Color.BLACK);
 				mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				if(mGamebuino)
+				if(false)
 					mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3, false);
 				else
 					mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (mScreenHeight/5)*2 + mScreenHeight/20, false);
@@ -295,7 +303,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 
 				@Override
 				public boolean onDoubleTap(MotionEvent event){
-					startActivityForResult(new Intent(getApplicationContext(), DebugActivity.class), DEBUG_COMMAND_REQUEST);
+					if(mUseGDB)
+						startActivityForResult(new Intent(getApplicationContext(), DebugActivity.class), DEBUG_COMMAND_REQUEST);
 					return true;
 				}
 			});
@@ -304,7 +313,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 				return mGestureDetector.onTouchEvent(event);
 			}
 		});
-		if(!mGamebuino)
+		if(mUsePins)
 			filterOutUnsupportedPins();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
