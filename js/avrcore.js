@@ -503,9 +503,11 @@ function fetch(c, b) {
       ;
       case 79:
         f = getSmallDestinationRegister(c, b);
-        setAddPreEvaluationFlags(r[f], getBigConstant(c, b) + C);
+        setSubPreEvaluationFlags(r[f], getBigConstant(c, b) + C);
         r[f] -= getBigConstant(c, b) + C;
+        var OldZ = Z;
         setPostEvaluationFlags(r[f]);
+        Z = OldZ;
         0 != r[f] && (Z = 0);
         for (C = 0;0 > r[f];) {
           r[f] = 256 + r[f], C = 1;
