@@ -25,7 +25,7 @@ import android.hardware.SensorManager;
 import android.content.*;
 import android.graphics.Matrix;
 
-public class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
+public abstract class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
 	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
@@ -34,20 +34,21 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
 	private SurfaceView mSurfaceView;
-	private WebView mBackgroundWebView;
 	private SurfaceHolder mHolder;
-	private Bitmap mBitmap;
 	private Bitmap mScaledBitmap;
 	private Thread mRefreshThread = null;
 	private GestureDetector mGestureDetector = null;
 
-	private int mScreenWidth;
-	private int mScreenHeight;
 	private boolean mScreenDirty = true;
 	private boolean mProgramEnded = false;
 	private boolean mDropboxCalled = false;
 	private boolean mPaused = false;
 	private boolean mShouldToastResult = false;
+
+	protected Bitmap mBitmap;
+	protected int mScreenWidth;
+	protected int mScreenHeight;
+	protected WebView mBackgroundWebView;
 
 	private int SCREEN_WIDTH;
 	private int SCREEN_HEIGHT;
@@ -188,35 +189,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {}
 
-	public void handleButtonPress(View view) {
-		int pinNumber = -1;
-		switch(view.getId())
-		{
-                        case R.id.btnUp:
-                                pinNumber = 1;
-                                break;
-                        case R.id.btnRight:
-                                pinNumber = 0;
-                                break;
-                        case R.id.btnDown:
-                                pinNumber = 22;
-                                break;
-                        case R.id.btnLeft:
-                                pinNumber = 23;
-                                break;
-			case R.id.btnA:
-				pinNumber = 20;
-				break;
-                        case R.id.btnB:
-                                pinNumber = 18;
-                                break;
-                        case R.id.btnC:
-                                pinNumber = 11;
-                                break;
-		}
-		if(pinNumber >= 0)
-			mBackgroundWebView.loadUrl("javascript:handlePinInput("+pinNumber+")");
-	}
+	protected abstract void handleButtonPress(View view);
+	protected abstract Bitmap getScaledBitmap();
 
 	protected void setConfiguration( int layout, int width, int height, boolean usePins, boolean useGDB ){
 		mLayout = layout;
@@ -267,10 +241,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Bo
 			if(canvas != null){
 				canvas.drawColor(Color.BLACK);
 				mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				if(false)
-					mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3, false);
-				else
-					mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (mScreenHeight/5)*2 + mScreenHeight/20, false);
+				mScaledBitmap = getScaledBitmap();
 				canvas.drawBitmap(mScaledBitmap, 0, 0, null);
 				mHolder.unlockCanvasAndPost(canvas);
 			}
