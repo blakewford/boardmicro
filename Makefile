@@ -83,6 +83,7 @@ endif
 
 android: $(TARGET).html
 ifeq ($(TARGET),atmega328)
+	-@mkdir android/src/org/starlo/boardmicro/gamebuino
 	cp -f android/GamebuinoAndroidManifest.xml android/AndroidManifest.xml
 	ln -f android/GamebuinoActivity.java android/src/org/starlo/boardmicro/gamebuino/GamebuinoActivity.java
 else
