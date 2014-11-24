@@ -1,7 +1,5 @@
 package org.starlo.boardmicro;
 
-import org.starlo.boardmicro.R;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.webkit.WebView;
@@ -191,6 +189,8 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 
 	public abstract void handleButtonPress(View view);
 	protected abstract Bitmap getScaledBitmap();
+	protected abstract void filterOutUnsupportedPins();
+	protected abstract SurfaceView getDisplay();
 
 	protected void setConfiguration( int layout, int width, int height, boolean usePins, boolean useGDB ){
 		mLayout = layout;
@@ -249,7 +249,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	private void setupUI(){
-		mSurfaceView = (SurfaceView)findViewById(R.id.display);
+		mSurfaceView = getDisplay();
 		mHolder = mSurfaceView.getHolder();
 		mHolder.addCallback(this);
 		mBitmap = Bitmap.createBitmap(SCREEN_WIDTH, SCREEN_HEIGHT, Config.ARGB_8888);
@@ -284,8 +284,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 				return mGestureDetector.onTouchEvent(event);
 			}
 		});
-		if(mUsePins)
-			filterOutUnsupportedPins();
+		filterOutUnsupportedPins();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
@@ -305,22 +304,5 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 				}
 			}
 		});
-	}
-
-	private void filterOutUnsupportedPins(){
-		findViewById(R.id.portC).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portC).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
-		findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
 	}
 }

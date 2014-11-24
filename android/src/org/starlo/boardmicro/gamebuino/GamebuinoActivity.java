@@ -22,6 +22,15 @@ public class GamebuinoActivity extends MainActivity
 		return Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3, false);
         }
 
+	@Override
+	protected void filterOutUnsupportedPins(){}
+
+	@Override
+	protected SurfaceView getDisplay(){
+		return (SurfaceView)findViewById(R.id.display);
+	}
+
+	@Override
 	public void handleButtonPress(View view) {
                 int pinNumber = -1;
                 switch(view.getId())

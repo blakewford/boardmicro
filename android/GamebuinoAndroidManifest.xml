@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.starlo.boardmicro"
+    package="org.starlo.boardmicro.gamebuino"
     android:versionCode="10"
     android:versionName="1.0" >
     <compatible-screens>
@@ -19,25 +19,18 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="@string/gamebuino"
         android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
         android:largeHeap="true"
         android:icon="@drawable/icon">
         <activity
-            android:screenOrientation="portrait"
-            android:name="org.starlo.boardmicro.BoardMicroActivity"
-            android:label="@string/app_name" >
+            android:screenOrientation="landscape"
+            android:name="org.starlo.boardmicro.gamebuino.GamebuinoActivity"
+            android:label="@string/gamebuino" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:theme="@android:style/Theme.Dialog"
-            android:windowIsTranslucent="true"
-            android:windowBackground="@null"
-            android:screenOrientation="portrait"
-            android:name="org.starlo.boardmicro.DebugActivity">
         </activity>
     </application>
 </manifest>

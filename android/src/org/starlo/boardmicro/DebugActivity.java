@@ -8,6 +8,8 @@ import android.widget.*;
 import android.view.View;
 import android.content.*;
 
+import org.starlo.boardmicro.R;
+
 public class DebugActivity extends Activity {
 
 	public static final String SEND_RESULT_ACTION = "sendResult";

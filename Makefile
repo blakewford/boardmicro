@@ -82,6 +82,11 @@ endif
 	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
 
 android: $(TARGET).html
+ifeq ($(TARGET),atmega328)
+	cp -f android/GamebuinoAndroidManifest.xml android/AndroidManifest.xml
+else
+	cp -f android/BoardMicroAndroidManifest.xml android/AndroidManifest.xml
+endif
 	cat htmlfrag/license > $@.html
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@.html;
 	echo '<script>' >> $@.html
@@ -119,3 +124,4 @@ clean:
 	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html js/scratch.js
 	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/nokia_spi_driver.js boardmicro.starlo.org/js/scratch.js
 	cd android; ant clean
+	-@rm android/AndroidManifest.xml
