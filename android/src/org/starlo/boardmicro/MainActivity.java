@@ -28,7 +28,6 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
 	private static final int DBX_CHOOSER_REQUEST = 0;
-	private static final int DEBUG_COMMAND_REQUEST = 1;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
 	private SurfaceView mSurfaceView;
@@ -41,18 +40,17 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	private boolean mProgramEnded = false;
 	private boolean mDropboxCalled = false;
 	private boolean mPaused = false;
-	private boolean mShouldToastResult = false;
 
+ 	protected static final int DEBUG_COMMAND_REQUEST = 1;
 	protected Bitmap mBitmap;
 	protected int mScreenWidth;
 	protected int mScreenHeight;
 	protected WebView mBackgroundWebView;
+	protected boolean mShouldToastResult = false;
 
 	private int SCREEN_WIDTH;
 	private int SCREEN_HEIGHT;
 	private int[] mPixelArray;
-	private boolean mUsePins;
-	private boolean mUseGDB;
 	private int mLayout;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -117,21 +115,6 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	@Override
-        public void setPinState(char port, byte pin, boolean status) {
-		if(mUsePins){
-			Resources r = getResources();
-			final boolean finalStatus = status;
-			final View view = findViewById(r.getIdentifier("port"+new Character(port).toString(), "id", this.getPackageName()))
-			.findViewById(r.getIdentifier("pin"+new Byte(pin).toString(), "id", this.getPackageName()));
-			view.post(new Runnable(){
-				public void run(){
-					view.setBackgroundColor(finalStatus ? Color.GREEN: Color.RED);
-				}
-			});
-		}
-	}
-
-	@Override
         public void setPixel(int x, int y, int color){
 		mScreenDirty = true;
 		mPixelArray[y*SCREEN_WIDTH+x] = color;
@@ -164,14 +147,6 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	@Override
-	public void setDebugResult(final String result){
-		if(mShouldToastResult)
-			Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-		sendBroadcast(new Intent(DebugActivity.SEND_RESULT_ACTION).putExtra("result", result));
-		mShouldToastResult = false;
-	}
-
-	@Override
         public void endProgram(){
 		mProgramEnded = true;
 	}
@@ -191,11 +166,10 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	protected abstract Bitmap getScaledBitmap();
 	protected abstract void filterOutUnsupportedPins();
 	protected abstract SurfaceView getDisplay();
+	protected abstract void startDebugActivity();
 
-	protected void setConfiguration( int layout, int width, int height, boolean usePins, boolean useGDB ){
+	protected void setConfiguration( int layout, int width, int height ){
 		mLayout = layout;
-		mUsePins = usePins;
-		mUseGDB = useGDB;
 		SCREEN_WIDTH = width;
 		SCREEN_HEIGHT = height;
 		mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
@@ -274,8 +248,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 
 				@Override
 				public boolean onDoubleTap(MotionEvent event){
-					if(mUseGDB)
-						startActivityForResult(new Intent(getApplicationContext(), DebugActivity.class), DEBUG_COMMAND_REQUEST);
+					startDebugActivity();
 					return true;
 				}
 			});

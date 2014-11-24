@@ -7,13 +7,13 @@ import android.view.View.*;
 import android.graphics.Bitmap;
 import org.starlo.boardmicro.*;
 
-import org.starlo.boardmicro.R;
+import org.starlo.boardmicro.gamebuino.R;
 
 public class GamebuinoActivity extends MainActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setConfiguration(R.layout.gamebuino, 84, 48, false, false);
+		setConfiguration(R.layout.gamebuino, 84, 48);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -22,8 +22,17 @@ public class GamebuinoActivity extends MainActivity
 		return Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3, false);
         }
 
+        @Override
+        public void setDebugResult(final String result){}
+
+        @Override
+        public void setPinState(char port, byte pin, boolean status) {}
+
 	@Override
 	protected void filterOutUnsupportedPins(){}
+
+	@Override
+        protected void startDebugActivity(){}
 
 	@Override
 	protected SurfaceView getDisplay(){
