@@ -16,8 +16,8 @@
  along with pichai; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 
-var timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory, 
-flashStart, dataStart, dataEnd, ioRegStart, portB, pinB = 57005, pinBTimer, portC, pinC = 57005, pinCTimer, portD, pinD = 57005, pinDTimer, portE, pinE = 57005, pinETimer, portF, pinF = 57005, pinFTimer, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1024, inputCycles = 8E5, batchDelay = 0, adcValue = 42, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
+var timedInstructions, scalerTicks = 64, timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory,
+flashStart, dataStart, dataEnd, ioRegStart, portB, pinB = 57005, pinBTimer, portC, pinC = 57005, pinCTimer, portD, pinD = 57005, pinDTimer, portE, pinE = 57005, pinETimer, portF, pinF = 57005, pinFTimer, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, batchSize = 1E4, inputCycles = 2E5, batchDelay = 0, adcValue = 42, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
 function initScreen() {
 }
 function writeDMARegion(c, b) {
@@ -90,8 +90,7 @@ function handleDebugCommandString(c) {
 }
 function initCore() {
   "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spr = 16894, udr = 16895, bitsPerPort = 4, SPH = 62, SPL = 61, spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, sdr = 47, spsr = 46, udr = 44, udri = 24, ucsra = 43, ucsrb = 
-  42, bitsPerPort = 8, pllCsr = portF = portE = 57005) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = 46, pinE = 44, portF = 49, pinF = 47, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, spipinport1 = 2, spipinport2 = 3, DMA = 32758) : "atmega328" === target ? (memory = Array(32768), 
-  spipinport1 = 1, spipinport2 = 1, timerInterrupt = 64, flashStart = 2304, dataStart = 256, dataEnd = 2304, SP = 2303, DMA = 32758, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = pinE = portF = pinF = 57005, spmCr = 87, sdr = 78, spsr = 77, udr = 198, udri = 76, ucsra = 192, ucsrb = 193, pllCsr = 57005, bitsPerPort = 8) : alert("Failed! Unknown target");
+  42, bitsPerPort = 8, pllCsr = portF = portE = 57005) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = 46, pinE = 44, portF = 49, pinF = 47, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, spipinport1 = 2, spipinport2 = 3, DMA = 32758) : "atmega328" === target ? (scalerTicks = 4, memory = Array(32768), spipinport1 = 1, spipinport2 = 1, timerInterrupt = 64, flashStart = 2304, dataStart = 256, dataEnd = 2304, SP = 2303, DMA = 32758, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = pinE = portF = pinF = 57005, spmCr = 87, sdr = 78, spsr = 77, udr = 198, udri = 76, ucsra = 192, ucsrb = 193, pllCsr = 57005, bitsPerPort = 8) : alert("Failed! Unknown target");
   optimizationEnabled = !1;
   PC = flashStart;
   SREG = ioRegStart + 63;
@@ -180,9 +179,10 @@ function writeMemory(c, b) {
 }
 function readMemory(c) {
   if (c === TCNT0) {
-    for (var b = 0;50 > b;b++) {
+    for (var b = 0;(timedInstructions / (scalerTicks*256)) > b;b++) {
       callTOV0Interrupt();
     }
+    timedInstructions = 0;
   }
   if (c === TIFR0) {
     return 1;
@@ -1162,6 +1162,7 @@ function isSoftBreakpoint(c) {
 function loop() {
   var c, b = !0;
   for (j = 0;j < batchSize;j++) {
+    timedInstructions++;
     var d = parseInt(memory[PC++], 16), h = parseInt(memory[PC++], 16), e = 149 == h && 152 == d || isSoftBreakpoint(PC) || forceBreak;
     if (207 == h && 255 == d || e) {
       b = !1, e ? (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : isNative() && Android.endProgram(), isNode() && console.log("Exit " + ((r[25] << 8) + r[24]));
@@ -1196,6 +1197,7 @@ function loop() {
   b && setTimeout(loop, batchDelay);
 }
 function engineInit() {
+  timedInstructions = 0;
   for (i = 0;i < r.length;i++) {
     r[i] = 0;
   }
