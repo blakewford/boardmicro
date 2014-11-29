@@ -77,6 +77,7 @@ ifeq ($(TARGET),atmega328)
 else
 	cp js/tft_spi_driver.js boardmicro.starlo.org/js
 endif
+	cp js/elfcore.js boardmicro.starlo.org/js
 	cp js/lib.js boardmicro.starlo.org/js
 	cp js/scratch.js boardmicro.starlo.org/js
 	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
@@ -126,7 +127,7 @@ upload: $(BASENAME).hex
 
 clean: 
 	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html js/scratch.js
-	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/nokia_spi_driver.js boardmicro.starlo.org/js/scratch.js
+	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/elfcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/nokia_spi_driver.js boardmicro.starlo.org/js/scratch.js
 	cd android; ant clean
 	-@rm android/AndroidManifest.xml
 	-@rm android/src/org/starlo/boardmicro/BoardMicroActivity.java

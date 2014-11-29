@@ -20,5 +20,6 @@
         <input text="this" type="file" id="hexfile"/>
     </div>
     <br/>
+    <script src="js/elfcore.js"></script>
     <script src="js/lib.js"></script>
     <table style="border-spacing: 0px; width:160px; height:128">

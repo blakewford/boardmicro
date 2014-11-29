@@ -112,7 +112,14 @@
         var reader = new FileReader();
         reader.onloadend = function(evt) {
           if (evt.target.readyState == FileReader.DONE) {
-            loadMemory(evt.target.result);
+            var bytes = evt.target.result;
+            if( bytes.charCodeAt(0) == 0x7f && bytes[1] == 'E' && bytes[2] == 'L' && bytes[3] == 'F' ){
+              readelfHeader(bytes);
+              intelhex = "";
+            }else{
+              intelhex = evt.target.result;
+            }
+            loadMemory(intelhex);
             engineInit();
             exec();
           }
