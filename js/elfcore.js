@@ -30,11 +30,11 @@ function getHexFromElf()
   var toWrite = section.Size;
   while(toWrite > 0)
   {
-    line = ":10";
-    line += ("000" + written.toString(16)).substr(-4);
+    var bytes = toWrite >= 16 ? 16: toWrite;
+    line = ":"+ ("0" + bytes.toString(16)).substr(-2).toUpperCase();
+    line += ("000" + written.toString(16)).substr(-4).toUpperCase();
     line += "00";
     var value = 0;
-    var bytes = toWrite >= 16 ? 16: toWrite;
     for(var i=0; i < bytes; i++)
     {
       value = elf.charCodeAt(section.fileOffset + written);
