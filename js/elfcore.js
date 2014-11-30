@@ -9,21 +9,36 @@ function readelfHeader(bytes)
   header.sectionHeaderOffset = elf.charCodeAt(32) | (elf.charCodeAt(33) << 8);
   header.sectionHeaderSize   = elf.charCodeAt(46) | (elf.charCodeAt(47) << 8);
   header.sectionHeaderNum    = elf.charCodeAt(48) | (elf.charCodeAt(49) << 8);
+  header.stringSectionIndex  = elf.charCodeAt(50) | (elf.charCodeAt(51) << 8);
 }
 var section = {};
 function readelfSection(name)
 {
-  if(name != ".text")
-    throw "Section name not supported";
-  var start = header.sectionHeaderOffset + (header.sectionHeaderSize*2);
-  section.name = ".text";
+  var start = 0;
+  var index = 0;
+  var strIndex = 0;
+  var numberSections = header.sectionHeaderNum;
+  var shstrOffset = header.sectionHeaderOffset + (header.sectionHeaderSize*header.stringSectionIndex);
+  shstrOffset     = ((elf.charCodeAt(shstrOffset + 18) | elf.charCodeAt(shstrOffset + 19) << 8) << 16) | elf.charCodeAt(shstrOffset + 16) | (elf.charCodeAt(shstrOffset + 17) << 8);
+  while(numberSections--)
+  {
+    section.name = "";
+    start = header.sectionHeaderOffset + (header.sectionHeaderSize*index);
+    strIndex = ((elf.charCodeAt(start + 2) | elf.charCodeAt(start + 3) << 8) << 16) | elf.charCodeAt(start) | (elf.charCodeAt(start + 1) << 8);
+    var str = shstrOffset + strIndex;
+    while(elf[str] != '\0')
+      section.name = section.name.concat(elf[str++]);
+    if(section.name == name)
+      break;
+    index++;
+  }
   section.fileOffset  = ((elf.charCodeAt(start + 18) | elf.charCodeAt(start + 19) << 8) << 16) | elf.charCodeAt(start + 16) | (elf.charCodeAt(start + 17) << 8);
   section.Size = ((elf.charCodeAt(start + 22) | elf.charCodeAt(start + 23) << 8) << 16) | elf.charCodeAt(start + 20) | (elf.charCodeAt(start + 21) << 8);
 }
-function getHexFromElf()
+function getHexFromElf(bytes)
 {
-  if(section.name != ".text")
-    throw "Section name not supported";
+  readelfHeader(bytes);
+  readelfSection(".text");
   var hex = "";
   var line = "";
   var written = 0;

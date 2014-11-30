@@ -114,9 +114,7 @@
           if (evt.target.readyState == FileReader.DONE) {
             var bytes = evt.target.result;
             if( bytes.charCodeAt(0) == 0x7f && bytes[1] == 'E' && bytes[2] == 'L' && bytes[3] == 'F' ){
-              readelfHeader(bytes);
-              readelfSection(".text");
-              intelhex = getHexFromElf();
+              intelhex = getHexFromElf(bytes);
             }else{
               intelhex = evt.target.result;
             }
