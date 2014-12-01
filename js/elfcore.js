@@ -32,13 +32,12 @@ function readelfSection(name)
       break;
     index++;
   }
+  section.address = ((elf.charCodeAt(start + 14) | elf.charCodeAt(start + 15) << 8) << 16) | elf.charCodeAt(start + 12) | (elf.charCodeAt(start + 13) << 8);
   section.fileOffset  = ((elf.charCodeAt(start + 18) | elf.charCodeAt(start + 19) << 8) << 16) | elf.charCodeAt(start + 16) | (elf.charCodeAt(start + 17) << 8);
   section.Size = ((elf.charCodeAt(start + 22) | elf.charCodeAt(start + 23) << 8) << 16) | elf.charCodeAt(start + 20) | (elf.charCodeAt(start + 21) << 8);
 }
-function getHexFromElf(bytes)
+function getHexFromSection()
 {
-  readelfHeader(bytes);
-  readelfSection(".text");
   var hex = "";
   var line = "";
   var written = 0;
@@ -47,7 +46,7 @@ function getHexFromElf(bytes)
   {
     var bytes = toWrite >= 16 ? 16: toWrite;
     line = ":"+ ("0" + bytes.toString(16)).substr(-2).toUpperCase();
-    line += ("000" + written.toString(16)).substr(-4).toUpperCase();
+    line += ("000" + (section.address + written).toString(16)).substr(-4).toUpperCase();
     line += "00";
     var value = 0;
     for(var i=0; i < bytes; i++)
@@ -67,6 +66,17 @@ function getHexFromElf(bytes)
     line += "\n";
     hex += line;
   }
+  return hex;
+}
+function getHexFromElf(bytes)
+{
+  readelfHeader(bytes);
+  readelfSection(".text");
+  var hex = getHexFromSection();
+  var textSize = section.Size;
+  readelfSection(".data");
+  section.address = textSize;
+  hex += getHexFromSection();
   hex += ":00000001FF";
   return hex;
 }
