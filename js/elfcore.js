@@ -56,4 +56,19 @@ function getHexFromElf(c) {
   c += getHexFromSection();
   return c + ":00000001FF";
 }
-;
+function buildFrameInfo() {
+  readelfSection(".debug_frame");
+  var start = section.fileOffset;
+  var entry = start;
+  while(entry < start + section.Size){
+    var length = (elf.charCodeAt(entry + 2) | elf.charCodeAt(entry + 3) << 8) << 16 | elf.charCodeAt(entry) | elf.charCodeAt(entry + 1) << 8;
+    var id = (elf.charCodeAt(entry + 7) | elf.charCodeAt(entry + 6) << 8) << 16 | elf.charCodeAt(entry + 4) | elf.charCodeAt(entry + 5) << 8;
+    if(id == -1){
+      // CIE
+    }else{
+      // FDE
+    }
+    entry += length;
+    entry += 4; // Size Word
+  }
+}
