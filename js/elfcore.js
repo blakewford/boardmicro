@@ -56,6 +56,14 @@ function getHexFromElf(c) {
   c += getHexFromSection();
   return c + ":00000001FF";
 }
+function getCIE(entry)
+{
+  var version = elf.charCodeAt(entry);
+  var augmentation = elf.charCodeAt(entry+1);
+  var codeAlignment = elf.charCodeAt(entry+2);
+  var dataAlignment = elf.charCodeAt(entry+3);
+  var returnAddress = elf.charCodeAt(entry+4);
+}
 function buildFrameInfo() {
   readelfSection(".debug_frame");
   var start = section.fileOffset;
@@ -64,7 +72,7 @@ function buildFrameInfo() {
     var length = (elf.charCodeAt(entry + 2) | elf.charCodeAt(entry + 3) << 8) << 16 | elf.charCodeAt(entry) | elf.charCodeAt(entry + 1) << 8;
     var id = (elf.charCodeAt(entry + 7) | elf.charCodeAt(entry + 6) << 8) << 16 | elf.charCodeAt(entry + 4) | elf.charCodeAt(entry + 5) << 8;
     if(id == -1){
-      // CIE
+      getCIE(entry + 8);
     }else{
       // FDE
     }
