@@ -6,7 +6,7 @@ function initScreen(){
     {
       k.x = x;
       k.y = y;
-      k.color = "#FFFFFF";
+      k.color = "#CCFF66";
       isNative() ? pixelQueue.push(k): drawPixel(k.x, k.y, k.color);
     }
   }
@@ -18,7 +18,7 @@ function writeDMARegion(c, b){
     for(var i = 0; i < 8; i++)
     {
       var base = y+i;
-      var color = memory[32758+i] === 0 ? "#000000":"#FFFFFF";
+      var color = memory[32758+i] === 0 ? "#CCFF66": "#293314";
       drawPixel( x, base, color );
       if(isNative()){
         var k = {};

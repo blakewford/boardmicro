@@ -19,7 +19,7 @@ public class GamebuinoActivity extends MainActivity
 
         @Override
         protected Bitmap getScaledBitmap() {
-		return Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3, false);
+		return Bitmap.createScaledBitmap(mBitmap, (mScreenWidth/5)*2, (mScreenHeight/5)*3 + mScreenHeight/20, false);
         }
 
         @Override
