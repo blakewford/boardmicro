@@ -6,9 +6,9 @@
         <input type="search" size="15" id="gdb" value="" onkeydown="filterRelevantKeypress()"/>
         <font id="gdbshell"style="color:white;"></font>
         <br/>
-        <font style="color:white;">Batch Instructions 1 - 10000</font>
+        <font style="color:white;">Batch Instructions 1 - 300000</font>
         <br/>
-        <input id="batch" onchange="batchSize=this.value" style="width: 99%" type="range" min="1" max="10000" value="1024">
+        <input id="batch" onchange="batchSize=this.value" style="width: 99%" type="range" min="1" max="300000" value="1024">
         <br/>
         <font style="color:white;">Batch Delay 0 - 1000ms</font>
         <br/>
