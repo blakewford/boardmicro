@@ -63,6 +63,27 @@ function getCIE(entry)
   var codeAlignment = elf.charCodeAt(entry+2);
   var dataAlignment = elf.charCodeAt(entry+3);
   var returnAddress = elf.charCodeAt(entry+4);
+  if( version != 1 || codeAlignment != 2 || dataAlignment != 127 /*-1*/ || returnAddress != 36 )
+    throw "CIE not supported";
+
+  // https://gcc.gnu.org/wiki/avr-gcc#Frame_Layout
+  // incoming arguments
+  // return address (2 bytes)
+  // saved registers
+  // stack slots, Y+1 points at the bottom
+
+  // Make sure all CIEs do the same thing, else this code cannot handle it
+  // Somehow SP = 32 and PC = 36, what are 33, 34, 35 ???
+  if( elf.charCodeAt(entry+5) != 0xC ||  // DW_CFA_def_cfa: r32 ofs 2
+      elf.charCodeAt(entry+6) != 0x20 ||
+      elf.charCodeAt(entry+7) != 0x2 ||
+      elf.charCodeAt(entry+8) != 0xa4 || // DW_CFA_offset: r36 at cfa-1
+      elf.charCodeAt(entry+9) != 0x01 ||
+      elf.charCodeAt(entry+10) != 0x00 || // DW_CFA_nop
+      elf.charCodeAt(entry+11) != 0x00 )  // DW_CFA_nop
+  {
+    throw "CIE not formatted as expected";
+  }
 }
 function buildFrameInfo() {
   readelfSection(".debug_frame");
