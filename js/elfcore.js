@@ -85,6 +85,11 @@ function getCIE(entry)
     throw "CIE not formatted as expected";
   }
 }
+function getFDE(entry, id, length)
+{
+  var start = (elf.charCodeAt(entry + 2) | elf.charCodeAt(entry + 3) << 8) << 16 | elf.charCodeAt(entry) | elf.charCodeAt(entry + 1) << 8;
+  var range = (elf.charCodeAt(entry + 6) | elf.charCodeAt(entry + 7) << 8) << 16 | elf.charCodeAt(entry+4) | elf.charCodeAt(entry + 5) << 8;
+}
 function buildFrameInfo() {
   readelfSection(".debug_frame");
   var start = section.fileOffset;
@@ -95,7 +100,7 @@ function buildFrameInfo() {
     if(id == -1){
       getCIE(entry + 8);
     }else{
-      // FDE
+      getFDE(entry + 8, id, length);
     }
     entry += length;
     entry += 4; // Size Word
