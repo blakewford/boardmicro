@@ -94,6 +94,57 @@ function buildLineInfo() {
   readelfSection(".debug_line");
   var start = section.fileOffset;
   var length = (elf.charCodeAt(start + 2) | elf.charCodeAt(start + 3) << 8) << 16 | elf.charCodeAt(start) | elf.charCodeAt(start + 1) << 8;
+  var version = elf.charCodeAt(start + 4) | elf.charCodeAt(start + 5) << 8;
+  if( version != 2 )
+    throw "Unable to parse line info";
+
+  var header = (elf.charCodeAt(start + 8) | elf.charCodeAt(start + 9) << 8) << 16 | elf.charCodeAt(start + 6) | elf.charCodeAt(start + 7) << 8;
+  var instrLength = elf.charCodeAt(start + 10);
+  if( instrLength != 2 )
+    throw "Unexpected value";
+
+  var defaultIsStmt = elf.charCodeAt(start + 11);
+  var lineBase = elf.charCodeAt(start + 12);
+  var lineRange = elf.charCodeAt(start + 13);
+  var opcodeBase = elf.charCodeAt(start + 14);
+  for(var i = 15; i < 15 + opcodeBase - 1; i++)
+  {
+    if( elf.charCodeAt(start + i) > 1 )
+      throw "Unexpected opcode length";
+  }
+  var more = true;
+  var includes = start + 15 + opcodeBase;
+  while( more )
+  {
+    while( elf[includes++] != '\0' )
+      ;
+    more = elf[includes] != '\0';
+  }
+  more = true;
+  var fileNames = ++includes;
+  while( more )
+  {
+    while( elf[fileNames++] != '\0' )
+      ;
+    fileNames+=2;
+    more = elf[fileNames] != '\0';
+  }
+  var program = ++fileNames;
+  while( program < start + length + 4 )
+  {
+    switch(elf[program])
+    {
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 9:
+        program += 2;
+        break;
+      default:
+        program++;
+    }
+  }
 }
 function buildFrameInfo() {
   readelfSection(".debug_frame");
