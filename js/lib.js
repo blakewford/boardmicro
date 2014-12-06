@@ -116,6 +116,7 @@
             if( bytes.charCodeAt(0) == 0x7f && bytes[1] == 'E' && bytes[2] == 'L' && bytes[3] == 'F' ){
               intelhex = getHexFromElf(bytes);
               buildFrameInfo();
+              buildLineInfo();
             }else{
               intelhex = evt.target.result;
             }
