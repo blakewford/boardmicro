@@ -93,6 +93,7 @@ function getFDE(entry, id, length)
 function buildLineInfo() {
   readelfSection(".debug_line");
   var start = section.fileOffset;
+
   var length = (elf.charCodeAt(start + 2) | elf.charCodeAt(start + 3) << 8) << 16 | elf.charCodeAt(start) | elf.charCodeAt(start + 1) << 8;
   var version = elf.charCodeAt(start + 4) | elf.charCodeAt(start + 5) << 8;
   if( version != 2 )
@@ -103,8 +104,9 @@ function buildLineInfo() {
   if( instrLength != 2 )
     throw "Unexpected value";
 
-  var defaultIsStmt = elf.charCodeAt(start + 11);
-  var lineBase = elf.charCodeAt(start + 12);
+  var isStmt = elf.charCodeAt(start + 11) > 0 ? true: false;
+  var sByte = elf.charCodeAt(start + 12);
+  var lineBase = sByte > 127 ? -(256-sByte): sByte;
   var lineRange = elf.charCodeAt(start + 13);
   var opcodeBase = elf.charCodeAt(start + 14);
   for(var i = 15; i < 15 + opcodeBase - 1; i++)
@@ -126,23 +128,70 @@ function buildLineInfo() {
   {
     while( elf[fileNames++] != '\0' )
       ;
-    fileNames+=2;
+    fileNames+=3;
     more = elf[fileNames] != '\0';
   }
+
   var program = ++fileNames;
+  var address = 0;
+  var file = 1;
+  var line = 1;
+  var column = 0;
+  var basicBlock = false;
+  var endSequence = false;
   while( program < start + length + 4 )
   {
-    switch(elf[program])
+    switch(elf.charCodeAt(program))
     {
+      case 0:
+        program++;
+        switch(elf.charCodeAt(program+1))
+        {
+          case 2:
+            address = (elf.charCodeAt(program + 4) | elf.charCodeAt(program + 5) << 8) << 16 | elf.charCodeAt(program + 2) | elf.charCodeAt(program + 3) << 8;
+            break;
+        }
+        program += elf.charCodeAt(program);
+        program++;
+        break;
+      case 1:
+        console.log( "Line info " + file + " " + line + " " + address.toString(16) + " " );
+        program++;
+        break;
       case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 9:
+        address += elf.charCodeAt(program+1)*instrLength;
         program += 2;
         break;
-      default:
+      case 3:
+        line += elf.charCodeAt(program+1);
+        program += 2;
+        break;
+      case 4:
+        file = elf.charCodeAt(program+1);
+        program += 2;
+        break;
+      case 5:
+        column = elf.charCodeAt(program+1);
+        program += 2;
+        break;
+      case 6:
+        IsStmt = !IsStmt;
         program++;
+        break;
+      case 7:
+        basicBlock = true;
+        program++;
+        break;
+      case 8:
+      case 9:
+        throw "Unimplemented opcode";
+      default:
+        address += Math.floor((elf.charCodeAt(program) - opcodeBase) / lineRange)*instrLength;
+        line += lineBase + ((elf.charCodeAt(program) - opcodeBase) % lineRange);
+        basicBlock = false;
+        console.log( "Line info " + file + " " + line + " " + address.toString(16) + " " );
+        program++;
+        break;
     }
   }
 }
