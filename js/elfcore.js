@@ -91,7 +91,8 @@ function getFDE(entry, id, length)
   var range = (elf.charCodeAt(entry + 6) | elf.charCodeAt(entry + 7) << 8) << 16 | elf.charCodeAt(entry+4) | elf.charCodeAt(entry + 5) << 8;
 }
 
-var frames = {};
+var sourceFiles = {};
+var sourceLines = {};
 function buildLineInfo() {
   readelfSection(".debug_line");
   var start = section.fileOffset;
@@ -126,10 +127,15 @@ function buildLineInfo() {
   }
   more = true;
   var fileNames = ++includes;
+  var fileIndex = 0;
   while( more )
   {
+    fileIndex++;
+    sourceFiles[fileIndex] = "";
     while( elf[fileNames++] != '\0' )
-      ;
+    {
+      sourceFiles[fileIndex] = sourceFiles[fileIndex].concat(elf[fileNames-1]);
+    }
     fileNames+=3;
     more = elf[fileNames] != '\0';
   }
@@ -158,7 +164,7 @@ function buildLineInfo() {
         break;
       case 1:
         console.log( "Line info " + file + " " + line + " " + address.toString(16) + " " );
-        frames[address] = file.toString() + " " + line.toString();
+        sourceLines[address] = sourceFiles[file] + " line " + line.toString();
         program++;
         break;
       case 2:
@@ -193,7 +199,7 @@ function buildLineInfo() {
         line += lineBase + ((elf.charCodeAt(program) - opcodeBase) % lineRange);
         basicBlock = false;
         console.log( "Line info " + file + " " + line + " " + address.toString(16) + " " );
-        frames[address] = file.toString() + " " + line.toString();
+        sourceLines[address] = sourceFiles[file] + " line " + line.toString();
         program++;
         break;
     }

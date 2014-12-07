@@ -80,7 +80,7 @@ function setDebugResult(c) {
   isNative() && Android.setDebugResult(c);
 }
 function getDecodedLine(address) {
-  var info = frames[address - flashStart];
+  var info = sourceLines[address - flashStart];
   if( "undefined" == typeof info )
     info = "$PC = 0x" + (address - flashStart).toString(16);
   return info;
