@@ -95,6 +95,7 @@ endif
 	cat htmlfrag/license > $@.html
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@.html;
 	echo '<script>' >> $@.html
+	cat js/elfcore.js >> $@.html
 	cat js/avrcore.js >> $@.html
 ifeq ($(TARGET),atmega328)
 	cat js/nokia_spi_driver.js >> $@.html
