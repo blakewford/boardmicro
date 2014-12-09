@@ -1,6 +1,6 @@
 var elf, header = {};
-function readelfHeader(c) {
-  elf = c;
+function readelfHeader(b) {
+  elf = b;
   if (83 != (elf.charCodeAt(18) | elf.charCodeAt(19) << 8)) {
     throw "Architecture mismatch";
   }
@@ -10,221 +10,196 @@ function readelfHeader(c) {
   header.stringSectionIndex = elf.charCodeAt(50) | elf.charCodeAt(51) << 8;
 }
 var section = {};
-function readelfSection(c) {
-  for (var a = 0, f = 0, d = 0, g = header.sectionHeaderNum, b = header.sectionHeaderOffset + header.sectionHeaderSize * header.stringSectionIndex, b = (elf.charCodeAt(b + 18) | elf.charCodeAt(b + 19) << 8) << 16 | elf.charCodeAt(b + 16) | elf.charCodeAt(b + 17) << 8;g--;) {
+function readelfSection(b) {
+  for (var a = 0, e = 0, d = 0, g = header.sectionHeaderNum, f = header.sectionHeaderOffset + header.sectionHeaderSize * header.stringSectionIndex, f = (elf.charCodeAt(f + 18) | elf.charCodeAt(f + 19) << 8) << 16 | elf.charCodeAt(f + 16) | elf.charCodeAt(f + 17) << 8;g--;) {
     section.name = "";
-    a = header.sectionHeaderOffset + header.sectionHeaderSize * f;
+    a = header.sectionHeaderOffset + header.sectionHeaderSize * e;
     d = (elf.charCodeAt(a + 2) | elf.charCodeAt(a + 3) << 8) << 16 | elf.charCodeAt(a) | elf.charCodeAt(a + 1) << 8;
-    for (d = b + d;"\x00" != elf[d];) {
+    for (d = f + d;"\x00" != elf[d];) {
       section.name = section.name.concat(elf[d++]);
     }
-    if (section.name == c) {
+    if (section.name == b) {
       break;
     }
-    f++;
+    e++;
   }
   section.address = (elf.charCodeAt(a + 14) | elf.charCodeAt(a + 15) << 8) << 16 | elf.charCodeAt(a + 12) | elf.charCodeAt(a + 13) << 8;
   section.fileOffset = (elf.charCodeAt(a + 18) | elf.charCodeAt(a + 19) << 8) << 16 | elf.charCodeAt(a + 16) | elf.charCodeAt(a + 17) << 8;
   section.Size = (elf.charCodeAt(a + 22) | elf.charCodeAt(a + 23) << 8) << 16 | elf.charCodeAt(a + 20) | elf.charCodeAt(a + 21) << 8;
 }
 function getHexFromSection() {
-  for (var c = "", a = "", f = 0, d = section.Size;0 < d;) {
-    for (var g = 16 <= d ? 16 : d, a = ":" + ("0" + g.toString(16)).substr(-2).toUpperCase(), a = a + ("000" + (section.address + f).toString(16)).substr(-4).toUpperCase(), a = a + "00", b = 0, e = 0;e < g;e++) {
-      b = elf.charCodeAt(section.fileOffset + f), a += ("0" + b.toString(16)).substr(-2).toUpperCase(), f++;
+  for (var b = "", a = "", e = 0, d = section.Size;0 < d;) {
+    for (var g = 16 <= d ? 16 : d, a = ":" + ("0" + g.toString(16)).substr(-2).toUpperCase(), a = a + ("000" + (section.address + e).toString(16)).substr(-4).toUpperCase(), a = a + "00", f = 0, l = 0;l < g;l++) {
+      f = elf.charCodeAt(section.fileOffset + e), a += ("0" + f.toString(16)).substr(-2).toUpperCase(), e++;
     }
     d -= g;
-    b = 0;
-    for (e = 1;e < 2 * g + 8;e += 2) {
-      b += parseInt(a.substr(e, 2), 16);
+    f = 0;
+    for (l = 1;l < 2 * g + 8;l += 2) {
+      f += parseInt(a.substr(l, 2), 16);
     }
-    b = ~b;
-    b++;
-    b &= 255;
-    a += ("0" + b.toString(16)).substr(-2).toUpperCase();
+    f = ~f;
+    f++;
+    f &= 255;
+    a += ("0" + f.toString(16)).substr(-2).toUpperCase();
     a += "\n";
-    c += a;
+    b += a;
   }
-  return c;
+  return b;
 }
-function getHexFromElf(c) {
-  readelfHeader(c);
+function getHexFromElf(b) {
+  readelfHeader(b);
   readelfSection(".text");
-  c = getHexFromSection();
+  b = getHexFromSection();
   var a = section.Size;
   readelfSection(".data");
   section.address = a;
-  c += getHexFromSection();
-  return c + ":00000001FF";
+  b += getHexFromSection();
+  return b + ":00000001FF";
 }
-function getCIE(entry)
-{
-  var version = elf.charCodeAt(entry);
-  var augmentation = elf.charCodeAt(entry+1);
-  var codeAlignment = elf.charCodeAt(entry+2);
-  var dataAlignment = elf.charCodeAt(entry+3);
-  var returnAddress = elf.charCodeAt(entry+4);
-  if( version != 1 || codeAlignment != 2 || dataAlignment != 127 /*-1*/ || returnAddress != 36 )
+function getCIE(b) {
+  var a = elf.charCodeAt(b);
+  elf.charCodeAt(b + 1);
+  var e = elf.charCodeAt(b + 2), d = elf.charCodeAt(b + 3), g = elf.charCodeAt(b + 4);
+  if (1 != a || 2 != e || 127 != d || 36 != g) {
     throw "CIE not supported";
-
-  // https://gcc.gnu.org/wiki/avr-gcc#Frame_Layout
-  // incoming arguments
-  // return address (2 bytes)
-  // saved registers
-  // stack slots, Y+1 points at the bottom
-
-  // Make sure all CIEs do the same thing, else this code cannot handle it
-  // Somehow SP = 32 and PC = 36, what are 33, 34, 35 ???
-  if( elf.charCodeAt(entry+5) != 0xC ||  // DW_CFA_def_cfa: r32 ofs 2
-      elf.charCodeAt(entry+6) != 0x20 ||
-      elf.charCodeAt(entry+7) != 0x2 ||
-      elf.charCodeAt(entry+8) != 0xa4 || // DW_CFA_offset: r36 at cfa-1
-      elf.charCodeAt(entry+9) != 0x01 ||
-      elf.charCodeAt(entry+10) != 0x00 || // DW_CFA_nop
-      elf.charCodeAt(entry+11) != 0x00 )  // DW_CFA_nop
-  {
+  }
+  if (12 != elf.charCodeAt(b + 5) || 32 != elf.charCodeAt(b + 6) || 2 != elf.charCodeAt(b + 7) || 164 != elf.charCodeAt(b + 8) || 1 != elf.charCodeAt(b + 9) || 0 != elf.charCodeAt(b + 10) || 0 != elf.charCodeAt(b + 11)) {
     throw "CIE not formatted as expected";
   }
 }
-function getFDE(entry, id, length)
-{
-  var start = (elf.charCodeAt(entry + 2) | elf.charCodeAt(entry + 3) << 8) << 16 | elf.charCodeAt(entry) | elf.charCodeAt(entry + 1) << 8;
-  var range = (elf.charCodeAt(entry + 6) | elf.charCodeAt(entry + 7) << 8) << 16 | elf.charCodeAt(entry+4) | elf.charCodeAt(entry + 5) << 8;
+function getFDE(b, a, e) {
+  elf.charCodeAt(b + 2);
+  elf.charCodeAt(b + 3);
+  elf.charCodeAt(b);
+  elf.charCodeAt(b + 1);
+  elf.charCodeAt(b + 6);
+  elf.charCodeAt(b + 7);
+  elf.charCodeAt(b + 4);
+  elf.charCodeAt(b + 5);
 }
-
+function getBytesForLEB(b, a) {
+  for (var e = 0;;) {
+    var d = b.charCodeAt(a++);
+    e++;
+    if (0 == (d & 128)) {
+      break;
+    }
+  }
+  return e;
+}
+function decodeULEB(b, a) {
+  for (var e = 0, d = 0;;) {
+    var g = b.charCodeAt(a++), e = e | (g & 127) << d;
+    if (0 == (g & 128)) {
+      break;
+    }
+    d += 7;
+  }
+  return e;
+}
+function decodeSLEB(b, a) {
+  for (var e = 0, d = 0;;) {
+    var g = b.charCodeAt(a++), e = e | (g & 127) << d, d = d + 7;
+    if (0 == (g & 128)) {
+      break;
+    }
+  }
+  16 > d && 0 < (g & 32768) && (e |= -(1 << d));
+  return e;
+}
 var sourceLines = {};
 function buildLineInfo() {
   readelfSection(".debug_line");
-  var start = section.fileOffset;
-  var entry = start;
-  while(entry < start + section.Size)
-  {
-    var length = (elf.charCodeAt(entry + 2) | elf.charCodeAt(entry + 3) << 8) << 16 | elf.charCodeAt(entry) | elf.charCodeAt(entry + 1) << 8;
-    var version = elf.charCodeAt(entry + 4) | elf.charCodeAt(entry + 5) << 8;
-    if( version != 2 )
+  for (var b = section.fileOffset, a = b;a < b + section.Size;) {
+    var e = (elf.charCodeAt(a + 2) | elf.charCodeAt(a + 3) << 8) << 16 | elf.charCodeAt(a) | elf.charCodeAt(a + 1) << 8;
+    if (2 != (elf.charCodeAt(a + 4) | elf.charCodeAt(a + 5) << 8)) {
       throw "Unable to parse line info";
-
-    var header = (elf.charCodeAt(entry + 8) | elf.charCodeAt(entry + 9) << 8) << 16 | elf.charCodeAt(entry + 6) | elf.charCodeAt(entry + 7) << 8;
-    var instrLength = elf.charCodeAt(entry + 10);
-    if( instrLength != 2 )
+    }
+    elf.charCodeAt(a + 8);
+    elf.charCodeAt(a + 9);
+    elf.charCodeAt(a + 6);
+    elf.charCodeAt(a + 7);
+    var d = elf.charCodeAt(a + 10);
+    if (2 != d) {
       throw "Unexpected value";
-
-    var isStmt = elf.charCodeAt(entry + 11) > 0 ? true: false;
-    var sByte = elf.charCodeAt(entry + 12);
-    var lineBase = sByte > 127 ? -(256-sByte): sByte;
-    var lineRange = elf.charCodeAt(entry + 13);
-    var opcodeBase = elf.charCodeAt(entry + 14);
-    for(var i = 15; i < 15 + opcodeBase - 1; i++)
-    {
-      if( elf.charCodeAt(entry + i) > 1 )
+    }
+    elf.charCodeAt(a + 11);
+    for (var g = elf.charCodeAt(a + 12), g = 127 < g ? -(256 - g) : g, f = elf.charCodeAt(a + 13), l = elf.charCodeAt(a + 14), k = 15;k < 15 + l - 1;k++) {
+      if (1 < elf.charCodeAt(a + k)) {
         throw "Unexpected opcode length";
-    }
-    var more = true;
-    var includes = entry + 15 + opcodeBase;
-    while( more )
-    {
-      while( elf[includes++] != '\0' )
-        ;
-      more = elf[includes] != '\0';
-    }
-    more = true;
-    var fileNames = ++includes;
-    var fileIndex = 0;
-    var sourceFiles = {};
-    while( more )
-    {
-      fileIndex++;
-      sourceFiles[fileIndex] = "";
-      while( elf[fileNames++] != '\0' )
-      {
-        sourceFiles[fileIndex] = sourceFiles[fileIndex].concat(elf[fileNames-1]);
       }
-      fileNames+=3;
-      more = elf[fileNames] != '\0';
     }
-
-    var program = ++fileNames;
-    var address = 0;
-    var file = 1;
-    var line = 1;
-    var column = 0;
-    var basicBlock = false;
-    var endSequence = false;
-    while( program < entry + length + 4 )
-    {
-      switch(elf.charCodeAt(program))
-      {
+    for (var c = !0, k = a + 15 + l;c;) {
+      for (;"\x00" != elf[k++];) {
+      }
+      c = "\x00" != elf[k];
+    }
+    for (var c = !0, h = ++k, m = 0, k = {};c;) {
+      m++;
+      for (k[m] = "";"\x00" != elf[h++];) {
+        k[m] = k[m].concat(elf[h - 1]);
+      }
+      h += 3;
+      c = "\x00" != elf[h];
+    }
+    for (var c = ++h, h = 0, n = m = 1;c < a + e + 4;) {
+      switch(elf.charCodeAt(c)) {
         case 0:
-          program++;
-          switch(elf.charCodeAt(program+1))
-          {
+          c++;
+          switch(elf.charCodeAt(c + 1)) {
             case 2:
-              address = (elf.charCodeAt(program + 4) | elf.charCodeAt(program + 5) << 8) << 16 | elf.charCodeAt(program + 2) | elf.charCodeAt(program + 3) << 8;
-              break;
+              h = (elf.charCodeAt(c + 4) | elf.charCodeAt(c + 5) << 8) << 16 | elf.charCodeAt(c + 2) | elf.charCodeAt(c + 3) << 8;
           }
-          program += elf.charCodeAt(program);
-          program++;
+          c += elf.charCodeAt(c);
+          c++;
           break;
         case 1:
-          console.log( "Line info " + sourceFiles[file] + " " + line + " " + address.toString(16) + " " );
-          sourceLines[address] = sourceFiles[file] + " line " + line.toString();
-          program++;
+          console.log("Line info " + k[m] + " " + n + " " + h.toString(16) + " ");
+          sourceLines[h] = k[m] + " line " + n.toString();
+          c++;
           break;
         case 2:
-          address += elf.charCodeAt(program+1)*instrLength;
-          program += 2;
+          h += decodeULEB(elf, c + 1) * d;
+          c += getBytesForLEB(elf, c + 1) + 1;
           break;
         case 3:
-          line += elf.charCodeAt(program+1);
-          program += 2;
+          n += decodeSLEB(elf, c + 1);
+          c += getBytesForLEB(elf, c + 1) + 1;
           break;
         case 4:
-          file = elf.charCodeAt(program+1);
-          program += 2;
+          m = decodeULEB(elf, c + 1);
+          c += getBytesForLEB(elf, c + 1) + 1;
           break;
         case 5:
-          column = elf.charCodeAt(program+1);
-          program += 2;
+          decodeULEB(elf, c + 1);
+          c += getBytesForLEB(elf, c + 1) + 1;
           break;
         case 6:
-          isStmt = !isStmt;
-          program++;
+          c++;
           break;
         case 7:
-          basicBlock = true;
-          program++;
+          c++;
           break;
         case 8:
-          address += Math.floor((255 - opcodeBase) / lineRange)*instrLength;
-          program++;
+          h += Math.floor((255 - l) / f) * d;
+          c++;
           break;
         case 9:
-          throw "Unimplemented opcode";
+          throw "Unimplemented opcode";;
         default:
-          address += Math.floor((elf.charCodeAt(program) - opcodeBase) / lineRange)*instrLength;
-          line += lineBase + ((elf.charCodeAt(program) - opcodeBase) % lineRange);
-          basicBlock = false;
-          console.log( "Line info " + sourceFiles[file] + " " + line + " " + address.toString(16) + " " );
-          sourceLines[address] = sourceFiles[file] + " line " + line.toString();
-          program++;
-          break;
+          h += Math.floor((elf.charCodeAt(c) - l) / f) * d, n += g + (elf.charCodeAt(c) - l) % f, console.log("Line info " + k[m] + " " + n + " " + h.toString(16) + " "), sourceLines[h] = k[m] + " line " + n.toString(), c++;
       }
     }
-    entry = program;
+    a = c;
   }
 }
 function buildFrameInfo() {
   readelfSection(".debug_frame");
-  var start = section.fileOffset;
-  var entry = start;
-  while(entry < start + section.Size){
-    var length = (elf.charCodeAt(entry + 2) | elf.charCodeAt(entry + 3) << 8) << 16 | elf.charCodeAt(entry) | elf.charCodeAt(entry + 1) << 8;
-    var id = (elf.charCodeAt(entry + 7) | elf.charCodeAt(entry + 6) << 8) << 16 | elf.charCodeAt(entry + 4) | elf.charCodeAt(entry + 5) << 8;
-    if(id == -1){
-      getCIE(entry + 8);
-    }else{
-      getFDE(entry + 8, id, length);
-    }
-    entry += length;
-    entry += 4; // Size Word
+  for (var b = section.fileOffset, a = b;a < b + section.Size;) {
+    var e = (elf.charCodeAt(a + 2) | elf.charCodeAt(a + 3) << 8) << 16 | elf.charCodeAt(a) | elf.charCodeAt(a + 1) << 8, d = (elf.charCodeAt(a + 7) | elf.charCodeAt(a + 6) << 8) << 16 | elf.charCodeAt(a + 4) | elf.charCodeAt(a + 5) << 8;
+    -1 == d ? getCIE(a + 8) : getFDE(a + 8, d, e);
+    a += e;
+    a += 4;
   }
 }
+;
