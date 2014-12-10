@@ -67,15 +67,16 @@ function getCIE(b) {
     throw "CIE not formatted as expected";
   }
 }
+var frames = [];
 function getFDE(b, a, e) {
-  elf.charCodeAt(b + 2);
-  elf.charCodeAt(b + 3);
-  elf.charCodeAt(b);
-  elf.charCodeAt(b + 1);
-  elf.charCodeAt(b + 6);
-  elf.charCodeAt(b + 7);
-  elf.charCodeAt(b + 4);
-  elf.charCodeAt(b + 5);
+  var fde = {};
+  fde.start = (elf.charCodeAt(b + 2) | elf.charCodeAt(b + 3) << 8) << 16 | elf.charCodeAt(b) | elf.charCodeAt(b + 1) << 8;
+  fde.range = (elf.charCodeAt(b + 6) | elf.charCodeAt(b + 7) << 8) << 16 | elf.charCodeAt(b + 4) | elf.charCodeAt(b + 5) << 8;
+  fde.instructions = [];
+  var list = b+8;
+  while(list < b+e)
+    fde.instructions.push(elf.charCodeAt(list++));
+  frames.push(fde);
 }
 function getBytesForLEB(b, a) {
   for (var e = 0;;) {
