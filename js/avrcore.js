@@ -79,6 +79,110 @@ function getStackDump() {
 function setDebugResult(c) {
   isNative() && Android.setDebugResult(c);
 }
+function getDecodedBytes(b, a) {
+  for (var e = 0;;) {
+    var d = b[a++];
+    e++;
+    if (0 == (d & 128)) {
+      break;
+    }
+  }
+  return e;
+}
+function decode(b, a) {
+  for (var e = 0, d = 0;;) {
+    var g = b[a++], e = e | (g & 127) << d;
+    if (0 == (g & 128)) {
+      break;
+    }
+    d += 7;
+  }
+  return e;
+}
+var rows = Array(37);
+var grabRegisters = true;
+function backtrace(address) {
+  if(grabRegisters)
+  {
+    var reg = 0
+    while(reg < 32)
+      rows[reg] = r[reg++];
+    rows[32] = SP;
+  }
+  var CFAReg = 32;
+  var CFAOffset = 0;
+  var CFA = rows[CFAReg] - 2;
+  rows[36] = CFA -1;
+
+  var found = false;
+  var i = 0;
+  while(i < frames.length)
+  {
+    var adjustedAddress = address - flashStart;
+    if(adjustedAddress >= frames[i].start && adjustedAddress < frames[i].start+frames[i].range)
+    {
+      found = true;
+      break;
+    }
+    else
+      i++;
+  }
+  getDecodedLine(address);
+  if(found)
+  {
+    grabRegisters = false;
+    var j = 0;
+    var frame = frames[i];
+    var location = frame.start;
+    while(j < frame.instructions.length)
+    {
+      var current = frame.instructions[j];
+      var value = current & 0x3F;
+      if((current >> 6) > 0)
+      {
+        switch(current >> 6)
+        {
+          case 1:
+            location += value*2;
+            j++;
+            break;
+          case 2:
+            j++
+            rows[value] = CFA-decode(frame.instructions, j);
+            j+=getDecodedBytes(frame.instructions, j);
+            break;
+          case 3:
+          default:
+            throw "Unknown state";
+        }
+        continue;
+      }
+      switch(value)
+      {
+        case 0:
+          j++;
+          break;
+        case 13:
+          j++;
+          CFA = rows[decode(frame.instructions, j)];
+          j+=getDecodedBytes(frame.instructions, j);
+          break;
+        case 14:
+          j++;
+          CFA += decode(frame.instructions, j);
+          j+=getDecodedBytes(frame.instructions, j);
+          break;
+        default:
+          throw "Unimplemented CFA instruction";
+      }
+    }
+    //backtrace(returnAddr);
+  }
+  else
+  {
+    grabRegisters = true;
+  }
+}
 function getDecodedLine(address) {
   var info = sourceLines[address - flashStart];
   if( "undefined" == typeof info )
