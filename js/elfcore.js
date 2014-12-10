@@ -59,7 +59,7 @@ function getHexFromElf(b) {
 function getCIE(b) {
   var a = elf.charCodeAt(b);
   elf.charCodeAt(b + 1);
-  var e = elf.charCodeAt(b + 2), d = elf.charCodeAt(b + 3), g = elf.charCodeAt(b + 4);
+  var e = decodeULEB(elf, b + 2), offset = b + 2 + getBytesForLEB(elf, b + 2), d = decodeSLEB(elf, offset), g = elf.charCodeAt(offset + getBytesForLEB(elf, offset));
   if (1 != a || 2 != e || 127 != d || 36 != g) {
     throw "CIE not supported";
   }
