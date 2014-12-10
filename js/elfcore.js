@@ -4,7 +4,7 @@ function readelfHeader(b) {
   if (83 != (elf.charCodeAt(18) | elf.charCodeAt(19) << 8)) {
     throw "Architecture mismatch";
   }
-  header.sectionHeaderOffset = elf.charCodeAt(32) | elf.charCodeAt(33) << 8;
+  header.sectionHeaderOffset = (elf.charCodeAt(34) | elf.charCodeAt(35) << 8) << 16 | elf.charCodeAt(32) | elf.charCodeAt(33) << 8;
   header.sectionHeaderSize = elf.charCodeAt(46) | elf.charCodeAt(47) << 8;
   header.sectionHeaderNum = elf.charCodeAt(48) | elf.charCodeAt(49) << 8;
   header.stringSectionIndex = elf.charCodeAt(50) | elf.charCodeAt(51) << 8;
@@ -154,7 +154,6 @@ function buildLineInfo() {
           c++;
           break;
         case 1:
-          console.log("Line info " + k[m] + " " + n + " " + h.toString(16) + " ");
           sourceLines[h] = k[m] + " line " + n.toString();
           c++;
           break;
@@ -187,7 +186,7 @@ function buildLineInfo() {
         case 9:
           throw "Unimplemented opcode";;
         default:
-          h += Math.floor((elf.charCodeAt(c) - l) / f) * d, n += g + (elf.charCodeAt(c) - l) % f, console.log("Line info " + k[m] + " " + n + " " + h.toString(16) + " "), sourceLines[h] = k[m] + " line " + n.toString(), c++;
+          h += Math.floor((elf.charCodeAt(c) - l) / f) * d, n += g + (elf.charCodeAt(c) - l) % f, sourceLines[h] = k[m] + " line " + n.toString(), c++;
       }
     }
     a = c;
