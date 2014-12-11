@@ -74,7 +74,7 @@ function getFDE(b, a, e) {
   fde.range = (elf.charCodeAt(b + 6) | elf.charCodeAt(b + 7) << 8) << 16 | elf.charCodeAt(b + 4) | elf.charCodeAt(b + 5) << 8;
   fde.instructions = [];
   var list = b+8;
-  while(list < b+e)
+  while(list < b+e-4)
     fde.instructions.push(elf.charCodeAt(list++));
   frames.push(fde);
 }
