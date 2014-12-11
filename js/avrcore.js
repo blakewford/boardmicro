@@ -99,6 +99,15 @@ function decode(b, a) {
   }
   return e;
 }
+
+function addressInStack(address){
+    return (address < flashStart) && (address > 0x100); // StackEnd 32u4 / 328
+}
+
+function addressInProgram(address){
+    return (address > flashStart) && (address < 0x7E00); // Arduino Uno Application flash
+}
+
 var rows = Array(37);
 var grabRegisters = true;
 function backtrace(address) {
@@ -126,7 +135,7 @@ function backtrace(address) {
     else
       i++;
   }
-  getDecodedLine(address);
+  console.log(getDecodedLine(address));
   if(found)
   {
     grabRegisters = false;
@@ -175,8 +184,23 @@ function backtrace(address) {
           throw "Unimplemented CFA instruction";
       }
     }
-    console.log(CFA.toString(16) +" "+ getStackDump());
-    //backtrace(returnAddr);
+    CFA += CFAOffset;
+    var cursor = CFA;
+    var returnAddr = readMemory(cursor) | readMemory(cursor-1) << 8;
+    while( !addressInStack(returnAddr) && !addressInProgram(returnAddr) && (cursor > (r[28] | r[29] << 8)) )
+    {
+      cursor-=2;
+      returnAddr = readMemory(cursor) | readMemory(cursor-1) << 8;
+    }
+    if(addressInStack(returnAddr))
+    {
+      returnAddr = readMemory(returnAddr) | readMemory(returnAddr-1) << 8;
+    }
+    if(addressInProgram(returnAddr))
+    {
+        if(returnAddr != address)
+	  backtrace(returnAddr);
+    }
   }
   else
   {
