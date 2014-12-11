@@ -148,6 +148,10 @@ function buildLineInfo() {
         case 0:
           c++;
           switch(elf.charCodeAt(c + 1)) {
+            case 1:
+              sourceLines[h] = k[m] + " line " + n.toString();
+              h = 0, n = m = 1;
+              break;
             case 2:
               h = (elf.charCodeAt(c + 4) | elf.charCodeAt(c + 5) << 8) << 16 | elf.charCodeAt(c + 2) | elf.charCodeAt(c + 3) << 8;
           }
