@@ -208,7 +208,10 @@ function backtrace(address) {
   }
 }
 function getDecodedLine(address) {
-  var info = sourceLines[address - flashStart];
+  var info;
+  var offset = 0;
+  while( "undefined" == typeof info && address > flashStart && offset < 128 )
+    info = sourceLines[address - flashStart - offset++];
   if( "undefined" == typeof info )
     info = "$PC = 0x" + (address - flashStart).toString(16);
   return info;
