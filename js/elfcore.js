@@ -60,7 +60,7 @@ function getCIE(b) {
   var a = elf.charCodeAt(b);
   elf.charCodeAt(b + 1);
   var e = decodeULEB(elf, b + 2), offset = b + 2 + getBytesForLEB(elf, b + 2), d = decodeSLEB(elf, offset), g = elf.charCodeAt(offset + getBytesForLEB(elf, offset));
-  if (1 != a || 2 != e || 127 != d || 36 != g) {
+  if (1 != a || 2 != e || -1 != d || 36 != g) {
     throw "CIE not supported";
   }
   if (12 != elf.charCodeAt(b + 5) || 32 != elf.charCodeAt(b + 6) || 2 != elf.charCodeAt(b + 7) || 164 != elf.charCodeAt(b + 8) || 1 != elf.charCodeAt(b + 9) || 0 != elf.charCodeAt(b + 10) || 0 != elf.charCodeAt(b + 11)) {
@@ -105,7 +105,7 @@ function decodeSLEB(b, a) {
       break;
     }
   }
-  16 > d && 0 < (g & 32768) && (e |= -(1 << d));
+  16 > d && 0 < (g & 0x40) && (e |= -(1 << d));
   return e;
 }
 var sourceLines = {};
