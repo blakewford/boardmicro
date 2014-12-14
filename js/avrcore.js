@@ -108,6 +108,7 @@ function addressInProgram(address){
     return (address > flashStart) && (address < 0x7E00); // Arduino Uno Application flash
 }
 
+var CFA = 0;
 var rows = Array(37);
 var grabRegisters = true;
 function backtrace(address) {
@@ -118,8 +119,12 @@ function backtrace(address) {
       rows[reg] = r[reg++];
     rows[32] = SP;
   }
+  else
+  {
+    rows[32] = CFA;
+  }
   var CFAOffset = 0;
-  var CFA = rows[32] + 2;
+  CFA = rows[32] + 2;
   rows[36] = CFA -1;
 
   var found = false;
