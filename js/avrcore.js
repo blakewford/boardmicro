@@ -468,12 +468,14 @@ function fetch(c, b) {
       case 10:
       ;
       case 11:
-        setAddPreEvaluationFlags(r[d], r[h] + C);
-        r[d] = r[d] - r[h] - C;
+        setSubPreEvaluationFlags(r[d], r[h] + C);
+        g = C;
+        C = Math.abs(r[h] + g) > Math.abs(r[d]);
+        r[d] = r[d] - r[h] - g;
         g = C;
         setPostEvaluationFlags(f);
         setPostEvaluationFlags(r[d]);
-        C = Math.abs(r[h] + g) > Math.abs(r[d]);
+        C = g;
         break;
       case 12:
       ;
