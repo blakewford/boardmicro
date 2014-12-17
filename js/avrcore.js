@@ -321,7 +321,8 @@ function writeMemory(c, b) {
 }
 function readMemory(c) {
   if (c === TCNT0) {
-    for (var b = 0;(timedInstructions / (scalerTicks*256)) > b;b++) {
+    var overflow = Math.ceil(timedInstructions / (scalerTicks*256));
+    for (var b = 0; (overflow & 0x3FF) > b;b++) {
       callTOV0Interrupt();
     }
     timedInstructions = 0;
