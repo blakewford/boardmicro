@@ -268,8 +268,11 @@ function writeADCDataRegister(c) {
 }
 function writeUARTDataRegister(c) {
   memory[udr] = c;
+  if(c){
   uartWrite(c);
   isNative() && Android.writeUARTBuffer(c);
+  }
+  memory[udr] = 0;
 }
 function writeSPIDataRegister(c) {
   memory[sdr] = c;
@@ -312,6 +315,8 @@ function writeSpecificPort(c) {
 }
 function writeMemory(c, b) {
   memory[c] = b;
+  if(c == ucsra)
+    memory[c] |= 32;
   disableHardware || (c == portB && dataQueueB.push(b), c == portC && dataQueueC.push(b), c == portD && dataQueueD.push(b), c == portE && dataQueueE.push(b), c == portF && dataQueueF.push(b), c == udr && writeUARTDataRegister(b), c == sdr && writeSPIDataRegister(b), c == ucsra && memory[ucsrb] & 32 && b & 64 && callUARTInterrupt(), c >= DMA && writeDMARegion(c, b));
   c == pllCsr && writeClockRegister(b);
   c == spmCr && writeControlRegister(b);
