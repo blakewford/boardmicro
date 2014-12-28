@@ -20,6 +20,8 @@
         <br/>
         <input type="checkbox" onchange="forceOptimizationEnabled=this.checked"><font style="color:white;">Disable SPI Port Animation</font>
         <br/>
+        <input type="checkbox" onchange="disableUARTInterrupt=this.checked"><font style="color:white;">Disable UART Interrupt</font>
+        <br/>
     </details>
     </div>
     <script src="js/scratch.js"></script>
