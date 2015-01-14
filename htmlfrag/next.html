@@ -1,0 +1,409 @@
+<html>
+
+<style>
+  body
+  {
+    margin: 0;
+    padding: 0;
+    width: 0;
+  }
+  img
+  {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: auto;
+  }
+</style>
+  
+<script src="js/avrcore.js"></script>
+<div id="sources">
+<input text="this" type="file" id="file"/>
+</div>
+<script src="js/elfcore.js"></script>
+  
+<body id="layout">
+<canvas id="screen"></canvas>
+<div id="portB" style="display:table;">
+<canvas style="width:1px;"></canvas>
+<canvas id="B0"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="B1"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="B2"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="B3"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="B4"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="B5"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="B6"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="B7"></canvas>
+</div>
+<hr style="margin:0">
+<div id="portC" style="display:table;">
+<canvas style="width:1px;"></canvas>
+<canvas id="C0"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="C1"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="C2"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="C3"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="C4"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="C5"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="C6"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="C7"></canvas>
+</div>
+<hr style="margin:0">
+<div id="portD" style="display:table">
+<canvas style="width:1px;"></canvas>
+<canvas id="D0"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="D1"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="D2"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="D3"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="D4"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="D5"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="D6"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="D7"></canvas>
+</div>
+<hr style="margin:0">
+<div id="portE" style="display:table">
+<canvas style="width:1px;"></canvas>
+<canvas id="E0"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="E1"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="E2"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="E3"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="E4"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="E5"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="E6"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="E7"></canvas>
+</div>
+<hr style="margin:0">
+<div id="portF" style="display:table">
+<canvas style="width:1px;"></canvas>
+<canvas id="F0"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="F1"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="F2"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="F3"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="F4"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="F5"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="F6"></canvas>
+<canvas style="width:1px;"></canvas>
+<canvas id="F7"></canvas>
+</div>
+</body>
+  
+<script src="js/tft_spi_driver.js"></script>
+<input style="width:0;" type="search" id="uart" size="33"/>
+
+<script> 
+  
+  // Replacement for lib.js
+  
+  // Platform specific
+  var target = "atmega32u4";
+  var num_ports = 5
+  var port_width = 8;
+  
+  var max_width = 320;
+  var max_height = 480;
+  
+  var width = screen.width > max_width ? max_width: screen.width;
+  var height = screen.height > max_height ? max_height: screen.height;
+  var layout = document.getElementById('layout');
+  var screen_canvas = document.getElementById("screen");
+  var uart = document.getElementById("uart");
+  var file_input = document.getElementById('file');
+  var red_color = "#FF0000";
+  var green_color = "#00FF00"
+  var default_color = "#626269";
+  var screen_buffer = document.createElement("canvas");
+  var nokiaScreen = target == "atmega328";
+  screen_buffer.width = nokiaScreen ? 84: 160;
+  screen_buffer.height = nokiaScreen ? 48: 128; 
+  var scale = (width/screen_buffer.width);
+ 
+  document.getElementById("sources").style.background = default_color;
+  
+  // TODO cache references to pin objects
+  
+  function initScreen() 
+  {
+      screen_canvas.width = width;
+      screen_canvas.height = scale*screen_buffer.height;
+      return screen_canvas.height;
+  }
+  
+  function initPort(port_id, port_height) 
+  {
+      var pin = document.getElementById(port_id);
+      pin.width = (width/port_width)-1;
+      pin.height = port_height;
+      fillCanvas(pin, default_color);
+  }
+  
+  function initPorts(port_height) 
+  {
+     initPort("B0",port_height);
+     initPort("B1",port_height);
+     initPort("B2",port_height);
+     initPort("B3",port_height);
+     initPort("B4",port_height);
+     initPort("B5",port_height);
+     initPort("B6",port_height);
+     initPort("B7",port_height);
+    
+     initPort("C0",port_height);
+     initPort("C1",port_height);
+     initPort("C2",port_height);
+     initPort("C3",port_height);
+     initPort("C4",port_height);
+     initPort("C5",port_height);
+     initPort("C6",port_height);
+     initPort("C7",port_height);
+    
+     initPort("D0",port_height);
+     initPort("D1",port_height);
+     initPort("D2",port_height);
+     initPort("D3",port_height);
+     initPort("D4",port_height);
+     initPort("D5",port_height);
+     initPort("D6",port_height);
+     initPort("D7",port_height);
+    
+     initPort("E0",port_height);
+     initPort("E1",port_height);
+     initPort("E2",port_height);
+     initPort("E3",port_height);
+     initPort("E4",port_height);
+     initPort("E5",port_height);
+     initPort("E6",port_height);
+     initPort("E7",port_height);
+    
+     initPort("F0",port_height);
+     initPort("F1",port_height);
+     initPort("F2",port_height);
+     initPort("F3",port_height);
+     initPort("F4",port_height);
+     initPort("F5",port_height);
+     initPort("F6",port_height);
+     initPort("F7",port_height);
+  }
+  
+  function setupActivePorts() 
+  {
+      fillCanvas(B0, red_color);
+      fillCanvas(B1, red_color);
+      fillCanvas(B2, red_color);
+      fillCanvas(B3, red_color);
+      fillCanvas(B4, red_color);
+      fillCanvas(B5, red_color);
+      fillCanvas(B6, red_color);
+      fillCanvas(B7, red_color);
+      fillCanvas(C6, red_color);
+      fillCanvas(C7, red_color);
+      fillCanvas(D0, red_color);
+      fillCanvas(D1, red_color);
+      fillCanvas(D2, red_color);
+      fillCanvas(D3, red_color);
+      fillCanvas(D4, red_color);
+      fillCanvas(D5, red_color);
+      fillCanvas(D6, red_color);
+      fillCanvas(D7, red_color);
+      fillCanvas(E2, red_color);
+      fillCanvas(E6, red_color);
+      fillCanvas(F0, red_color);
+      fillCanvas(F1, red_color);
+      fillCanvas(F4, red_color);
+      fillCanvas(F5, red_color);
+      fillCanvas(F6, red_color);
+      fillCanvas(F7, red_color);
+  }
+  
+  function initFileInput()
+  {
+      file_input.addEventListener('change', function(evt)
+      {
+        var file = file_input.files[0];
+        if(!file) 
+        {
+          alert('Intel Hex File Required');
+          return;
+        }
+        var reader = new FileReader();
+        reader.onloadend = function(evt) 
+        {
+          if(evt.target.readyState == FileReader.DONE) 
+          {
+            var bytes = evt.target.result;
+            if( bytes.charCodeAt(0) == 0x7f && bytes[1] == 'E' && bytes[2] == 'L' && bytes[3] == 'F' )
+            {
+              intelhex = getHexFromElf(bytes);
+              buildFrameInfo();
+              buildLineInfo();
+            }else{
+              intelhex = evt.target.result;
+            }
+            loadMemory(intelhex);
+            engineInit();
+            exec();
+          }
+        };
+        reader.readAsBinaryString(file.slice(0, file.size));
+      }, false);
+  }
+  
+  function fillCanvas(canvas, color)
+  {
+      var context = canvas.getContext('2d');
+      context.rect(0,0,canvas.width,canvas.height);
+      context.fillStyle = color;
+      context.fill(); 
+  }
+  
+  function refreshScreen(canvas) 
+  {
+      var context = screen_canvas.getContext('2d');
+      context.scale(scale,scale);
+      context.drawImage(canvas, 0, 0);
+      context.scale(1/scale,1/scale);
+  }
+  
+  function pinNumberToPinObject(pin_number)
+  {
+    var pin = null;
+    switch(pin_number)
+    {
+      case 0:
+        pin = document.getElementById('B0');
+        break;
+      case 1:
+        pin = document.getElementById('B1');
+        break;
+      case 2:
+        pin = document.getElementById('B2');
+        break;
+      case 3:
+        pin = document.getElementById('B3');
+        break;
+    }
+    
+    return pin;
+  }
+  
+  function popPortBuffer(queue, port)
+  {
+      if(!optimizationEnabled && !(forceOptimizationEnabled && (port == spipinport1*8 || port == spipinport2*8)))
+      {
+        var pin = null;
+        // Disable all port pins
+        for(i = 0; i < bitsPerPort; i++)
+        {
+          pin = pinNumberToPinObject(parseInt(i + port));
+          if(pin)
+          {
+            //IsGreen?
+            var data = pin.getContext('2d').getImageData(0, 0, 1, 1).data[1];
+            if(data == 0xFF)
+            {
+              fillCanvas(pin, red_color);
+            }
+          }
+        }
+        queue = queue.shift();
+        // Enable selected port pins
+        for(i = 0; i < bitsPerPort; i++) 
+        {
+           if(parseInt(queue) & 1 << i)
+           {
+             pin = pinNumberToPinObject(parseInt(i + port));
+             if(pin)
+             {
+               fillCanvas(pin, green_color);
+             }
+           }
+        }
+      }
+      else{
+          queue.shift();
+      }
+  }
+  
+  function uartWrite(data){
+      uart.value.length == uartBufferLength - 1 && (uart.value = "");
+      uart.value += String.fromCharCode(data);
+  }
+  
+  function drawPixel(x, y, color)
+  {
+      if( x > screen_buffer.width-1 || y > screen_buffer.height-1 )
+      {
+        return;
+      }
+      var context = screen_buffer.getContext('2d');
+      context.rect(x,y,1,1);
+      context.fillStyle = color;
+      context.fill(); 
+      refreshScreen(screen_buffer);
+  }
+  
+  function fillScreen(color)
+  {
+      for(var y = 0; y < screen_buffer.height; y++)
+      {
+        for(var x = 0; x < screen_buffer.width; x++)
+        {
+          drawPixel( x, y, color );
+        }
+      }
+  }
+  
+  function handleBreakpoint(address)
+  {
+      var index = softBreakpoints.indexOf(parseInt(address, 16)-flashStart+2);
+      if(index >= 0)
+      {
+        alert("Breakpoint at 0x" + softBreakpoints[index].toString(16));
+      }
+  }
+  
+  // Essential layout functions
+  layout.style.width = width;
+  uart.style.width = width;
+  var screen_height = initScreen();
+  fillCanvas(screen_canvas,"black");
+  var port_height = (height-screen_height)/num_ports;
+  initPorts(port_height);
+  setupActivePorts();
+  initFileInput();
+
+</script>
+  
+</html>

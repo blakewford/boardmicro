@@ -70,6 +70,7 @@ else
 	echo '<script src="js/tft_spi_driver.js"></script>' >> $@
 endif
 	cat htmlfrag/htmlfrag2 >> $@
+	cat htmlfrag/next.html >> next.html
 	cp $@ boardmicro.starlo.org/index.html
 	cp js/avrcore.js boardmicro.starlo.org/js
 ifeq ($(TARGET),atmega328)
