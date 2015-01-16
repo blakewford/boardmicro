@@ -1343,7 +1343,18 @@ function loop() {
       break;
     }
   }
-  0 < pixelQueue.length && (Android.writePixelBuffer(JSON.stringify(pixelQueue)), pixelQueue.length = 0);
+  if(0 < pixelQueue.length)
+  {
+    if(isNative())
+    {
+      Android.writePixelBuffer(JSON.stringify(pixelQueue));
+    }
+    else
+    {
+      refreshScreen();
+    }
+    pixelQueue.length = 0;
+  }
   b && setTimeout(loop, batchDelay);
 }
 function engineInit() {

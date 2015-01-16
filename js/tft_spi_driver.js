@@ -11,7 +11,11 @@ function writeDMARegion(c, b) {
         k = "0" + k;
       }
       g = "#" + k;
-      -1 != screenDataOffset && (drawPixel(d + screenDataOffset, e, g), isNative()) && (k = {}, k.x = d + screenDataOffset, k.y = e, k.color = g, pixelQueue.push(k));
+      if(-1 != screenDataOffset)
+      {
+        drawPixel(d + screenDataOffset, e, g);
+        (k = {}, k.x = d + screenDataOffset, k.y = e, k.color = g, pixelQueue.push(k));
+      }
       d + screenDataOffset != h ? screenDataOffset++ : (screenDataOffset = 0, e != f && (e++, writeMemory(DMA + 5, e >> 8), writeMemory(DMA + 4, e & 255)));
     }
   }

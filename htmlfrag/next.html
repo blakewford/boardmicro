@@ -288,11 +288,11 @@
       context.fill(); 
   }
   
-  function refreshScreen(canvas) 
+  function refreshScreen()
   {
       var context = screen_canvas.getContext('2d');
       context.scale(scale,scale);
-      context.drawImage(canvas, 0, 0);
+      context.drawImage(screen_buffer, 0, 0);
       context.scale(1/scale,1/scale);
   }
   
@@ -374,7 +374,6 @@
       imgData.data[2] = parseInt(color.substr(5),16);
       imgData.data[3] = 0xFF;
       context.putImageData(imgData, x, y);
-      refreshScreen(screen_buffer);
   }
   
   function fillScreen(color)
