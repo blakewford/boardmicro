@@ -163,6 +163,7 @@
   var screen_canvas = document.getElementById("screen");
   var uart = document.getElementById("uart");
   var debug = document.getElementById("debug");
+  var sources = document.getElementById("sources");
   var file_input = document.getElementById('file');
   var red_color = "#FF0000";
   var green_color = "#00FF00"
@@ -453,9 +454,10 @@
   uart.style.width = width;
   debug.style.background = default_color;
   debug.style.width = width;
-  document.getElementById("sources").style.background = default_color;
+  sources.style.background = default_color;
   var screen_height = initScreen();
   fillCanvas(screen_canvas,"black");
+  fillCanvas(screen_buffer,"black");
   var port_height = (height-screen_height)/num_ports;
   initPorts(port_height);
   setupActivePorts();

@@ -1327,6 +1327,7 @@ function isSoftBreakpoint(c) {
 }
 function loop() {
   var c, b = !0;
+  var start = new Date().getTime();
   for (j = 0;j < batchSize;j++) {
     timedInstructions++;
     var d = parseInt(memory[PC++], 16), h = parseInt(memory[PC++], 16), e = 149 == h && 152 == d || isSoftBreakpoint(PC) || forceBreak;
@@ -1359,6 +1360,8 @@ function loop() {
       break;
     }
   }
+  var end = new Date().getTime();
+  console.log((end - start)/batchSize);
   flushPixelBuffer();
   b && setTimeout(loop, batchDelay);
 }
