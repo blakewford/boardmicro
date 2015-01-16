@@ -122,7 +122,29 @@
   
 <script src="js/tft_spi_driver.js"></script>
 <input style="width:0;" type="search" id="uart" size="33"/>
-
+<details id="debug">
+<summary>Debug</summary>
+<button onClick="doDebugCommand();">(gdb)</button>
+<input type="search" size="15" id="gdb" value="" onkeydown="filterRelevantKeypress()"/>
+<font id="gdbshell"></font>
+<br/>
+<font>Batch Instructions 1 - 300000</font>
+<br/>
+<input id="batch" onchange="batchSize=this.value" style="width: 99%" type="range" min="1" max="300000" value="1024">
+<br/>
+<font>Batch Delay 0 - 1000ms</font>
+<br/>
+<input id="delay" onchange="batchDelay=this.value" style="width: 99%" type="range" min="0" max="1000" value="0">
+<br/>
+<font>ADC Value 0 - 1023</font>
+<br/>
+<input id="adc" onchange="adcValue=this.value" style="width: 99%" type="range" min="0" max="1023" value="42">
+<br/>
+<input type="checkbox" onchange="forceOptimizationEnabled=this.checked"><font>Disable SPI Port Animation</font>
+<br/>
+<input type="checkbox" onchange="disableUARTInterrupt=this.checked"><font>Disable UART Interrupt</font>
+<br/>
+</details>
 <script> 
   
   // Replacement for lib.js
@@ -140,6 +162,7 @@
   var layout = document.getElementById('layout');
   var screen_canvas = document.getElementById("screen");
   var uart = document.getElementById("uart");
+  var debug = document.getElementById("debug");
   var file_input = document.getElementById('file');
   var red_color = "#FF0000";
   var green_color = "#00FF00"
@@ -149,8 +172,8 @@
   screen_buffer.width = nokiaScreen ? 84: 160;
   screen_buffer.height = nokiaScreen ? 48: 128; 
   var scale = (width/screen_buffer.width);
- 
-  document.getElementById("sources").style.background = default_color;
+  var commandHistory = [];
+  var historyIndex = -1;
   
   // TODO cache references to pin objects
   
@@ -396,9 +419,41 @@
       }
   }
   
+  function filterRelevantKeypress()
+  {
+      switch(event.which)
+      {
+        case 13:
+            doDebugCommand();
+            break;
+        case 38:
+            document.getElementById("gdb").value = historyIndex >= 0 ?
+            commandHistory[historyIndex--]: "";
+            break;
+      }
+  }
+
+  function doDebugCommand()
+  {
+      var c = document.getElementById("gdb").value;
+      commandHistory.push(c);
+      historyIndex = commandHistory.length-1;
+      handleDebugCommandString(c);
+      document.getElementById("gdb").value = "";
+      document.getElementById("gdb").focus();
+  }
+
+  function setDebugResult(c)
+  {
+      document.getElementById("gdbshell").textContent = c;
+  }
+
   // Essential layout functions
   layout.style.width = width;
   uart.style.width = width;
+  debug.style.background = default_color;
+  debug.style.width = width;
+  document.getElementById("sources").style.background = default_color;
   var screen_height = initScreen();
   fillCanvas(screen_canvas,"black");
   var port_height = (height-screen_height)/num_ports;
