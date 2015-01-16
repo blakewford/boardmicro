@@ -28,6 +28,22 @@ function uartWrite(c) {
 }
 function drawPixel(c, b, d) {
 }
+function refreshScreen() {
+}
+function flushPixelBuffer() {
+  if(0 < pixelQueue.length)
+  {
+    if(isNative())
+    {
+      Android.writePixelBuffer(JSON.stringify(pixelQueue));
+    }
+    else
+    {
+      refreshScreen();
+    }
+    pixelQueue.length = 0;
+  }
+}
 function popPortBuffer(c, b) {
   isNode() && console.log(c[0]);
   c.shift();
@@ -1343,18 +1359,7 @@ function loop() {
       break;
     }
   }
-  if(0 < pixelQueue.length)
-  {
-    if(isNative())
-    {
-      Android.writePixelBuffer(JSON.stringify(pixelQueue));
-    }
-    else
-    {
-      refreshScreen();
-    }
-    pixelQueue.length = 0;
-  }
+  flushPixelBuffer();
   b && setTimeout(loop, batchDelay);
 }
 function engineInit() {
