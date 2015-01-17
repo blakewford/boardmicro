@@ -374,9 +374,28 @@
   function fillCanvas(canvas, color)
   {
       var context = canvas.getContext('2d');
-      context.rect(0,0,canvas.width,canvas.height);
-      context.fillStyle = color;
-      context.fill(); 
+      switch(color)
+      {
+          case "red":
+              color = "#FF0000";
+              break;
+          case "green":
+              color = "#00FF00";
+              break;
+          case "black":
+              color = "#000000";
+              break;
+      }
+      var imgData = context.getImageData(0,0,canvas.width,canvas.height);
+      var cursor = canvas.width*canvas.height*4;
+      while(cursor-=4)
+      {
+        imgData.data[cursor]   = parseInt(color.substr(1,2),16);
+        imgData.data[cursor+1] = parseInt(color.substr(3,2),16);
+        imgData.data[cursor+2] = parseInt(color.substr(5),16);
+        imgData.data[cursor+3] = 0xFF;
+      }
+      context.putImageData(imgData, 0, 0);
   }
   
   function refreshScreen()
