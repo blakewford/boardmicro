@@ -17,12 +17,12 @@
 </style>
   
 <script src="js/avrcore.js"></script>
-<div id="sources">
-<input text="this" type="file" id="file"/>
-</div>
 <script src="js/elfcore.js"></script>
   
 <body id="layout">
+<div id="sources">
+<input text="this" type="file" id="file"/>
+</div>
 <canvas id="screen"></canvas>
 <div id="portB" style="display:table;">
 <canvas style="width:1px;"></canvas>
@@ -118,10 +118,10 @@
 <canvas style="width:1px;"></canvas>
 <canvas id="F7"></canvas>
 </div>
+<input style="width:0;" type="search" id="uart" size="33"/>
 </body>
   
 <script src="js/tft_spi_driver.js"></script>
-<input style="width:0;" type="search" id="uart" size="33"/>
 <details id="debug">
 <summary>Debug</summary>
 <button onClick="doDebugCommand();">(gdb)</button>
@@ -149,6 +149,12 @@
   
   // Replacement for lib.js
   
+  function normalize(value, align)
+  {
+    var normal_value = Math.floor(value);
+    return normal_value % align == 0 ? normal_value: normal_value - (normal_value % align) ;
+  }
+
   // Platform specific
   var target = "atmega32u4";
   var num_ports = 5
@@ -172,7 +178,7 @@
   var nokiaScreen = target == "atmega328";
   screen_buffer.width = nokiaScreen ? 84: 160;
   screen_buffer.height = nokiaScreen ? 48: 128; 
-  var scale = (width/screen_buffer.width);
+  var scale = normalize(width/screen_buffer.width, 2)
   var commandHistory = [];
   var historyIndex = -1;
   
@@ -188,11 +194,24 @@
   function initPort(port_id, port_height) 
   {
       var pin = document.getElementById(port_id);
-      pin.width = (width/port_width)-1;
+      pin.width = normalize(width/port_width, port_width)-1;
+      var device_width = (pin.width*port_width) + port_width;
+      if(device_width < width)
+      {
+          pin.width += normalize((width-device_width)/port_width, 2);
+      }
       pin.height = port_height;
       fillCanvas(pin, default_color);
   }
-  
+
+  function initLastPin(port_id, port_height)
+  {
+     initPort(port_id, port_height);
+     var pin = document.getElementById(port_id);
+     var device_width = (pin.width*port_width)+port_width;
+     pin.width += width-device_width;
+  }
+
   function initPorts(port_height) 
   {
      initPort("B0",port_height);
@@ -202,7 +221,7 @@
      initPort("B4",port_height);
      initPort("B5",port_height);
      initPort("B6",port_height);
-     initPort("B7",port_height);
+     initLastPin("B7",port_height);
     
      initPort("C0",port_height);
      initPort("C1",port_height);
@@ -211,7 +230,7 @@
      initPort("C4",port_height);
      initPort("C5",port_height);
      initPort("C6",port_height);
-     initPort("C7",port_height);
+     initLastPin("C7",port_height);
     
      initPort("D0",port_height);
      initPort("D1",port_height);
@@ -220,7 +239,7 @@
      initPort("D4",port_height);
      initPort("D5",port_height);
      initPort("D6",port_height);
-     initPort("D7",port_height);
+     initLastPin("D7",port_height);
     
      initPort("E0",port_height);
      initPort("E1",port_height);
@@ -229,7 +248,7 @@
      initPort("E4",port_height);
      initPort("E5",port_height);
      initPort("E6",port_height);
-     initPort("E7",port_height);
+     initLastPin("E7",port_height);
     
      initPort("F0",port_height);
      initPort("F1",port_height);
@@ -238,7 +257,7 @@
      initPort("F4",port_height);
      initPort("F5",port_height);
      initPort("F6",port_height);
-     initPort("F7",port_height);
+     initLastPin("F7",port_height);
   }
   
   function setupActivePorts() 
@@ -271,6 +290,25 @@
       fillCanvas(F7, red_color);
   }
   
+  function setupInactivePorts()
+  {
+      fillCanvas(C0, default_color);
+      fillCanvas(C1, default_color);
+      fillCanvas(C2, default_color);
+      fillCanvas(C3, default_color);
+      fillCanvas(C4, default_color);
+      fillCanvas(C5, default_color);
+      fillCanvas(E0, default_color);
+      fillCanvas(E1, default_color);
+      fillCanvas(E3, default_color);
+      fillCanvas(E4, default_color);
+      fillCanvas(E5, default_color);
+      fillCanvas(E7, default_color);
+      fillCanvas(F2, default_color);
+      fillCanvas(F3, default_color);
+  }
+
+
   function initFileInput()
   {
       file_input.addEventListener('change', function(evt)
@@ -452,15 +490,20 @@
   // Essential layout functions
   layout.style.width = width;
   uart.style.width = width;
+  var uart_height = normalize(height/25, 2);
+  uart.style.height = uart_height;
   debug.style.background = default_color;
   debug.style.width = width;
   sources.style.background = default_color;
+  var sources_height = normalize(height/21, 2);
+  sources.style.height = sources_height;
   var screen_height = initScreen();
   fillCanvas(screen_canvas,"black");
   fillCanvas(screen_buffer,"black");
-  var port_height = (height-screen_height)/num_ports;
+  var port_height = normalize((height-screen_height-uart_height-sources_height)/num_ports, 2);
   initPorts(port_height);
   setupActivePorts();
+  setupInactivePorts();
   initFileInput();
 
 </script>
