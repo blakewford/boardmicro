@@ -16,14 +16,13 @@
 #along with pichai; see the file LICENSE.  If not see
 #<http://www.gnu.org/licenses/>.
 
-#SUPPORTED TARGETS: attiny4 atmega8 atmega32u4 atmega328
+#SUPPORTED TARGETS: atmega32u4 atmega328
 TARGET = atmega32u4
 
 SRC = blink
 SRC_DIR = src/
 LIB_DIR = src/lib
 BASENAME = $(SRC)_$(TARGET)
-DROPBOX = cat htmlfrag/dropbox >> $@
 
 all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).bin $(TARGET).html
 
@@ -47,20 +46,12 @@ $(BASENAME).bin: $(BASENAME).elf
 
 .PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
+	cat htmlfrag/next.html >> $@
+ifeq ($(TARGET),atmega328)
+#	cat htmlfrag/gamebuino_pad >> $@
+endif
 	echo 'var target = "$(TARGET)";' > js/scratch.js
-	$(DROPBOX)
-	cat htmlfrag/htmlfrag >> $@
-ifeq ($(TARGET),atmega328)
-	node js/nokia_screen.js >> $@
-else
-	node js/arduino_screen.js >> $@
-endif
-	echo '</table>' >> $@;
-ifeq ($(TARGET),atmega328)
-	cat htmlfrag/gamebuino_pad >> $@
-endif
-	node js/$(TARGET)_port_gui.js >> $@
-	node js/$(TARGET)_port_state.js >> js/scratch.js
+#	node js/$(TARGET)_port_state.js >> js/scratch.js
 ifeq ($(DEBUG),yes)
 	cat js/debug.js >> js/scratch.js
 endif
@@ -69,8 +60,6 @@ ifeq ($(TARGET),atmega328)
 else
 	echo '<script src="js/tft_spi_driver.js"></script>' >> $@
 endif
-	cat htmlfrag/htmlfrag2 >> $@
-	cat htmlfrag/next.html > next.html
 	cp $@ boardmicro.starlo.org/index.html
 	cp js/avrcore.js boardmicro.starlo.org/js
 ifeq ($(TARGET),atmega328)

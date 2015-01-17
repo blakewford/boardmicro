@@ -20,13 +20,11 @@ function writeDMARegion(c, b){
       var base = y+i;
       var color = memory[32758+i] === 0 ? "#CCFF66": "#293314";
       drawPixel( x, base, color );
-      if(isNative()){
-        var k = {};
-        k.x = x;
-        k.y = base;
-        k.color = color;
-        pixelQueue.push(k);
-      }
+      var k = {};
+      k.x = x;
+      k.y = base;
+      k.color = color;
+      pixelQueue.push(k);
     }
   }
 }

@@ -119,10 +119,7 @@
 <canvas id="F7"></canvas>
 </div>
 <input style="width:0;" type="search" id="uart" size="33"/>
-</body>
-  
-<script src="js/tft_spi_driver.js"></script>
-<details id="debug">
+<details style="display:none" id="debug">
 <summary>Debug</summary>
 <button onClick="doDebugCommand();">(gdb)</button>
 <input type="search" size="15" id="gdb" value="" onkeydown="filterRelevantKeypress()"/>
@@ -145,6 +142,9 @@
 <input type="checkbox" onchange="disableUARTInterrupt=this.checked"><font>Disable UART Interrupt</font>
 <br/>
 </details>
+</body>
+<script src="js/tft_spi_driver.js"></script>
+<script src="js/scratch.js"></script>
 <script> 
   
   // Replacement for lib.js
@@ -156,7 +156,6 @@
   }
 
   // Platform specific
-  var target = "atmega32u4";
   var num_ports = 5
   var port_width = 8;
 
@@ -187,11 +186,11 @@
   var F6 = document.getElementById('F6');
   var F7 = document.getElementById('F7');
   
-  var max_width = 320;
-  var max_height = 480;
+  var max_width = 400;
+  var max_height = 480; // Currently short circuited below
   
   var width = screen.width > max_width ? max_width: screen.width;
-  var height = screen.height > max_height ? max_height: screen.height;
+  var height = screen.height > max_height ?  screen.height: screen.height;
   var layout = document.getElementById('layout');
   var screen_canvas = document.getElementById("screen");
   var uart = document.getElementById("uart");
@@ -210,8 +209,6 @@
   var scale = width/screen_buffer.width;
   var commandHistory = [];
   var historyIndex = -1;
-  
-  // TODO cache references to pin objects
   
   function initScreen() 
   {
