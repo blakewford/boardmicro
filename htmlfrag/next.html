@@ -395,6 +395,10 @@
         imgData.data[cursor+2] = parseInt(color.substr(5),16);
         imgData.data[cursor+3] = 0xFF;
       }
+      imgData.data[cursor]   = parseInt(color.substr(1,2),16);
+      imgData.data[cursor+1] = parseInt(color.substr(3,2),16);
+      imgData.data[cursor+2] = parseInt(color.substr(5),16);
+      imgData.data[cursor+3] = 0xFF;
       context.putImageData(imgData, 0, 0);
   }
   
