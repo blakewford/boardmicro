@@ -178,7 +178,7 @@
   var nokiaScreen = target == "atmega328";
   screen_buffer.width = nokiaScreen ? 84: 160;
   screen_buffer.height = nokiaScreen ? 48: 128; 
-  var scale = normalize(width/screen_buffer.width, 2)
+  var scale = width/screen_buffer.width;
   var commandHistory = [];
   var historyIndex = -1;
   
