@@ -202,6 +202,8 @@
   var green_color = "#00FF00"
   var default_color = "#626269";
   var screen_buffer = document.createElement("canvas");
+  var gdb_window = document.getElementById("gdb");
+  var result_window = document.getElementById("gdbshell");
   var nokiaScreen = target == "atmega328";
   screen_buffer.width = nokiaScreen ? 84: 160;
   screen_buffer.height = nokiaScreen ? 48: 128; 
@@ -559,7 +561,7 @@
             doDebugCommand();
             break;
         case 38:
-            document.getElementById("gdb").value = historyIndex >= 0 ?
+            gdb_window.value = historyIndex >= 0 ?
             commandHistory[historyIndex--]: "";
             break;
       }
@@ -567,17 +569,17 @@
 
   function doDebugCommand()
   {
-      var c = document.getElementById("gdb").value;
-      commandHistory.push(c);
+      var command = gdb_window.value;
+      commandHistory.push(command);
       historyIndex = commandHistory.length-1;
-      handleDebugCommandString(c);
-      document.getElementById("gdb").value = "";
-      document.getElementById("gdb").focus();
+      handleDebugCommandString(command);
+      gdb_window.value = "";
+      gdb_window.focus();
   }
 
-  function setDebugResult(c)
+  function setDebugResult(result)
   {
-      document.getElementById("gdbshell").textContent = c;
+      result_window.textContent = result;
   }
 
   // Essential layout functions
