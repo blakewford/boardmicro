@@ -159,6 +159,33 @@
   var target = "atmega32u4";
   var num_ports = 5
   var port_width = 8;
+
+  var B0 = document.getElementById('B0');
+  var B1 = document.getElementById('B1');
+  var B2 = document.getElementById('B2');
+  var B3 = document.getElementById('B3');
+  var B4 = document.getElementById('B4');
+  var B5 = document.getElementById('B5');
+  var B6 = document.getElementById('B6');
+  var B7 = document.getElementById('B7');
+  var C6 = document.getElementById('C6');
+  var C7 = document.getElementById('C7');
+  var D0 = document.getElementById('D0');
+  var D1 = document.getElementById('D1');
+  var D2 = document.getElementById('D2');
+  var D3 = document.getElementById('D3');
+  var D4 = document.getElementById('D4');
+  var D5 = document.getElementById('D5');
+  var D6 = document.getElementById('D6');
+  var D7 = document.getElementById('D7');
+  var E2 = document.getElementById('E2');
+  var E6 = document.getElementById('E6');
+  var F0 = document.getElementById('F0');
+  var F1 = document.getElementById('F1');
+  var F4 = document.getElementById('F4');
+  var F5 = document.getElementById('F5');
+  var F6 = document.getElementById('F6');
+  var F7 = document.getElementById('F7');
   
   var max_width = 320;
   var max_height = 480;
@@ -364,16 +391,82 @@
     switch(pin_number)
     {
       case 0:
-        pin = document.getElementById('B0');
+        pin = B0;
         break;
       case 1:
-        pin = document.getElementById('B1');
+        pin = B1;
         break;
       case 2:
-        pin = document.getElementById('B2');
+        pin = B2;
         break;
       case 3:
-        pin = document.getElementById('B3');
+        pin = B3;
+        break;
+      case 4:
+        pin = B4;
+        break;
+      case 5:
+        pin = B5;
+        break;
+      case 6:
+        pin = B6;
+        break;
+      case 7:
+        pin = B7;
+        break;
+      case 14:
+        pin = C6;
+        break;
+      case 15:
+        pin = C7;
+        break;
+      case 16:
+        pin = D0;
+        break;
+      case 17:
+        pin = D1;
+        break;
+      case 18:
+        pin = D2;
+        break;
+      case 19:
+        pin = D3;
+        break;
+      case 20:
+        pin = D4;
+        break;
+      case 21:
+        pin = D5;
+        break;
+      case 22:
+        pin = D6;
+        break;
+      case 23:
+        pin = D7;
+        break;
+      case 26:
+        pin = E6;
+        break;
+      case 30:
+        pin = E7;
+        break;
+      case 32:
+        pin = F0;
+        break;
+      case 33:
+        pin = F1;
+        break;
+      case 36:
+        pin = F4;
+        break;
+      case 37:
+        pin = F5;
+        break;
+      case 38:
+        pin = F6;
+        break;
+      case 39:
+        pin = F7;
         break;
     }
     
