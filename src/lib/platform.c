@@ -1,35 +1,23 @@
 #include <avr/io.h>
+#include <avr/boot.h>
 #include <platform.h>
 #include <stdbool.h>
 #include <string.h>
 
-#ifndef attiny4
-    #include <avr/boot.h>
-#endif
-
-#ifdef atmega8
-    #define SIGRD 5
-#endif
 #ifdef atmega328
     #define SIGRD 5
 #endif
 
 #define SPI_PORT PORTB
 #define DDR_SPI DDRB
-#ifdef atmega8
-    #define DD_MOSI PB3
-    #define DD_SCK PB5
-    #define DD_SS PB0
-#endif
+#define DD_SS PB0
 #ifdef atmega32u4
     #define DD_MOSI PB2
     #define DD_SCK PB1
-    #define DD_SS PB0
 #endif
 #ifdef atmega328
     #define DD_MOSI PB3
     #define DD_SCK PB5
-    #define DD_SS PB0
 #endif
 
 #ifdef atmega32u4
@@ -60,39 +48,20 @@
     #define UDR UDR0
 #endif
 
+#define SPI_SELECT_DATA PORTD
+#define SPI_DATA_DIRECTION DDRD
+
 #ifdef atmega32u4
     #define SPI_SELECT_CMD PORTE
     #define SPI_CMD_DIRECTION DDRE
-    #define SPI_SELECT_DATA PORTD
-    #define SPI_DATA_DIRECTION DDRD
     #define SPI_SELECT_CMD_ACTIVE 0x40
     #define SPI_SELECT_DATA_ACTIVE 0x4
-#endif
-
-#ifdef atmega8
-    #define SPI_SELECT_CMD PORTD
-    #define SPI_CMD_DIRECTION DDRD
-    #define SPI_SELECT_DATA PORTD
-    #define SPI_DATA_DIRECTION DDRD
-    #define SPI_SELECT_CMD_ACTIVE 0x80
-    #define SPI_SELECT_DATA_ACTIVE 0x1
 #endif
 
 #ifdef atmega328
     #define SPI_SELECT_CMD PORTD
     #define SPI_CMD_DIRECTION DDRD
-    #define SPI_SELECT_DATA PORTD
-    #define SPI_DATA_DIRECTION DDRD
     #define SPI_SELECT_CMD_ACTIVE 0x80
-    #define SPI_SELECT_DATA_ACTIVE 0x1
-#endif
-
-#ifdef attiny4
-    #define SPI_SELECT_CMD PORTB
-    #define SPI_CMD_DIRECTION DDRB
-    #define SPI_SELECT_DATA PORTB
-    #define SPI_SELECT_CMD_ACTIVE 0x8
-    #define SPI_DATA_DIRECTION DDRB
     #define SPI_SELECT_DATA_ACTIVE 0x1
 #endif
 
@@ -115,11 +84,7 @@ void delay(uint32_t milliseconds){
 }
 
 bool platformIsSimulated(){
-#ifndef attiny4
   return boot_signature_byte_get(0) == SIMULATED_PLATFORM_SIGNATURE;
-#else
-  return *((uint8_t*)0x3FC0) == SIMULATED_PLATFORM_SIGNATURE;
-#endif
 }
 
 void platformBasedDelay(uint32_t milliseconds) {
@@ -129,7 +94,6 @@ void platformBasedDelay(uint32_t milliseconds) {
     delay(milliseconds);
 }
 
-#ifndef attiny4
 void platformBasedSPIBegin()
 {
     SPI_PORT = 0x1;
@@ -345,4 +309,3 @@ void platformBasedDisplayBegin() {
         writeDisplayCommand(0x36);
         writeDisplayData(0xA8);
 }
-#endif
