@@ -95,7 +95,7 @@ endif
 	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
-firefox: $(TARGET).html
+firefox: chrome
 	cd boardmicro.starlo.org; zip -r boardmicro.zip .
 
 desktop.js: $(TARGET).html
