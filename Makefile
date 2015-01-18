@@ -44,6 +44,19 @@ $(BASENAME).hex: $(BASENAME).elf
 $(BASENAME).bin: $(BASENAME).elf
 	avr-objcopy -I elf32-avr -O binary $(BASENAME).elf $(BASENAME).bin
 
+chrome: $(TARGET).html
+	cp $(TARGET).html boardmicro.starlo.org/index.html
+	cp js/avrcore.js boardmicro.starlo.org/js
+ifeq ($(TARGET),atmega328)
+	cp js/nokia_spi_driver.js boardmicro.starlo.org/js
+else
+	cp js/tft_spi_driver.js boardmicro.starlo.org/js
+endif
+	cp js/elfcore.js boardmicro.starlo.org/js
+	cp js/lib.js boardmicro.starlo.org/js
+	cp js/scratch.js boardmicro.starlo.org/js
+	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
+
 .PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
 	cat htmlfrag/next.html >> $@
@@ -55,17 +68,6 @@ endif
 ifeq ($(DEBUG),yes)
 	echo 'debug.style.display = "block";' >> js/scratch.js
 endif
-	cp $@ boardmicro.starlo.org/index.html
-	cp js/avrcore.js boardmicro.starlo.org/js
-ifeq ($(TARGET),atmega328)
-	cp js/nokia_spi_driver.js boardmicro.starlo.org/js
-else
-	cp js/tft_spi_driver.js boardmicro.starlo.org/js
-endif
-	cp js/elfcore.js boardmicro.starlo.org/js
-	cp js/lib.js boardmicro.starlo.org/js
-	cp js/scratch.js boardmicro.starlo.org/js
-	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
 
 android: $(TARGET).html
 ifeq ($(TARGET),atmega328)
