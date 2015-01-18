@@ -55,11 +55,6 @@ endif
 ifeq ($(DEBUG),yes)
 	cat js/debug.js >> js/scratch.js
 endif
-ifeq ($(TARGET),atmega328)
-	echo '<script src="js/nokia_spi_driver.js"></script>' >> $@
-else
-	echo '<script src="js/tft_spi_driver.js"></script>' >> $@
-endif
 	cp $@ boardmicro.starlo.org/index.html
 	cp js/avrcore.js boardmicro.starlo.org/js
 ifeq ($(TARGET),atmega328)
