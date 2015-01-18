@@ -53,7 +53,7 @@ endif
 	echo 'var target = "$(TARGET)";' > js/scratch.js
 #	node js/$(TARGET)_port_state.js >> js/scratch.js
 ifeq ($(DEBUG),yes)
-	cat js/debug.js >> js/scratch.js
+	echo 'debug.style.display = "block";' >> js/scratch.js
 endif
 	cp $@ boardmicro.starlo.org/index.html
 	cp js/avrcore.js boardmicro.starlo.org/js
