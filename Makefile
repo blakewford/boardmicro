@@ -64,7 +64,7 @@ ifeq ($(TARGET),atmega328)
 #	cat htmlfrag/gamebuino_pad >> $@
 endif
 	echo 'var target = "$(TARGET)";' > js/scratch.js
-#	node js/$(TARGET)_port_state.js >> js/scratch.js
+	cat js/$(TARGET)_port_supplier.js >> js/scratch.js
 ifeq ($(DEBUG),yes)
 	echo 'debug.style.display = "block";' >> js/scratch.js
 endif
