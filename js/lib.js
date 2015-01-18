@@ -189,6 +189,24 @@
       case 7:
         pin = B7;
         break;
+      case 8:
+        pin = C0;
+        break;
+      case 9:
+        pin = C1;
+        break;
+      case 10:
+        pin = C2;
+        break;
+      case 11:
+        pin = C3;
+        break;
+      case 12:
+        pin = C4;
+        break;
+      case 13:
+        pin = C5;
+        break;
       case 14:
         pin = C6;
         break;
