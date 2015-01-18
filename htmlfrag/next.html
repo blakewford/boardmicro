@@ -24,6 +24,7 @@
 <input text="this" type="file" id="file"/>
 </div>
 <canvas id="screen"></canvas>
+<div id=ports>
 <div id="portB" style="display:table;">
 <canvas style="width:1px;"></canvas>
 <canvas id="B0"></canvas>
@@ -118,6 +119,7 @@
 <canvas style="width:1px;"></canvas>
 <canvas id="F7"></canvas>
 </div>
+</div>
 <input style="width:0;" type="search" id="uart" size="33"/>
 <details style="display:none" id="debug">
 <summary>Debug</summary>
@@ -179,6 +181,7 @@
   var uart = document.getElementById("uart");
   var debug = document.getElementById("debug");
   var sources = document.getElementById("sources");
+  var ports = document.getElementById("ports");
   var file_input = document.getElementById('file');
   var red_color = "#FF0000";
   var green_color = "#00FF00"

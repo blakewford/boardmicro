@@ -60,13 +60,14 @@ endif
 .PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
 	cat htmlfrag/next.html >> $@
-ifeq ($(TARGET),atmega328)
-#	cat htmlfrag/gamebuino_pad >> $@
-endif
 	echo 'var target = "$(TARGET)";' > js/scratch.js
 	cat js/$(TARGET)_port_supplier.js >> js/scratch.js
 ifeq ($(DEBUG),yes)
 	echo 'debug.style.display = "block";' >> js/scratch.js
+endif
+ifeq ($(TARGET),atmega328)
+#       cat htmlfrag/gamebuino_pad >> $@
+	echo 'ports.style.display = "none";' >> js/scratch.js
 endif
 
 android: $(TARGET).html
