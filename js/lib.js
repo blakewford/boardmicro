@@ -373,3 +373,9 @@
   {
       result_window.textContent = result;
   }
+
+  function customizePortsLayout(element)
+  {
+      default_port_layout.style.display = "none";
+      ports.appendChild(element);
+  }

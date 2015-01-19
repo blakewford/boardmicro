@@ -25,6 +25,7 @@
 </div>
 <canvas id="screen"></canvas>
 <div id=ports>
+<div id=default>
 <div id="portB" style="display:table;">
 <canvas style="width:1px;"></canvas>
 <canvas id="B0"></canvas>
@@ -120,6 +121,7 @@
 <canvas id="F7"></canvas>
 </div>
 </div>
+</div>
 <input style="width:0;" type="search" id="uart" size="33"/>
 <details style="display:none" id="debug">
 <summary>Debug</summary>
@@ -182,6 +184,7 @@
   var debug = document.getElementById("debug");
   var sources = document.getElementById("sources");
   var ports = document.getElementById("ports");
+  var default_port_layout = document.getElementById("default");
   var file_input = document.getElementById('file');
   var red_color = "#FF0000";
   var green_color = "#00FF00"
@@ -222,11 +225,16 @@
   var screen_height = initScreen();
   fillCanvas(screen_canvas,"black");
   fillCanvas(screen_buffer,"black");
-  var port_height = normalize((height-screen_height-uart_height-sources_height)/num_ports, 2);
+  var port_layout_height = height-screen_height-uart_height-sources_height;
+  var port_height = normalize(port_layout_height/num_ports, 2);
   initPorts(port_height);
   setupActivePorts();
   setupInactivePorts();
   initFileInput();
 
+  if("undefined" != typeof GetCustomLayout)
+  {
+    customizePortsLayout(GetCustomLayout());
+  }
 </script>
 </html>

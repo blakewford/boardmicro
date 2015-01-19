@@ -65,10 +65,6 @@ endif
 ifeq ($(DEBUG),yes)
 	echo 'debug.style.display = "block";' >> js/scratch.js
 endif
-ifeq ($(TARGET),atmega328)
-#       cat htmlfrag/gamebuino_pad >> $@
-	echo 'ports.style.display = "none";' >> js/scratch.js
-endif
 
 android: $(TARGET).html
 ifeq ($(TARGET),atmega328)
