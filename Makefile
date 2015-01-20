@@ -62,9 +62,6 @@ endif
 	cat htmlfrag/next.html >> $@
 	echo 'var target = "$(TARGET)";' > js/scratch.js
 	cat js/$(TARGET)_port_supplier.js >> js/scratch.js
-ifeq ($(DEBUG),yes)
-	echo 'debug.style.display = "block";' >> js/scratch.js
-endif
 
 android: $(TARGET).html
 ifeq ($(TARGET),atmega328)

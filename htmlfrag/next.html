@@ -1,4 +1,4 @@
-<html>
+<html id="all">
 <meta name=viewport content="width=device-width, initial-scale=1">
 <style>
   body
@@ -19,11 +19,14 @@
 <script src="js/avrcore.js"></script>
 <script src="js/elfcore.js"></script>
   
-<body id="layout">
+<body>
+<div id="table" style="display: table;">
+<div style="display: table-row;">
+<div style="display: table-cell;" id="layout">
 <div id="sources">
 <input text="this" type="file" id="file"/>
 </div>
-<canvas id="screen"></canvas>
+<canvas style="background:black" id="screen"></canvas>
 <div id=ports>
 <div id=default>
 <div id="portB" style="display:table;">
@@ -123,10 +126,11 @@
 </div>
 </div>
 <input style="width:0;" type="search" id="uart" size="33"/>
-<details style="display:none" id="debug">
-<summary>Debug</summary>
-<button onClick="doDebugCommand();">(gdb)</button>
-<input type="search" size="15" id="gdb" value="" onkeydown="filterRelevantKeypress()"/>
+</div>
+<div style="display: table-cell;">
+<div id="debug">
+<button id="gdb_button" onClick="doDebugCommand();">(gdb)</button>
+<input type="search" id="gdb" value="" onkeydown="filterRelevantKeypress()"/>
 <font id="gdbshell"></font>
 <br/>
 <font>Batch Instructions 1 - 300000</font>
@@ -145,11 +149,16 @@
 <br/>
 <input type="checkbox" onchange="disableUARTInterrupt=this.checked"><font>Disable UART Interrupt</font>
 <br/>
-</details>
+</div>
+</div>
+</div>
+</div>
 </body>
 <script> 
 
   // Globals
+
+  var all = document.getElementById('all');
 
   var B0 = document.getElementById('B0');
   var B1 = document.getElementById('B1');
@@ -235,6 +244,11 @@
       height = screen.height;
   }
 
+  if(!isTablet() || isPortrait())
+  {
+      debug.style.display = "none";
+  }
+
   var commandHistory = [];
   var historyIndex = -1;
 
@@ -244,6 +258,7 @@
 <script>
 
   // Essential layout functions
+  all.style.background = default_color;
   layout.style.width = width;
   uart.style.width = width;
   var uart_height = normalize(height/25, 2);
