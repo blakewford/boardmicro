@@ -6,6 +6,13 @@
   screen_buffer.height = nokiaScreen ? 48: 128;
   var scale = width/screen_buffer.width;
 
+  function buildBreakpointsList()
+  {
+    var test_bp = document.createElement("li");
+    test_bp.appendChild(document.createTextNode(getDecodedLine(0xB00)));
+    breakpoint.appendChild(test_bp);
+  }
+
   function normalize(value, align)
   {
     var normal_value = Math.floor(value);

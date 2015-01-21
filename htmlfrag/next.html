@@ -14,6 +14,12 @@
     width: 100%;
     height: auto;
   }
+  nav ul{width:100%;}
+  nav ul{overflow:hidden; overflow-y:scroll;}
+  ul
+  {
+    list-style-type: none;
+  }
 </style>
   
 <script src="js/avrcore.js"></script>
@@ -151,6 +157,14 @@
 <br/>
 </div>
 </div>
+<div style="display: table-cell;">
+<div id="state">
+<nav>
+<ul id="breakpoints" style="background: white">
+</ul>
+</nav>
+</div>
+</div>
 </div>
 </div>
 </body>
@@ -191,10 +205,12 @@
   var screen_canvas = document.getElementById("screen");
   var uart = document.getElementById("uart");
   var debug = document.getElementById("debug");
+  var state = document.getElementById("state");
   var sources = document.getElementById("sources");
   var ports = document.getElementById("ports");
   var default_port_layout = document.getElementById("default");
-  var file_input = document.getElementById('file');
+  var file_input = document.getElementById("file");
+  var breakpoints = document.getElementById("breakpoints")
   var red_color = "#FF0000";
   var green_color = "#00FF00"
   var default_color = "#626269";
@@ -247,6 +263,7 @@
   if(!isTablet() || isPortrait())
   {
       debug.style.display = "none";
+      state.style.display = "none";
   }
 
   var commandHistory = [];
@@ -265,6 +282,7 @@
   uart.style.height = uart_height;
   debug.style.background = default_color;
   debug.style.width = width;
+  state.style.width = width;
   sources.style.background = default_color;
   var sources_height = normalize(height/21, 2);
   sources.style.height = sources_height;
