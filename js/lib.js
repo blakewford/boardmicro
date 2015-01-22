@@ -97,35 +97,65 @@
 
   function initFileInput()
   {
-      file_input.addEventListener('change', function(evt)
-      {
-        var file = file_input.files[0];
-        if(!file)
-        {
-          alert('Intel Hex File Required');
-          return;
-        }
-        var reader = new FileReader();
-        reader.onloadend = function(evt)
-        {
-          if(evt.target.readyState == FileReader.DONE)
+      var useDropbox = (typeof Dropbox != "undefined");
+      if(useDropbox){
+          var options =
           {
-            var bytes = evt.target.result;
-            if( bytes.charCodeAt(0) == 0x7f && bytes[1] == 'E' && bytes[2] == 'L' && bytes[3] == 'F' )
+            success: function(files) {
+                var url = files[0].link;
+                var client = new XMLHttpRequest();
+                client.open("GET", url, true);
+                client.setRequestHeader("Content-Type", "text/plain");
+                client.onreadystatechange = function()
+                {
+                    if(client.readyState==4 && client.status==200)
+                    {
+                      loadMemory(client.responseText);
+                      engineInit();
+                      isPaused = true;
+                      exec();
+                    }
+                }
+                client.send();
+            },
+            linkType: "direct",
+            extensions: ['.hex'],
+         };
+        file_input.style.display = "none";
+        sources.appendChild(Dropbox.createChooseButton(options));
+      }
+      else
+      {
+          file_input.addEventListener('change', function(evt)
+          {
+            var file = file_input.files[0];
+            if(!file)
             {
-              intelhex = getHexFromElf(bytes);
-              buildFrameInfo();
-              buildLineInfo();
-            }else{
-              intelhex = evt.target.result;
+              alert('Intel Hex File Required');
+              return;
             }
-            loadMemory(intelhex);
-            engineInit();
-            exec();
-          }
-        };
-        reader.readAsBinaryString(file.slice(0, file.size));
-      }, false);
+            var reader = new FileReader();
+            reader.onloadend = function(evt)
+            {
+              if(evt.target.readyState == FileReader.DONE)
+              {
+                var bytes = evt.target.result;
+                if( bytes.charCodeAt(0) == 0x7f && bytes[1] == 'E' && bytes[2] == 'L' && bytes[3] == 'F' )
+                {
+                  intelhex = getHexFromElf(bytes);
+                  buildFrameInfo();
+                  buildLineInfo();
+                }else{
+                  intelhex = evt.target.result;
+                }
+                loadMemory(intelhex);
+                engineInit();
+                exec();
+              }
+            };
+            reader.readAsBinaryString(file.slice(0, file.size));
+          }, false);
+      }
   }
 
   function fillCanvas(canvas, color)
