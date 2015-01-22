@@ -14,11 +14,16 @@
     width: 100%;
     height: auto;
   }
-  nav ul{width:100%;}
+  nav ul{width:30%;}
   nav ul{overflow:hidden; overflow-y:scroll;}
   ul
   {
+    margin: 0;
     list-style-type: none;
+  }
+  font
+  {
+    color: white;
   }
 </style>
   
@@ -134,7 +139,10 @@
 <input style="width:0;" type="search" id="uart" size="33"/>
 </div>
 <div style="display: table-cell;">
-<div id="debug">
+<div style="margin: 2" id="debug">
+<font style="font-size:24">Debug Control</font>
+<br>
+<br>
 <button id="gdb_button" onClick="doDebugCommand();">(gdb)</button>
 <input type="search" id="gdb" value="" onkeydown="filterRelevantKeypress()"/>
 <font id="gdbshell"></font>
@@ -158,9 +166,61 @@
 </div>
 </div>
 <div style="display: table-cell;">
-<div id="state">
+<div style="margin: 2" id="state">
+<font style="font-size:24">Program State</font>
+<br>
+<br>
+<input id="mhz" type="search">
+<font>Mhz</font>
+<br>
+<font style="margin-left: 4">Registers</font>
+<div style="display: table">
+<div style="display: table-row;">
+<input id="R0" type="search">
+<input id="R1" type="search">
+<input id="R2" type="search">
+<input id="R3" type="search">
+<input id="R4" type="search">
+<input id="R5" type="search">
+<input id="R6" type="search">
+<input id="R7" type="search">
+</div>
+<div style="display: table-row">
+<input id="R8" type="search">
+<input id="R9" type="search">
+<input id="R10" type="search">
+<input id="R11" type="search">
+<input id="R12" type="search">
+<input id="R13" type="search">
+<input id="R14" type="search">
+<input id="R15" type="search">
+</div>
+<div style="display: table-row">
+<input id="R16" type="search">
+<input id="R17" type="search">
+<input id="R18" type="search">
+<input id="R19" type="search">
+<input id="R20" type="search">
+<input id="R21" type="search">
+<input id="R22" type="search">
+<input id="R23" type="search">
+</div>
+<div style="display: table-row">
+<input id="R24" type="search">
+<input id="R25" type="search">
+<input id="R26" type="search">
+<input id="R27" type="search">
+<input id="R28" type="search">
+<input id="R29" type="search">
+<input id="R30" type="search">
+<input id="R31" type="search">
+</div>
+</div>
+<font style="margin-left: 4">Memory</font>
+<input id="memory" type="search"></input>
+<font style="margin-left: 4">Breakpoints</font>
 <nav>
-<ul id="breakpoints" style="background: white">
+<ul id="breakpoints" style="background: white" multiple>
 </ul>
 </nav>
 </div>
@@ -201,7 +261,41 @@
   var F6 = document.getElementById('F6');
   var F7 = document.getElementById('F7');
 
+  var R0 = document.getElementById('R0');
+  var R1 = document.getElementById('R1');
+  var R2 = document.getElementById('R2');
+  var R3 = document.getElementById('R3');
+  var R4 = document.getElementById('R4');
+  var R5 = document.getElementById('R5');
+  var R6 = document.getElementById('R6');
+  var R7 = document.getElementById('R7');
+  var R8 = document.getElementById('R8');
+  var R9 = document.getElementById('R9');
+  var R10 = document.getElementById('R10');
+  var R11 = document.getElementById('R11');
+  var R12 = document.getElementById('R12');
+  var R13 = document.getElementById('R13');
+  var R14 = document.getElementById('R14');
+  var R15 = document.getElementById('R15');
+  var R16 = document.getElementById('R16');
+  var R17 = document.getElementById('R17');
+  var R18 = document.getElementById('R18');
+  var R19 = document.getElementById('R19');
+  var R20 = document.getElementById('R20');
+  var R21 = document.getElementById('R21');
+  var R22 = document.getElementById('R22');
+  var R23 = document.getElementById('R23');
+  var R24 = document.getElementById('R24');
+  var R25 = document.getElementById('R25');
+  var R26 = document.getElementById('R26');
+  var R27 = document.getElementById('R27');
+  var R28 = document.getElementById('R28');
+  var R29 = document.getElementById('R29');
+  var R30 = document.getElementById('R30');
+  var R31 = document.getElementById('R31');
+
   var layout = document.getElementById('layout');
+  var memory = document.getElementById('memory');
   var screen_canvas = document.getElementById("screen");
   var uart = document.getElementById("uart");
   var debug = document.getElementById("debug");
@@ -218,7 +312,7 @@
   var screen_driver = document.createElement("script");
   var gdb_window = document.getElementById("gdb");
   var result_window = document.getElementById("gdbshell");
-
+  var mhz = document.getElementById("mhz");
   // Platform specific
   var num_ports = 5
   var port_width = 8;
@@ -276,6 +370,51 @@
 
   // Essential layout functions
   all.style.background = default_color;
+  var registerWidth = (width/8)-1;
+  breakpoints.style.marginLeft = 4;
+  breakpoints.style.height = height/8;
+  memory.style.width = registerWidth*8;
+  memory.style.marginLeft = 4;
+  mhz.style.marginLeft = 4;
+  mhz.style.width = registerWidth;
+
+  R0.style.width = registerWidth;
+  R0.style.marginLeft = 4;
+  R1.style.width = registerWidth;
+  R2.style.width = registerWidth;
+  R3.style.width = registerWidth;
+  R4.style.width = registerWidth;
+  R5.style.width = registerWidth;
+  R6.style.width = registerWidth;
+  R7.style.width = registerWidth;
+  R8.style.width = registerWidth;
+  R8.style.marginLeft = 4;
+  R9.style.width = registerWidth;
+  R10.style.width = registerWidth;
+  R11.style.width = registerWidth;
+  R12.style.width = registerWidth;
+  R13.style.width = registerWidth;
+  R14.style.width = registerWidth;
+  R15.style.width = registerWidth;
+  R16.style.width = registerWidth;
+  R16.style.marginLeft = 4;
+  R17.style.width = registerWidth;
+  R18.style.width = registerWidth;
+  R19.style.width = registerWidth;
+  R20.style.width = registerWidth;
+  R21.style.width = registerWidth;
+  R22.style.width = registerWidth;
+  R23.style.width = registerWidth;
+  R24.style.width = registerWidth;
+  R24.style.marginLeft = 4;
+  R25.style.width = registerWidth;
+  R26.style.width = registerWidth;
+  R27.style.width = registerWidth;
+  R28.style.width = registerWidth;
+  R29.style.width = registerWidth;
+  R30.style.width = registerWidth;
+  R31.style.width = registerWidth;
+
   layout.style.width = width;
   uart.style.width = width;
   var uart_height = normalize(height/25, 2);
