@@ -218,7 +218,7 @@
 </div>
 </div>
 <font style="margin-left: 4">Memory</font>
-<input id="memory" type="search"></input>
+<textarea id="disasm" type="search"></textarea>
 <font style="margin-left: 4">Breakpoints</font>
 <nav>
 <ul id="breakpoints" style="background: white" multiple>
@@ -296,7 +296,7 @@
   var R31 = document.getElementById('R31');
 
   var layout = document.getElementById('layout');
-  var memory = document.getElementById('memory');
+  var disasm = document.getElementById('disasm');
   var screen_canvas = document.getElementById("screen");
   var uart = document.getElementById("uart");
   var debug = document.getElementById("debug");
@@ -374,8 +374,9 @@
   var registerWidth = (width/8)-1;
   breakpoints.style.marginLeft = 4;
   breakpoints.style.height = height/8;
-  memory.style.width = registerWidth*8;
-  memory.style.marginLeft = 4;
+  disasm.style.width = registerWidth*8;
+  disasm.style.height = height/8;
+  disasm.style.marginLeft = 4;
   mhz.style.marginLeft = 4;
   mhz.style.width = registerWidth;
 
@@ -435,7 +436,6 @@
   setupActivePorts();
   setupInactivePorts();
   initFileInput();
-
   if("undefined" != typeof GetCustomLayout)
   {
     customizePortsLayout(GetCustomLayout());

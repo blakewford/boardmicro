@@ -401,6 +401,17 @@
       }
   }
 
+  function writeMemoryWindow()
+  {
+    var i = SP;
+    disasm.value = "";
+    while(i < flashStart)
+    {
+      disasm.value += memory[i].toString(16) + " ";
+      i++;
+    }
+  }
+
   function doDebugCommand()
   {
       var command = gdb_window.value;
@@ -408,6 +419,7 @@
       historyIndex = commandHistory.length-1;
       handleDebugCommandString(command);
       gdb_window.value = "";
+      writeMemoryWindow();
       gdb_window.focus();
   }
 
