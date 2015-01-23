@@ -6,6 +6,11 @@
   screen_buffer.height = nokiaScreen ? 48: 128;
   var scale = width/screen_buffer.width;
 
+  function reportMhz(mhz)
+  {
+    document.getElementById("mhz").value = mhz.toString();
+  }
+
   function buildBreakpointsList()
   {
     var test_bp = document.createElement("li");

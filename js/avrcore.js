@@ -30,6 +30,8 @@ function drawPixel(c, b, d) {
 }
 function refreshScreen() {
 }
+function reportMhz(mhz) {
+}
 function flushPixelBuffer() {
   if(0 < pixelQueue.length)
   {
@@ -1361,7 +1363,8 @@ function loop() {
     }
   }
   var end = new Date().getTime();
-  console.log((end - start)/batchSize);
+  var mhz = (batchSize/(end-start))/1000;
+  reportMhz(mhz);
   flushPixelBuffer();
   b && setTimeout(loop, batchDelay);
 }
