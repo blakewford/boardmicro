@@ -94,6 +94,7 @@ firefox: chrome
 
 desktop.js: $(TARGET).html
 	cat js/avrcore.js > $@
+	cat js/libdesktop.js >> $@
 	echo 'var target = "$(TARGET)";' >> $@;
 	printf 'var hex = "' >> $@
 	tr '\r\n' '\\n' < $(BASENAME).hex >> $@

@@ -18,6 +18,8 @@
 
 var timedInstructions, scalerTicks = 64, timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory,
 flashStart, dataStart, dataEnd, ioRegStart, portB, pinB = 57005, pinBTimer, portC, pinC = 57005, pinCTimer, portD, pinD = 57005, pinDTimer, portE, pinE = 57005, pinETimer, portF, pinF = 57005, pinFTimer, pllCsr, bitsPerPort, vectorBase, usbVectorBase, signatureOffset, jumpTableAddress, mainAddress, PC, optimizationEnabled, forceOptimizationEnabled = !1, disableUARTInterrupt = !1, batchSize = 1E4, inputCycles = 2E5, batchDelay = 0, adcValue = 42, disableHardware = !1, nativeFlag, spipinport1, spipinport2;
+
+// Client Callbacks
 function initScreen() {
 }
 function writeDMARegion(c, b) {
@@ -32,6 +34,15 @@ function refreshScreen() {
 }
 function reportMhz(mhz) {
 }
+function popPortBuffer(c, b) {
+  c.shift();
+}
+function setPin(c, b) {
+}
+function handleBreakpoint(c) {
+}
+//
+
 function flushPixelBuffer() {
   if(0 < pixelQueue.length)
   {
@@ -45,12 +56,6 @@ function flushPixelBuffer() {
     }
     pixelQueue.length = 0;
   }
-}
-function popPortBuffer(c, b) {
-  isNode() && console.log(c[0]);
-  c.shift();
-}
-function setPin(c, b) {
 }
 function handlePinInput( pinNumber )
 {
@@ -87,12 +92,6 @@ function handlePinInput( pinNumber )
         pinFTimer = inputCycles;
      }
      writeMemory(inputPort, mask);
-}
-function getStackDump() {
-  for (var c = " ", b = SP;b < flashStart;) {
-    c += "0x" + readMemory(b).toString(16).toUpperCase() + " ", b++;
-  }
-  return c;
 }
 function setDebugResult(c) {
   isNative() && Android.setDebugResult(c);
@@ -249,8 +248,10 @@ function handleDebugCommandString(c) {
   }
 }
 function initCore() {
-  "attiny4" === target ? (memory = Array(17408), flashStart = 16384, dataStart = 64, dataEnd = 96, ioRegStart = 0, portB = 2, spr = 16894, udr = 16895, bitsPerPort = 4, SPH = 62, SPL = 61, spsr = udri = ucsra = ucsrb = spmCr = pllCsr = portF = portE = portD = portC = 57005) : "atmega8" === target ? (memory = Array(8192), flashStart = 1120, dataStart = 96, dataEnd = 1120, ioRegStart = 32, portB = 56, portC = 53, portD = 50, spmCr = 87, sdr = 47, spsr = 46, udr = 44, udri = 24, ucsra = 43, ucsrb = 
-  42, bitsPerPort = 8, pllCsr = portF = portE = 57005) : "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = 46, pinE = 44, portF = 49, pinF = 47, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, spipinport1 = 2, spipinport2 = 3, DMA = 32758) : "atmega328" === target ? (scalerTicks = 4, memory = Array(32768), spipinport1 = 1, spipinport2 = 1, timerInterrupt = 64, flashStart = 2304, dataStart = 256, dataEnd = 2304, SP = 2303, DMA = 32758, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = pinE = portF = pinF = 57005, spmCr = 87, sdr = 78, spsr = 77, udr = 198, udri = 76, ucsra = 192, ucsrb = 193, pllCsr = 57005, bitsPerPort = 8) : alert("Failed! Unknown target");
+  "atmega32u4" === target ? (memory = Array(32768), flashStart = 2816, dataStart = 256, dataEnd = 2816, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = 46, pinE = 44, portF = 49, pinF = 47, spmCr = 87, sdr = 78, spsr = 77, udr = 206, udri = 104, ucsra = 200, ucsrb = 201, pllCsr = 73, bitsPerPort = 8, SP = 2815, spipinport1 = 2, spipinport2 = 3, DMA = 32758):
+  "atmega328"  === target ? (scalerTicks = 4, memory = Array(32768), spipinport1 = 1, spipinport2 = 1, timerInterrupt = 64, flashStart = 2304, dataStart = 256, dataEnd = 2304, SP = 2303, DMA = 32758, ioRegStart = 32, portB = 37, pinB = 35, portC = 40, pinC = 38, portD = 43, pinD = 41, portE = pinE = portF = pinF = 57005, spmCr = 87, sdr = 78, spsr = 77, udr = 198, udri = 76, ucsra = 192, ucsrb = 193, pllCsr = 57005, bitsPerPort = 8):
+  alert("Failed! Unknown target");
+
   optimizationEnabled = !1;
   PC = flashStart;
   SREG = ioRegStart + 63;
@@ -265,7 +266,6 @@ function initCore() {
   memory[ucsra] = 32;
   memory[ucsrb] = 32;
   memory[spsr] = 128;
-  "attiny4" === target && (memory[16320] = simulationManufacturerID, memory[16321] = 143, memory[16322] = 10);
 }
 function writeClockRegister(c) {
   memory[pllCsr] = 0 < (c & 2) ? memory[pllCsr] | 1 : memory[pllCsr] & 254;
@@ -311,22 +311,19 @@ function writeSpecificPort(c) {
   switch(c) {
     case 0:
       b = dataQueueB;
-      isNode() && console.log("PortB");
       break;
     case 1:
       b = dataQueueC;
-      isNode() && console.log("PortC");
       break;
     case 2:
       b = dataQueueD;
-      isNode() && console.log("PortD");
       break;
     case 3:
       b = dataQueueE;
-      isNode() && console.log("PortE");
       break;
     case 4:
-      b = dataQueueF, isNode() && console.log("PortF");
+      b = dataQueueF;
+      break;
   }
   isNative() && (!forceOptimizationEnabled || 8 * spipinport1 != d && 8 * spipinport2 != d) && Android.writePort(c, b[0]);
   popPortBuffer(b, d);
@@ -1315,9 +1312,6 @@ function fetch(c, b) {
   memory[ADCSRA] &= 191;
   memory[ucsrb] |= 32;
   memory[spsr] |= 128;
-}
-function handleBreakpoint(c) {
-  isNode() ? console.log("Breakpoint at 0x" + c) : alert("Breakpoint at 0x" + c);
 }
 function isSoftBreakpoint(c) {
   for (i = 0;i < softBreakpoints.length;i++) {
