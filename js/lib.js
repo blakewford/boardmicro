@@ -412,6 +412,42 @@
     }
   }
 
+  function writeRegisterWindow()
+  {
+      R0.value = "0x"+r[0].toString(16);
+      R1.value = "0x"+r[1].toString(16);
+      R2.value = "0x"+r[2].toString(16);
+      R3.value = "0x"+r[3].toString(16);
+      R4.value = "0x"+r[4].toString(16);
+      R5.value = "0x"+r[5].toString(16);
+      R6.value = "0x"+r[6].toString(16);
+      R7.value = "0x"+r[7].toString(16);
+      R8.value = "0x"+r[8].toString(16);
+      R9.value = "0x"+r[9].toString(16);
+      R10.value = "0x"+r[10].toString(16);
+      R11.value = "0x"+r[11].toString(16);
+      R12.value = "0x"+r[12].toString(16);
+      R13.value = "0x"+r[13].toString(16);
+      R14.value = "0x"+r[14].toString(16);
+      R15.value = "0x"+r[15].toString(16);
+      R16.value = "0x"+r[16].toString(16);
+      R17.value = "0x"+r[17].toString(16);
+      R18.value = "0x"+r[18].toString(16);
+      R19.value = "0x"+r[19].toString(16);
+      R20.value = "0x"+r[20].toString(16);
+      R21.value = "0x"+r[21].toString(16);
+      R22.value = "0x"+r[22].toString(16);
+      R23.value = "0x"+r[23].toString(16);
+      R24.value = "0x"+r[24].toString(16);
+      R25.value = "0x"+r[25].toString(16);
+      R26.value = "0x"+r[26].toString(16);
+      R27.value = "0x"+r[27].toString(16);
+      R28.value = "0x"+r[28].toString(16);
+      R29.value = "0x"+r[29].toString(16);
+      R30.value = "0x"+r[30].toString(16);
+      R31.value = "0x"+r[31].toString(16);
+  }
+
   function doDebugCommand()
   {
       var command = gdb_window.value;
@@ -420,6 +456,7 @@
       handleDebugCommandString(command);
       gdb_window.value = "";
       writeMemoryWindow();
+      writeRegisterWindow();
       gdb_window.focus();
   }
 
