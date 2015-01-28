@@ -34,6 +34,8 @@ function refreshScreen() {
 }
 function reportMhz(mhz) {
 }
+function reportCallFrame(frame) {
+}
 function popPortBuffer(c, b) {
   c.shift();
 }
@@ -157,7 +159,7 @@ function backtrace(address) {
     else
       i++;
   }
-  console.log(getDecodedLine(address));
+  reportCallFrame(getDecodedLine(address));
   if(found)
   {
     grabRegisters = false;
@@ -235,7 +237,7 @@ function getDecodedLine(address) {
   while( "undefined" == typeof info && address > flashStart && offset < 128 )
     info = sourceLines[address - flashStart - offset++];
   if( "undefined" == typeof info )
-    info = "$PC = 0x" + (address - flashStart).toString(16);
+    info = "0x" + (address - flashStart).toString(16);
   return info;
 }
 function handleDebugCommandString(c) {

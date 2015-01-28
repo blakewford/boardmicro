@@ -11,11 +11,8 @@
     document.getElementById("mhz").value = mhz.toString();
   }
 
-  function buildBreakpointsList()
+  function reportCallFrame(frame)
   {
-    var test_bp = document.createElement("li");
-    test_bp.appendChild(document.createTextNode(getDecodedLine(0xB00)));
-    breakpoint.appendChild(test_bp);
   }
 
   function normalize(value, align)
@@ -448,6 +445,26 @@
       R31.value = "0x"+r[31].toString(16);
   }
 
+  function writeBreakpointWindow()
+  {
+    while(breakpoints.firstChild)
+    {
+        breakpoints.removeChild(breakpoints.firstChild);
+    }
+    var i = softBreakpoints.length;
+    while(i--)
+    {
+        var address = softBreakpoints[i]+flashStart;
+        var breakpoint = document.createElement("li");
+        if( PC == address )
+        {
+            breakpoint.style.background = "red";
+        }
+        breakpoint.appendChild(document.createTextNode(getDecodedLine(address)));
+        breakpoints.appendChild(breakpoint);
+    }
+  }
+
   function doDebugCommand()
   {
       var command = gdb_window.value;
@@ -457,6 +474,7 @@
       gdb_window.value = "";
       writeMemoryWindow();
       writeRegisterWindow();
+      writeBreakpointWindow();
       gdb_window.focus();
   }
 

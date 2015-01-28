@@ -26,3 +26,7 @@ function handleBreakpoint(c)
   console.log("Breakpoint at 0x" + c);
 }
 
+function reportCallFrame(frame)
+{
+  console.log(frame);
+}
