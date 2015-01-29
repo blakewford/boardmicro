@@ -14,7 +14,7 @@
     width: 100%;
     height: auto;
   }
-  nav ul{width:30%;}
+  nav ul{width:50%;}
   nav ul{overflow:hidden; overflow-y:scroll;}
   ul
   {
@@ -224,6 +224,11 @@
 <ul id="breakpoints" style="background: white" multiple>
 </ul>
 </nav>
+<font style="margin-left: 4">Call Stack</font>
+<nav>
+<ul id="callstack" style="background: white" multiple>
+</ul>
+</nav>
 </div>
 </div>
 </div>
@@ -305,7 +310,8 @@
   var ports = document.getElementById("ports");
   var default_port_layout = document.getElementById("default");
   var file_input = document.getElementById("file");
-  var breakpoints = document.getElementById("breakpoints")
+  var breakpoints = document.getElementById("breakpoints");
+  var callstack = document.getElementById("callstack");
   var red_color = "#FF0000";
   var green_color = "#00FF00"
   var default_color = "#626269";
@@ -379,6 +385,8 @@
   var registerWidth = (width/8)-1;
   breakpoints.style.marginLeft = 4;
   breakpoints.style.height = height/8;
+  callstack.style.marginLeft = 4;
+  callstack.style.height = height/8;
   disasm.style.width = registerWidth*8;
   disasm.style.height = height/8;
   disasm.style.marginLeft = 4;

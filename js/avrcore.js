@@ -246,7 +246,7 @@ function handleDebugCommandString(c) {
     setDebugResult(c.substring(1) + ": 0x" + b.substring(0, 2));
   } else {
     "p" == c.substring(0, 1) ? (b = 0, "$PC" == c.substring(2) ? b = (PC - flashStart).toString(16) : "$SREG" == c.substring(2) ? b = readMemory(SREG).toString(16) : "$SP" == c.substring(2) ? b = readMemory(SPH).toString(16) + readMemory(SPL).toString(16) : "$r" == c.substring(2, 4) && (b = r[parseInt(c.substring(4), 10)].toString(16)), setDebugResult(c.substring(2) + " = 0x" + b)) : "c" == c.substring(0, 1) ? (setDebugResult("Continuing"), exec()) : "s" == c.substring(0, 1) ? (forceBreak = !0, exec(), 
-    setDebugResult(getDecodedLine(PC)), backtrace(PC)) : "delete" == c ? (softBreakpoints = [], setDebugResult("Cleared Breakpoints")) : "break" == c.substring(0, 5) && "*" == c.substring(6, 7) && softBreakpoints.push(parseInt(c.substring(7), 16));
+    setDebugResult(getDecodedLine(PC))) : "delete" == c ? (softBreakpoints = [], setDebugResult("Cleared Breakpoints")) : "break" == c.substring(0, 5) && "*" == c.substring(6, 7) && softBreakpoints.push(parseInt(c.substring(7), 16));
   }
 }
 function initCore() {

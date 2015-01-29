@@ -13,6 +13,9 @@
 
   function reportCallFrame(frame)
   {
+        var callframe = document.createElement("li");
+        callframe.appendChild(document.createTextNode(frame));
+        callstack.appendChild(callframe);
   }
 
   function normalize(value, align)
@@ -458,7 +461,7 @@
         var breakpoint = document.createElement("li");
         if( PC == address )
         {
-            breakpoint.style.background = "red";
+            breakpoint.style.color = "red";
         }
         breakpoint.appendChild(document.createTextNode(getDecodedLine(address)));
         breakpoints.appendChild(breakpoint);
@@ -475,6 +478,11 @@
       writeMemoryWindow();
       writeRegisterWindow();
       writeBreakpointWindow();
+      while(callstack.firstChild)
+      {
+        callstack.removeChild(callstack.firstChild);
+      }
+      backtrace(PC);
       gdb_window.focus();
   }
 
