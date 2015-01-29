@@ -55,7 +55,6 @@ endif
 	cp js/elfcore.js boardmicro.starlo.org/js
 	cp js/lib.js boardmicro.starlo.org/js
 	cp js/scratch.js boardmicro.starlo.org/js
-	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
 
 .PHONY $(TARGET).html: $(BASENAME).hex
 	cat htmlfrag/license > $@
@@ -90,6 +89,7 @@ endif
 	cd android; ant debug
 
 firefox: chrome
+	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
 	cd boardmicro.starlo.org; zip -r boardmicro.zip .
 
 desktop.js: $(TARGET).html

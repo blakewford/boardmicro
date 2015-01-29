@@ -14,7 +14,7 @@
     width: 100%;
     height: auto;
   }
-  nav ul{width:50%;}
+  nav ul{width:65%;}
   nav ul{overflow:hidden; overflow-y:scroll;}
   ul
   {
@@ -217,18 +217,26 @@
 <input id="R31" type="search">
 </div>
 </div>
-<font style="margin-left: 4">Memory</font>
+<font style="margin-left: 4">SRAM</font>
 <textarea id="disasm" type="search"></textarea>
+<div id="addresses" style="display: table">
+<div style="display: table-row">
+<div style="display: table-cell">
 <font style="margin-left: 4">Breakpoints</font>
 <nav>
 <ul id="breakpoints" style="background: white" multiple>
 </ul>
 </nav>
+</div>
+<div style="display: table-cell">
 <font style="margin-left: 4">Call Stack</font>
 <nav>
 <ul id="callstack" style="background: white" multiple>
 </ul>
 </nav>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -312,6 +320,7 @@
   var file_input = document.getElementById("file");
   var breakpoints = document.getElementById("breakpoints");
   var callstack = document.getElementById("callstack");
+  var addresses = document.getElementById("addresses");
   var red_color = "#FF0000";
   var green_color = "#00FF00"
   var default_color = "#626269";
@@ -347,6 +356,7 @@
     return !isTablet();
   }
 
+  var scale = 1;
   var width = screen.width > max_width ? max_width: screen.width;
   var height = screen.height > max_height ? max_height: screen.height;
 
@@ -357,6 +367,7 @@
 
   if(isTablet() && isLandscape())
   {
+      scale = 0.9;
       width = screen.width*1/3;
       height = screen.height;
   }
@@ -366,8 +377,6 @@
       debug.style.display = "none";
       state.style.display = "none";
   }
-
-  var scale = 0.9;
 
   width = width*scale;
   height = height*scale;
@@ -383,6 +392,7 @@
   // Essential layout functions
   all.style.background = default_color;
   var registerWidth = (width/8)-1;
+  addresses.style.width = registerWidth*8;
   breakpoints.style.marginLeft = 4;
   breakpoints.style.height = height/8;
   callstack.style.marginLeft = 4;
