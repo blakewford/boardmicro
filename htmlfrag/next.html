@@ -569,10 +569,11 @@
 
   var max_width = 480;
   var max_height = 720;
+  var use_orientation = "undefined" != typeof window.orientation;
 
   function isLandscape()
   {
-    if("undefined" != typeof window.orientation)
+    if(use_orientation)
     {
       return Math.abs(window.orientation) == 90;
     }
@@ -608,9 +609,17 @@
 
   if(isTablet() && isLandscape())
   {
-      scale = 0.9;
+    scale = 0.9;
+    if(use_orientation)
+    {
+      height = screen.width;
+      width = screen.height*1/3;
+    }
+    else
+    {
       width = screen.width*1/3;
       height = screen.height;
+    }
   }
 
   if(!isTablet() || isPortrait())
