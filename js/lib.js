@@ -49,7 +49,7 @@
      initPort(port_id, port_height);
      var pin = document.getElementById(port_id);
      var device_width = (pin.width*port_width)+port_width;
-     pin.width += width-device_width;
+     pin.width += width-device_width-1;
   }
 
   function initPorts(port_height)
