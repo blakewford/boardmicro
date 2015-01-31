@@ -88,10 +88,6 @@ endif
 	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
-firefox: chrome
-	cp android/res/drawable-mdpi/icon.png boardmicro.starlo.org/style/icons/48/icon.png
-	cd boardmicro.starlo.org; zip -r boardmicro.zip .
-
 desktop.js: $(TARGET).html
 	cat js/avrcore.js > $@
 	cat js/libdesktop.js >> $@
@@ -110,7 +106,7 @@ upload: $(BASENAME).hex
 
 clean: 
 	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html js/scratch.js
-	-@rm boardmicro.starlo.org/boardmicro.zip boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/elfcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/nokia_spi_driver.js boardmicro.starlo.org/js/scratch.js
+	-@rm boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/elfcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/nokia_spi_driver.js boardmicro.starlo.org/js/scratch.js
 	cd android; ant clean
 	-@rm android/AndroidManifest.xml
 	-@rm android/src/org/starlo/boardmicro/BoardMicroActivity.java

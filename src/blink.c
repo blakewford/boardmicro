@@ -24,11 +24,6 @@ char finalValue = 0xF;
 int
 main (void)
 {
-#ifdef attiny4
-  //__do_copy_data
-  asm ("ldi r16, 0xF");
-  asm ("sts 0x40, r16 ");
-#endif
   bssValue = finalValue;
   //Set as output pin
   DDRB = _BV (3);
