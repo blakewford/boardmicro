@@ -45,19 +45,18 @@ $(BASENAME).bin: $(BASENAME).elf
 	avr-objcopy -I elf32-avr -O binary $(BASENAME).elf $(BASENAME).bin
 
 chrome: $(TARGET).html
-	cp $(TARGET).html boardmicro.starlo.org/index.html
-	cp js/avrcore.js boardmicro.starlo.org/js
+	cp $(TARGET).html chromeExt/index.html
+	cp js/avrcore.js chromeExt/js
 ifeq ($(TARGET),atmega328)
-	cp js/nokia_spi_driver.js boardmicro.starlo.org/js
+	cp js/nokia_spi_driver.js chromeExt/js
 else
-	cp js/tft_spi_driver.js boardmicro.starlo.org/js
+	cp js/tft_spi_driver.js chromeExt/js
 endif
-	cp js/elfcore.js boardmicro.starlo.org/js
-	cp js/lib.js boardmicro.starlo.org/js
-	cp js/scratch.js boardmicro.starlo.org/js
+	cp js/elfcore.js chromeExt/js
+	cp js/lib.js chromeExt/js
+	cp js/scratch.js chromeExt/js
 
 .PHONY $(TARGET).html: $(BASENAME).hex
-	cat htmlfrag/license > $@
 	cat htmlfrag/next.html >> $@
 	echo 'var target = "$(TARGET)";' > js/scratch.js
 	cat js/$(TARGET)_port_supplier.js >> js/scratch.js
@@ -72,7 +71,6 @@ else
 	ln -f android/BoardMicroActivity.java android/src/org/starlo/boardmicro/BoardMicroActivity.java
 	ln -f android/DebugActivity.java android/src/org/starlo/boardmicro/DebugActivity.java
 endif
-	cat htmlfrag/license > $@.html
 	echo '<script type="text/javascript">var target = "$(TARGET)";</script>' >> $@.html;
 	echo '<script>' >> $@.html
 	cat js/elfcore.js >> $@.html
@@ -105,8 +103,8 @@ upload: $(BASENAME).hex
 	avrdude -c avr109 -p$(TARGET) -P/dev/ttyACM0 -Uflash:w:$<:i -b 57600
 
 clean: 
-	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html boardmicro.starlo.org/index.html js/scratch.js
-	-@rm boardmicro.starlo.org/js/avrcore.js boardmicro.starlo.org/js/elfcore.js boardmicro.starlo.org/js/lib.js boardmicro.starlo.org/js/tft_spi_driver.js boardmicro.starlo.org/js/nokia_spi_driver.js boardmicro.starlo.org/js/scratch.js
+	-@rm *.elf *.dis *.hex *.html *.o *.a *.bin *.js android/assets/avrcore.html chromeExt/index.html js/scratch.js
+	-@rm chromeExt/js/avrcore.js chromeExt/js/elfcore.js chromeExt/js/lib.js chromeExt/js/tft_spi_driver.js chromeExt/js/nokia_spi_driver.js chromeExt/js/scratch.js
 	cd android; ant clean
 	-@rm android/AndroidManifest.xml
 	-@rm android/src/org/starlo/boardmicro/BoardMicroActivity.java
