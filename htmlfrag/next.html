@@ -572,7 +572,14 @@
 
   function isLandscape()
   {
-    return screen.width > screen.height;
+    if("undefined" != typeof window.orientation)
+    {
+      return Math.abs(window.orientation) == 90;
+    }
+    else
+    {
+      return screen.width > screen.height;
+    }
   }
 
   function isPortrait()
