@@ -30,3 +30,12 @@ function reportCallFrame(frame)
 {
   console.log(frame);
 }
+
+function getCommandLineArgs()
+{
+  var length = process.argv.length;
+  while(length--)
+  {
+    console.log(process.argv[length]);
+  }
+}

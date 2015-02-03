@@ -80,6 +80,7 @@ desktop.js:
 	printf 'var hex = "' >> $@
 	tr '\r\n' '\\n' < $(BASENAME).hex >> $@
 	printf '";\n' >> $@
+	echo 'getCommandLineArgs();' >> $@
 	echo 'loadMemory(hex);' >> $@
 	echo 'engineInit();' >> $@
 	echo 'exec();' >> $@
