@@ -39,3 +39,17 @@ function getCommandLineArgs()
     console.log(process.argv[length]);
   }
 }
+
+var fileSystem = require('fs');
+fileSystem.readFile(process.argv[process.argv.length-1], 'utf8',
+  function(error, hex)
+  {
+    if(error)
+    {
+      return console.log(error);
+    }
+    loadMemory(hex);
+    engineInit();
+    exec();
+  }
+);

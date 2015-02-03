@@ -77,13 +77,6 @@ desktop.js: $(BASENAME).hex
 	cat js/avrcore.js > $@
 	cat js/libdesktop.js >> $@
 	echo 'var target = "$(TARGET)";' >> $@;
-	printf 'var hex = "' >> $@
-	tr '\r\n' '\\n' < $(BASENAME).hex >> $@
-	printf '";\n' >> $@
-	echo 'getCommandLineArgs();' >> $@
-	echo 'loadMemory(hex);' >> $@
-	echo 'engineInit();' >> $@
-	echo 'exec();' >> $@
 
 upload: $(BASENAME).hex
 	python reset.py /dev/ttyACM0
