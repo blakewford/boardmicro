@@ -73,7 +73,7 @@ endif
 	cp $@.html ./android/assets/avrcore.html
 	cd android; ant debug
 
-desktop.js:
+desktop.js: $(BASENAME).hex
 	cat js/avrcore.js > $@
 	cat js/libdesktop.js >> $@
 	echo 'var target = "$(TARGET)";' >> $@;
