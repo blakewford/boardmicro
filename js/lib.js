@@ -15,6 +15,10 @@
   {
         var callframe = document.createElement("li");
         callframe.appendChild(document.createTextNode(frame));
+        callframe.addEventListener('click', function()
+        {
+            source_dialog.showModal();
+        });
         callstack.appendChild(callframe);
   }
 
@@ -128,6 +132,26 @@
          };
         file_input.style.display = "none";
         sources.appendChild(Dropbox.createChooseButton(options));
+          options =
+          {
+            success: function(files) {
+                var url = files[0].link;
+                var client = new XMLHttpRequest();
+                client.open("GET", url, true);
+                client.setRequestHeader("Content-Type", "text/plain");
+                client.onreadystatechange = function()
+                {
+                    if(client.readyState==4 && client.status==200)
+                    {
+                      debug_source.value = client.responseText;
+                    }
+                }
+                client.send();
+            },
+            linkType: "direct",
+            extensions: ['.c','.cpp'],
+         };
+        source_dialog.insertBefore(Dropbox.createChooseButton(options), source_dialog.childNodes[0]);
       }
       else
       {

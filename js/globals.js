@@ -62,6 +62,8 @@ var R29 = document.getElementById('R29');
 var R30 = document.getElementById('R30');
 var R31 = document.getElementById('R31');
 
+var debug_source = document.getElementById('debug_source');
+var source_dialog = document.getElementById('source_dialog');
 var layout = document.getElementById('layout');
 var disasm = document.getElementById('disasm');
 var screen_canvas = document.getElementById("screen");
