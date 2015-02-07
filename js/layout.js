@@ -68,7 +68,8 @@ initPorts(port_height);
 setupActivePorts();
 setupInactivePorts();
 initFileInput();
-if("undefined" != typeof GetCustomLayout)
+var dialog_supported = document.createElement('dialog').open;
+if("undefined" != typeof dialog_supported)
 {
-  customizePortsLayout(GetCustomLayout());
+    source_dialog.hidden = false;
 }
