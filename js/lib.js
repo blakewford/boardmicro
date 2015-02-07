@@ -11,15 +11,41 @@
     document.getElementById("mhz").value = mhz.toString();
   }
 
+  var selected;
+  var frameSource = [];
   function reportCallFrame(frame)
   {
         var callframe = document.createElement("li");
         callframe.appendChild(document.createTextNode(frame));
         callframe.addEventListener('click', function()
         {
+            var source;
+            var index = frameSource.length;
+            while(index--)
+            {
+              if(frameSource[index].frame == frame)
+              {
+                  source = frameSource[index];
+                  debug_source.value = source.text;
+              }
+            }
+            if(typeof source == "undefined")
+            {
+              source = {};
+              source.frame = frame;
+              source.text = "";
+            }
+            selected = source;
             source_dialog.showModal();
         });
         callstack.appendChild(callframe);
+  }
+
+  function closeDialog()
+  {
+    selected = null;
+    debug_source.value = "";
+    source_dialog.close();
   }
 
   function normalize(value, align)
@@ -119,6 +145,7 @@
                 {
                     if(client.readyState==4 && client.status==200)
                     {
+                      frameSource = [];
                       loadMemory(client.responseText);
                       engineInit();
                       isPaused = true;
@@ -132,25 +159,27 @@
          };
         file_input.style.display = "none";
         sources.appendChild(Dropbox.createChooseButton(options));
-          options =
+        options =
+        {
+          success: function(files) {
+          var url = files[0].link;
+          var client = new XMLHttpRequest();
+          client.open("GET", url, true);
+          client.setRequestHeader("Content-Type", "text/plain");
+          client.onreadystatechange = function()
           {
-            success: function(files) {
-                var url = files[0].link;
-                var client = new XMLHttpRequest();
-                client.open("GET", url, true);
-                client.setRequestHeader("Content-Type", "text/plain");
-                client.onreadystatechange = function()
-                {
-                    if(client.readyState==4 && client.status==200)
-                    {
-                      debug_source.value = client.responseText;
-                    }
-                }
-                client.send();
-            },
-            linkType: "direct",
-            extensions: ['.c','.cpp'],
-         };
+            if(client.readyState==4 && client.status==200)
+            {
+              selected.text = client.responseText;
+              frameSource.push(selected);
+              debug_source.value = selected.text;
+            }
+          }
+          client.send();
+          },
+          linkType: "direct",
+          extensions: ['.c','.cpp'],
+        };
         source_dialog.insertBefore(Dropbox.createChooseButton(options), source_dialog.childNodes[0]);
       }
       else
@@ -177,6 +206,7 @@
                 }else{
                   intelhex = evt.target.result;
                 }
+                frameSource = [];
                 loadMemory(intelhex);
                 engineInit();
                 exec();

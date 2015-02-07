@@ -73,3 +73,7 @@ if("undefined" != typeof dialog_supported)
 {
     source_dialog.hidden = false;
 }
+if("undefined" != typeof GetCustomLayout)
+{
+    customizePortsLayout(GetCustomLayout());
+}
