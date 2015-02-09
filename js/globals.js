@@ -74,6 +74,7 @@ var sources = document.getElementById("sources");
 var ports = document.getElementById("ports");
 var default_port_layout = document.getElementById("default");
 var file_input = document.getElementById("file");
+var source_input = document.getElementById("source");
 var breakpoints = document.getElementById("breakpoints");
 var callstack = document.getElementById("callstack");
 var addresses = document.getElementById("addresses");

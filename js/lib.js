@@ -179,6 +179,7 @@
           linkType: "direct",
           extensions: ['.c','.cpp'],
         };
+        source_input.style.display = "none";
         source_dialog.insertBefore(Dropbox.createChooseButton(options), source_dialog.childNodes[0]);
       }
       else
@@ -209,6 +210,25 @@
                 loadMemory(intelhex);
                 engineInit();
                 exec();
+              }
+            };
+            reader.readAsBinaryString(file.slice(0, file.size));
+          }, false);
+          source_input.addEventListener('change', function(evt)
+          {
+            var file = source_input.files[0];
+            if(!file)
+            {
+              return;
+            }
+            var reader = new FileReader();
+            reader.onloadend = function(evt)
+            {
+              if(evt.target.readyState == FileReader.DONE)
+              {
+                  selected.text = evt.target.result;
+                  frameSource.push(selected);
+                  debug_source.value = selected.text;
               }
             };
             reader.readAsBinaryString(file.slice(0, file.size));
