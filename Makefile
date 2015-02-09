@@ -23,6 +23,7 @@ SRC = blink
 SRC_DIR = src/
 LIB_DIR = src/lib
 BASENAME = $(SRC)_$(TARGET)
+DROPBOX = yes
 
 all: $(BASENAME).elf $(BASENAME).dis $(BASENAME).hex $(BASENAME).bin $(TARGET).html
 
@@ -46,6 +47,11 @@ $(BASENAME).bin: $(BASENAME).elf
 
 .PHONY $(TARGET).html: $(BASENAME).hex
 	echo 'var target = "$(TARGET)";' > js/scratch.js
+ifeq ($(DROPBOX),yes)
+	echo 'var useDropbox = (typeof Dropbox != "undefined");' >> js/scratch.js
+else
+	echo 'var useDropbox = false;' >> js/scratch.js
+endif
 	cat js/$(TARGET)_port_supplier.js >> js/scratch.js
 
 android: $(TARGET).html

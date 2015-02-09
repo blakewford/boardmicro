@@ -132,7 +132,6 @@
 
   function initFileInput()
   {
-      var useDropbox = (typeof Dropbox != "undefined");
       if(useDropbox){
           var options =
           {
