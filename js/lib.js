@@ -28,6 +28,7 @@
               {
                   source = frameSource[index];
                   debug_source.value = source.text;
+                  source.line = (frame.split(" ")[2]*20/*line-height*/)-20;
                   setTimeout(function()
                   {
                     debug_source.scrollTop = source.line;
