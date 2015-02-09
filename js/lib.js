@@ -20,10 +20,11 @@
         callframe.addEventListener('click', function()
         {
             var source;
+            var first = frame.split(" ")[0];
             var index = frameSource.length;
             while(index--)
             {
-              if(frameSource[index].frame == frame)
+              if(frameSource[index].frame == first)
               {
                   source = frameSource[index];
                   debug_source.value = source.text;
@@ -32,7 +33,7 @@
             if(typeof source == "undefined")
             {
               source = {};
-              source.frame = frame;
+              source.frame = first;
               source.text = "";
             }
             selected = source;
@@ -232,6 +233,7 @@
               }
             };
             reader.readAsBinaryString(file.slice(0, file.size));
+            source_input.value = '';
           }, false);
       }
   }
