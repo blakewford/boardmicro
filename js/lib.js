@@ -28,12 +28,17 @@
               {
                   source = frameSource[index];
                   debug_source.value = source.text;
+                  setTimeout(function()
+                  {
+                    debug_source.scrollTop = source.line;
+                  }, 10);
               }
             }
             if(typeof source == "undefined")
             {
               source = {};
               source.frame = first;
+              source.line = (frame.split(" ")[2]*20/*line-height*/)-20;
               source.text = "";
             }
             selected = source;
@@ -173,6 +178,10 @@
               selected.text = client.responseText;
               frameSource.push(selected);
               debug_source.value = selected.text;
+              setTimeout(function()
+              {
+                debug_source.scrollTop = selected.line;
+              }, 10);
             }
           }
           client.send();
@@ -230,6 +239,10 @@
                   selected.text = evt.target.result;
                   frameSource.push(selected);
                   debug_source.value = selected.text;
+                  setTimeout(function()
+                  {
+                    debug_source.scrollTop = selected.line;
+                  }, 10);
               }
             };
             reader.readAsBinaryString(file.slice(0, file.size));
