@@ -53,6 +53,10 @@ else
 	echo 'var useDropbox = false;' >> js/scratch.js
 endif
 	cat js/$(TARGET)_port_supplier.js >> js/scratch.js
+ifeq ($(TARGET),atmega328)
+	echo 'forceOptimizationEnabled = true;' >> js/scratch.js
+	echo 'optimize.style.display = "none";' >> js/scratch.js
+endif
 
 android: $(TARGET).html
 ifeq ($(TARGET),atmega328)
