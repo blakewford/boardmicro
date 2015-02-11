@@ -49,8 +49,26 @@ R29.style.width = registerWidth;
 R30.style.width = registerWidth;
 R31.style.width = registerWidth;
 
+var numRows = Math.floor((height*.5)/20);
+while( numRows-- )
+{
+  var row = document.createElement("tr");
+  var data = document.createElement("td");
+  data.style.padding = 0;
+  var canvas = document.createElement("canvas");
+  canvas.style.width = "100%";
+  canvas.style.height = 20;
+  canvas.style.background = "gray";
+
+  data.appendChild(canvas);
+  row.appendChild(data);
+
+  graphics.appendChild(row);
+}
+
 layout.style.width = width;
 uart.style.width = width;
+source_dialog.style.height = height*.5;
 var uart_height = normalize(height/25, 2);
 uart.style.height = uart_height;
 debug.style.background = default_color;

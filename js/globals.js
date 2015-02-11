@@ -86,6 +86,7 @@ var screen_driver = document.createElement("script");
 var gdb_window = document.getElementById("gdb");
 var result_window = document.getElementById("gdbshell");
 var mhz = document.getElementById("mhz");
+var graphics = document.getElementById("source_graphics");
 // Platform specific
 var num_ports = 5
 var port_width = 8;

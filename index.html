@@ -491,11 +491,21 @@
 </div>
 </div>
 </div>
-<dialog hidden style="width: 90%; height: 50%" id="source_dialog">
+<dialog hidden style="width: 90%;" id="source_dialog">
 <input text="this" type="file" id="source"/>
 <button onclick="closeDialog()">Dismiss</button>
 <br>
-<textarea id="debug_source" style="line-height: 20px; width: 100%; height: 80%"></textarea>
+<div id="source_table" style="width: 100%; height: 90%; display: table;">
+<div style="display: table-row;">
+<div style="width: 5%; height: 100%; display: table-cell;">
+<table id="source_graphics" style="border-collapse:collapse; width:100%">
+</table>
+</div>
+<div style="display: table-cell;">
+<textarea id="debug_source" style="width: 100%; height: 100%; line-height: 20px"></textarea>
+</div>
+</div>
+</div>
 </dialog>
 </body>
 <script src="js/globals.js"></script>
