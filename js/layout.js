@@ -49,6 +49,7 @@ R29.style.width = registerWidth;
 R30.style.width = registerWidth;
 R31.style.width = registerWidth;
 
+var source_graphics_state = [];
 var numRows = Math.floor((height*.5)/20);
 while( numRows-- )
 {
@@ -59,7 +60,17 @@ while( numRows-- )
   canvas.style.width = "100%";
   canvas.style.height = 20;
   canvas.style.background = "gray";
-
+  canvas.id = numRows.toString();
+  var object = {};
+  object.enabled = false;
+  object.canvas = canvas.id;
+  source_graphics_state.unshift(object);
+  canvas.addEventListener('click', function()
+  {
+      var object = source_graphics_state[parseInt(this.id)];
+      object.enabled = !object.enabled;
+      handleDialogBreakpoint(object);
+  });
   data.appendChild(canvas);
   row.appendChild(data);
 
@@ -68,7 +79,7 @@ while( numRows-- )
 
 layout.style.width = width;
 uart.style.width = width;
-source_dialog.style.height = height*.5;
+source_dialog.style.height = height*.55;
 var uart_height = normalize(height/25, 2);
 uart.style.height = uart_height;
 debug.style.background = default_color;

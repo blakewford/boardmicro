@@ -11,6 +11,15 @@
     document.getElementById("mhz").value = mhz.toString();
   }
 
+  function handleDialogBreakpoint(object)
+  {
+      var context = document.getElementById(object.canvas).getContext("2d");
+      context.beginPath();
+      context.fillStyle = object.enabled ? "red": "gray";
+      context.arc(canvas.width/2, canvas.height/2, 50, 0, 2*Math.PI);
+      context.fill();
+  }
+
   var selected;
   var frameSource = [];
   function reportCallFrame(frame)
