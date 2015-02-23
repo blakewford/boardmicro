@@ -18,6 +18,8 @@
       context.fillStyle = object.enabled ? "red": "gray";
       context.arc(canvas.width/2, canvas.height/2, 50, 0, 2*Math.PI);
       context.fill();
+      var line_number = ((debug_source.scrollTop / 20)+1);
+      line_number += parseInt(object.canvas);
   }
 
   var selected;
@@ -30,8 +32,8 @@
         {
             var source;
             var first = frame.split(" ")[0];
-            var index = frameSource.length;
-            while(index--)
+            var index = 0;
+            while(index < frameSource.length)
             {
               if(frameSource[index].frame == first)
               {
@@ -43,6 +45,7 @@
                     debug_source.scrollTop = source.line;
                   }, 10);
               }
+              index++;
             }
             if(typeof source == "undefined")
             {

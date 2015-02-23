@@ -50,8 +50,9 @@ R30.style.width = registerWidth;
 R31.style.width = registerWidth;
 
 var source_graphics_state = [];
-var numRows = Math.floor((height*.5)/20);
-while( numRows-- )
+var current = 0;
+var numRows = Math.floor((height*.5)/20)
+while( current < numRows )
 {
   var row = document.createElement("tr");
   var data = document.createElement("td");
@@ -60,11 +61,11 @@ while( numRows-- )
   canvas.style.width = "100%";
   canvas.style.height = 20;
   canvas.style.background = "gray";
-  canvas.id = numRows.toString();
+  canvas.id = current.toString();
   var object = {};
   object.enabled = false;
   object.canvas = canvas.id;
-  source_graphics_state.unshift(object);
+  source_graphics_state.push(object);
   canvas.addEventListener('click', function()
   {
       var object = source_graphics_state[parseInt(this.id)];
@@ -75,6 +76,7 @@ while( numRows-- )
   row.appendChild(data);
 
   graphics.appendChild(row);
+  current++;
 }
 
 layout.style.width = width;
