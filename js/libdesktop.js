@@ -48,8 +48,34 @@ fileSystem.readFile(process.argv[process.argv.length-1], 'utf8',
     {
       return console.log(error);
     }
-    loadMemory(hex);
-    engineInit();
-    exec();
+
+    var emccBackend = false;
+    var length = process.argv.length;
+    while(length--)
+    {
+      emccBackend = process.argv[length] == "emcc";
+      if(emccBackend)
+      {
+          break;
+      }
+    }
+
+    if(emccBackend)
+    {
+        var lines = hex.split("\n");
+        var numLines = lines.length-1;
+        for(var current = 0; current < numLines; current++)
+        {
+           Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
+        }
+        Module.ccall('engineInit');
+        Module.ccall('execProgram');
+    }
+    else
+    {
+        loadMemory(hex);
+        engineInit();
+        exec();
+    }
   }
 );

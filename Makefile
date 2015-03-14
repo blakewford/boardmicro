@@ -85,6 +85,7 @@ endif
 
 desktop.js: $(BASENAME).hex
 	cat js/avrcore.js > $@
+	cat js/emcc_avrcore.js >> $@
 	cat js/libdesktop.js >> $@
 	echo 'var target = "$(TARGET)";' >> $@;
 
