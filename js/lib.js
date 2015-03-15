@@ -626,3 +626,36 @@
       default_port_layout.style.display = "none";
       ports.appendChild(element);
   }
+
+  //New API
+  var shouldBeBitsPerPort = 8;
+  function writePort(port, value)
+  {
+      var pin = null;
+      // Disable all port pins
+      for(i = 0; i < shouldBeBitsPerPort; i++)
+      {
+        pin = pinNumberToPinObject(parseInt(i + port*8));
+        if(pin)
+        {
+          //IsGreen?
+          var data = pin.getContext('2d').getImageData(0, 0, 1, 1).data[1];
+          if(data == 0xFF)
+          {
+            fillCanvas(pin, red_color);
+          }
+        }
+      }
+      // Enable selected port pins
+      for(i = 0; i < shouldBeBitsPerPort; i++)
+      {
+        if(parseInt(value) & 1 << i)
+        {
+          pin = pinNumberToPinObject(parseInt(i + port*8));
+          if(pin)
+          {
+            fillCanvas(pin, green_color);
+          }
+        }
+      }
+  }
