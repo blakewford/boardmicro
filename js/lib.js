@@ -1,3 +1,4 @@
+  var emcc = false;
   var nokiaScreen = target == "atmega328";
   screen_driver.setAttribute("type", "text/javascript");
   screen_driver.setAttribute("src", nokiaScreen ? "js/nokia_spi_driver.js": "js/tft_spi_driver.js");
@@ -164,10 +165,24 @@
                     if(client.readyState==4 && client.status==200)
                     {
                       frameSource = [];
-                      loadMemory(client.responseText);
-                      engineInit();
                       isPaused = true;
-                      exec();
+                      if(emcc)
+                      {
+                        var lines = client.responseText.split("\n");
+                        var numLines = lines.length-1;
+                        for(var current = 0; current < numLines; current++)
+                        {
+                          Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
+                        }
+                        Module.ccall('engineInit');
+                        Module.ccall('execProgram');
+                      }
+                      else
+                      {
+                        loadMemory(client.responseText);
+                        engineInit();
+                        exec();
+                      }
                     }
                 }
                 client.send();
@@ -230,9 +245,23 @@
                   intelhex = evt.target.result;
                 }
                 frameSource = [];
-                loadMemory(intelhex);
-                engineInit();
-                exec();
+                if(emcc)
+                {
+                  var lines = intelhex.split("\n");
+                  var numLines = lines.length-1;
+                  for(var current = 0; current < numLines; current++)
+                  {
+                    Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
+                  }
+                  Module.ccall('engineInit');
+                  Module.ccall('execProgram');
+                }
+                else
+                {
+                  loadMemory(intelhex);
+                  engineInit();
+                  exec();
+                }
               }
             };
             reader.readAsBinaryString(file.slice(0, file.size));
