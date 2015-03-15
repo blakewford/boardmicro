@@ -1334,7 +1334,9 @@ var memoryInitializer = null;
 
 STATIC_BASE = 8;
 
-STATICTOP = STATIC_BASE + 33528;
+STATICTOP = STATIC_BASE + 33552;
+
+
 
 
 
@@ -1371,7 +1373,7 @@ STATICTOP = STATIC_BASE + 33528;
 
 
 
-/* memory initializer */ allocate([255,10,0,0,0,0,0,0,0,11,0,0,0,0,0,0,0,11,0,0,0,0,0,0,48,0,0,0,0,0,0,0,73,110,115,116,114,117,99,116,105,111,110,32,110,111,116,32,105,109,112,108,101,109,101,110,116,101,100,32,97,116,32,97,100,100,114,101,115,115,32,48,120,37,88,10,0,0,0,0,98,105,110,97,114,121,91,102,105,108,101,67,117,114,115,111,114,43,43,93,32,61,61,32,39,58,39,0,0,0,0,0,102,97,108,115,101,0,0,0,109,97,105,110,46,99,112,112,0,0,0,0,0,0,0,0,98,105,110,97,114,121,91,108,105,110,101,67,117,114,115,111,114,43,43,93,32,61,61,32,39,58,39,0,0,0,0,0,99,111,110,115,111,108,101,46,108,111,103,40,39,80,111,114,116,66,32,37,105,39,41,0,108,111,97,100,80,114,111,103,114,97,109,0,0,0,0,0,108,111,97,100,80,97,114,116,105,97,108,80,114,111,103,114,97,109,0,0,0,0,0,0,101,120,101,99,80,114,111,103,114,97,109,0,0,0,0,0,18,18,18,18,0,0,0,0], "i8", ALLOC_NONE, Runtime.GLOBAL_BASE);
+/* memory initializer */ allocate([255,10,0,0,0,0,0,0,0,11,0,0,0,0,0,0,0,11,0,0,0,0,0,0,48,0,0,0,0,0,0,0,73,110,115,116,114,117,99,116,105,111,110,32,110,111,116,32,105,109,112,108,101,109,101,110,116,101,100,32,97,116,32,97,100,100,114,101,115,115,32,48,120,37,88,0,0,0,0,0,98,105,110,97,114,121,91,102,105,108,101,67,117,114,115,111,114,43,43,93,32,61,61,32,39,58,39,0,0,0,0,0,102,97,108,115,101,0,0,0,109,97,105,110,46,99,112,112,0,0,0,0,0,0,0,0,98,105,110,97,114,121,91,108,105,110,101,67,117,114,115,111,114,43,43,93,32,61,61,32,39,58,39,0,0,0,0,0,119,114,105,116,101,80,111,114,116,40,48,44,32,37,105,41,0,0,0,0,0,0,0,0,99,111,110,115,111,108,101,46,108,111,103,40,39,37,115,39,41,0,0,0,0,0,0,0,108,111,97,100,80,114,111,103,114,97,109,0,0,0,0,0,108,111,97,100,80,97,114,116,105,97,108,80,114,111,103,114,97,109,0,0,0,0,0,0,101,120,101,99,80,114,111,103,114,97,109,0,0,0,0,0,18,18,18,18,0,0,0,0], "i8", ALLOC_NONE, Runtime.GLOBAL_BASE);
 
 
 
@@ -1849,138 +1851,211 @@ function copyTempDouble(ptr) {
       eval(Pointer_stringify(ptr));
     }
 
-  
-  
-  
-  
-  var ERRNO_CODES={EPERM:1,ENOENT:2,ESRCH:3,EINTR:4,EIO:5,ENXIO:6,E2BIG:7,ENOEXEC:8,EBADF:9,ECHILD:10,EAGAIN:11,EWOULDBLOCK:11,ENOMEM:12,EACCES:13,EFAULT:14,ENOTBLK:15,EBUSY:16,EEXIST:17,EXDEV:18,ENODEV:19,ENOTDIR:20,EISDIR:21,EINVAL:22,ENFILE:23,EMFILE:24,ENOTTY:25,ETXTBSY:26,EFBIG:27,ENOSPC:28,ESPIPE:29,EROFS:30,EMLINK:31,EPIPE:32,EDOM:33,ERANGE:34,ENOMSG:42,EIDRM:43,ECHRNG:44,EL2NSYNC:45,EL3HLT:46,EL3RST:47,ELNRNG:48,EUNATCH:49,ENOCSI:50,EL2HLT:51,EDEADLK:35,ENOLCK:37,EBADE:52,EBADR:53,EXFULL:54,ENOANO:55,EBADRQC:56,EBADSLT:57,EDEADLOCK:35,EBFONT:59,ENOSTR:60,ENODATA:61,ETIME:62,ENOSR:63,ENONET:64,ENOPKG:65,EREMOTE:66,ENOLINK:67,EADV:68,ESRMNT:69,ECOMM:70,EPROTO:71,EMULTIHOP:72,EDOTDOT:73,EBADMSG:74,ENOTUNIQ:76,EBADFD:77,EREMCHG:78,ELIBACC:79,ELIBBAD:80,ELIBSCN:81,ELIBMAX:82,ELIBEXEC:83,ENOSYS:38,ENOTEMPTY:39,ENAMETOOLONG:36,ELOOP:40,EOPNOTSUPP:95,EPFNOSUPPORT:96,ECONNRESET:104,ENOBUFS:105,EAFNOSUPPORT:97,EPROTOTYPE:91,ENOTSOCK:88,ENOPROTOOPT:92,ESHUTDOWN:108,ECONNREFUSED:111,EADDRINUSE:98,ECONNABORTED:103,ENETUNREACH:101,ENETDOWN:100,ETIMEDOUT:110,EHOSTDOWN:112,EHOSTUNREACH:113,EINPROGRESS:115,EALREADY:114,EDESTADDRREQ:89,EMSGSIZE:90,EPROTONOSUPPORT:93,ESOCKTNOSUPPORT:94,EADDRNOTAVAIL:99,ENETRESET:102,EISCONN:106,ENOTCONN:107,ETOOMANYREFS:109,EUSERS:87,EDQUOT:122,ESTALE:116,ENOTSUP:95,ENOMEDIUM:123,EILSEQ:84,EOVERFLOW:75,ECANCELED:125,ENOTRECOVERABLE:131,EOWNERDEAD:130,ESTRPIPE:86};
-  
-  var ERRNO_MESSAGES={0:"Success",1:"Not super-user",2:"No such file or directory",3:"No such process",4:"Interrupted system call",5:"I/O error",6:"No such device or address",7:"Arg list too long",8:"Exec format error",9:"Bad file number",10:"No children",11:"No more processes",12:"Not enough core",13:"Permission denied",14:"Bad address",15:"Block device required",16:"Mount device busy",17:"File exists",18:"Cross-device link",19:"No such device",20:"Not a directory",21:"Is a directory",22:"Invalid argument",23:"Too many open files in system",24:"Too many open files",25:"Not a typewriter",26:"Text file busy",27:"File too large",28:"No space left on device",29:"Illegal seek",30:"Read only file system",31:"Too many links",32:"Broken pipe",33:"Math arg out of domain of func",34:"Math result not representable",35:"File locking deadlock error",36:"File or path name too long",37:"No record locks available",38:"Function not implemented",39:"Directory not empty",40:"Too many symbolic links",42:"No message of desired type",43:"Identifier removed",44:"Channel number out of range",45:"Level 2 not synchronized",46:"Level 3 halted",47:"Level 3 reset",48:"Link number out of range",49:"Protocol driver not attached",50:"No CSI structure available",51:"Level 2 halted",52:"Invalid exchange",53:"Invalid request descriptor",54:"Exchange full",55:"No anode",56:"Invalid request code",57:"Invalid slot",59:"Bad font file fmt",60:"Device not a stream",61:"No data (for no delay io)",62:"Timer expired",63:"Out of streams resources",64:"Machine is not on the network",65:"Package not installed",66:"The object is remote",67:"The link has been severed",68:"Advertise error",69:"Srmount error",70:"Communication error on send",71:"Protocol error",72:"Multihop attempted",73:"Cross mount point (not really error)",74:"Trying to read unreadable message",75:"Value too large for defined data type",76:"Given log. name not unique",77:"f.d. invalid for this operation",78:"Remote address changed",79:"Can   access a needed shared lib",80:"Accessing a corrupted shared lib",81:".lib section in a.out corrupted",82:"Attempting to link in too many libs",83:"Attempting to exec a shared library",84:"Illegal byte sequence",86:"Streams pipe error",87:"Too many users",88:"Socket operation on non-socket",89:"Destination address required",90:"Message too long",91:"Protocol wrong type for socket",92:"Protocol not available",93:"Unknown protocol",94:"Socket type not supported",95:"Not supported",96:"Protocol family not supported",97:"Address family not supported by protocol family",98:"Address already in use",99:"Address not available",100:"Network interface is not configured",101:"Network is unreachable",102:"Connection reset by network",103:"Connection aborted",104:"Connection reset by peer",105:"No buffer space available",106:"Socket is already connected",107:"Socket is not connected",108:"Can't send after socket shutdown",109:"Too many references",110:"Connection timed out",111:"Connection refused",112:"Host is down",113:"Host is unreachable",114:"Socket already connected",115:"Connection already in progress",116:"Stale file handle",122:"Quota exceeded",123:"No medium (in tape drive)",125:"Operation canceled",130:"Previous owner died",131:"State not recoverable"};
+  function ___assert_fail(condition, filename, line, func) {
+      ABORT = true;
+      throw 'Assertion failed: ' + Pointer_stringify(condition) + ', at: ' + [filename ? Pointer_stringify(filename) : 'unknown filename', line, func ? Pointer_stringify(func) : 'unknown function'] + ' at ' + stackTrace();
+    }
+
+  function _llvm_lifetime_start() {}
+
+  function _llvm_lifetime_end() {}
+
+  function _abort() {
+      Module['abort']();
+    }
+
   
   
   var ___errno_state=0;function ___setErrNo(value) {
       // For convenient setting and returning of errno.
       HEAP32[((___errno_state)>>2)]=value;
       return value;
+    }function ___errno_location() {
+      return ___errno_state;
     }
+
   
-  var PATH={splitPath:function (filename) {
-        var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-        return splitPathRe.exec(filename).slice(1);
-      },normalizeArray:function (parts, allowAboveRoot) {
-        // if the path tries to go above the root, `up` ends up > 0
-        var up = 0;
-        for (var i = parts.length - 1; i >= 0; i--) {
-          var last = parts[i];
-          if (last === '.') {
-            parts.splice(i, 1);
-          } else if (last === '..') {
-            parts.splice(i, 1);
-            up++;
-          } else if (up) {
-            parts.splice(i, 1);
-            up--;
-          }
-        }
-        // if the path is allowed to go above the root, restore leading ..s
-        if (allowAboveRoot) {
-          for (; up--; up) {
-            parts.unshift('..');
-          }
-        }
-        return parts;
-      },normalize:function (path) {
-        var isAbsolute = path.charAt(0) === '/',
-            trailingSlash = path.substr(-1) === '/';
-        // Normalize the path
-        path = PATH.normalizeArray(path.split('/').filter(function(p) {
-          return !!p;
-        }), !isAbsolute).join('/');
-        if (!path && !isAbsolute) {
-          path = '.';
-        }
-        if (path && trailingSlash) {
-          path += '/';
-        }
-        return (isAbsolute ? '/' : '') + path;
-      },dirname:function (path) {
-        var result = PATH.splitPath(path),
-            root = result[0],
-            dir = result[1];
-        if (!root && !dir) {
-          // No dirname whatsoever
-          return '.';
-        }
-        if (dir) {
-          // It has a dirname, strip trailing slash
-          dir = dir.substr(0, dir.length - 1);
-        }
-        return root + dir;
-      },basename:function (path) {
-        // EMSCRIPTEN return '/'' for '/', not an empty string
-        if (path === '/') return '/';
-        var lastSlash = path.lastIndexOf('/');
-        if (lastSlash === -1) return path;
-        return path.substr(lastSlash+1);
-      },extname:function (path) {
-        return PATH.splitPath(path)[3];
-      },join:function () {
-        var paths = Array.prototype.slice.call(arguments, 0);
-        return PATH.normalize(paths.join('/'));
-      },join2:function (l, r) {
-        return PATH.normalize(l + '/' + r);
-      },resolve:function () {
-        var resolvedPath = '',
-          resolvedAbsolute = false;
-        for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-          var path = (i >= 0) ? arguments[i] : FS.cwd();
-          // Skip empty and invalid entries
-          if (typeof path !== 'string') {
-            throw new TypeError('Arguments to path.resolve must be strings');
-          } else if (!path) {
-            continue;
-          }
-          resolvedPath = path + '/' + resolvedPath;
-          resolvedAbsolute = path.charAt(0) === '/';
-        }
-        // At this point the path should be resolved to a full absolute path, but
-        // handle relative paths to be safe (might happen when process.cwd() fails)
-        resolvedPath = PATH.normalizeArray(resolvedPath.split('/').filter(function(p) {
-          return !!p;
-        }), !resolvedAbsolute).join('/');
-        return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-      },relative:function (from, to) {
-        from = PATH.resolve(from).substr(1);
-        to = PATH.resolve(to).substr(1);
-        function trim(arr) {
-          var start = 0;
-          for (; start < arr.length; start++) {
-            if (arr[start] !== '') break;
-          }
-          var end = arr.length - 1;
-          for (; end >= 0; end--) {
-            if (arr[end] !== '') break;
-          }
-          if (start > end) return [];
-          return arr.slice(start, end - start + 1);
-        }
-        var fromParts = trim(from.split('/'));
-        var toParts = trim(to.split('/'));
-        var length = Math.min(fromParts.length, toParts.length);
-        var samePartsLength = length;
-        for (var i = 0; i < length; i++) {
-          if (fromParts[i] !== toParts[i]) {
-            samePartsLength = i;
-            break;
-          }
-        }
-        var outputParts = [];
-        for (var i = samePartsLength; i < fromParts.length; i++) {
-          outputParts.push('..');
-        }
-        outputParts = outputParts.concat(toParts.slice(samePartsLength));
-        return outputParts.join('/');
-      }};
+   
+  Module["_memcpy"] = _memcpy;var _llvm_memcpy_p0i8_p0i8_i32=_memcpy;
+
+  function _sbrk(bytes) {
+      // Implement a Linux-like 'memory area' for our 'process'.
+      // Changes the size of the memory area by |bytes|; returns the
+      // address of the previous top ('break') of the memory area
+      // We control the "dynamic" memory - DYNAMIC_BASE to DYNAMICTOP
+      var self = _sbrk;
+      if (!self.called) {
+        DYNAMICTOP = alignMemoryPage(DYNAMICTOP); // make sure we start out aligned
+        self.called = true;
+        assert(Runtime.dynamicAlloc);
+        self.alloc = Runtime.dynamicAlloc;
+        Runtime.dynamicAlloc = function() { abort('cannot dynamically allocate, sbrk now has control') };
+      }
+      var ret = DYNAMICTOP;
+      if (bytes != 0) self.alloc(bytes);
+      return ret;  // Previous break location.
+    }
+
+  
+  var ERRNO_CODES={EPERM:1,ENOENT:2,ESRCH:3,EINTR:4,EIO:5,ENXIO:6,E2BIG:7,ENOEXEC:8,EBADF:9,ECHILD:10,EAGAIN:11,EWOULDBLOCK:11,ENOMEM:12,EACCES:13,EFAULT:14,ENOTBLK:15,EBUSY:16,EEXIST:17,EXDEV:18,ENODEV:19,ENOTDIR:20,EISDIR:21,EINVAL:22,ENFILE:23,EMFILE:24,ENOTTY:25,ETXTBSY:26,EFBIG:27,ENOSPC:28,ESPIPE:29,EROFS:30,EMLINK:31,EPIPE:32,EDOM:33,ERANGE:34,ENOMSG:42,EIDRM:43,ECHRNG:44,EL2NSYNC:45,EL3HLT:46,EL3RST:47,ELNRNG:48,EUNATCH:49,ENOCSI:50,EL2HLT:51,EDEADLK:35,ENOLCK:37,EBADE:52,EBADR:53,EXFULL:54,ENOANO:55,EBADRQC:56,EBADSLT:57,EDEADLOCK:35,EBFONT:59,ENOSTR:60,ENODATA:61,ETIME:62,ENOSR:63,ENONET:64,ENOPKG:65,EREMOTE:66,ENOLINK:67,EADV:68,ESRMNT:69,ECOMM:70,EPROTO:71,EMULTIHOP:72,EDOTDOT:73,EBADMSG:74,ENOTUNIQ:76,EBADFD:77,EREMCHG:78,ELIBACC:79,ELIBBAD:80,ELIBSCN:81,ELIBMAX:82,ELIBEXEC:83,ENOSYS:38,ENOTEMPTY:39,ENAMETOOLONG:36,ELOOP:40,EOPNOTSUPP:95,EPFNOSUPPORT:96,ECONNRESET:104,ENOBUFS:105,EAFNOSUPPORT:97,EPROTOTYPE:91,ENOTSOCK:88,ENOPROTOOPT:92,ESHUTDOWN:108,ECONNREFUSED:111,EADDRINUSE:98,ECONNABORTED:103,ENETUNREACH:101,ENETDOWN:100,ETIMEDOUT:110,EHOSTDOWN:112,EHOSTUNREACH:113,EINPROGRESS:115,EALREADY:114,EDESTADDRREQ:89,EMSGSIZE:90,EPROTONOSUPPORT:93,ESOCKTNOSUPPORT:94,EADDRNOTAVAIL:99,ENETRESET:102,EISCONN:106,ENOTCONN:107,ETOOMANYREFS:109,EUSERS:87,EDQUOT:122,ESTALE:116,ENOTSUP:95,ENOMEDIUM:123,EILSEQ:84,EOVERFLOW:75,ECANCELED:125,ENOTRECOVERABLE:131,EOWNERDEAD:130,ESTRPIPE:86};function _sysconf(name) {
+      // long sysconf(int name);
+      // http://pubs.opengroup.org/onlinepubs/009695399/functions/sysconf.html
+      switch(name) {
+        case 30: return PAGE_SIZE;
+        case 132:
+        case 133:
+        case 12:
+        case 137:
+        case 138:
+        case 15:
+        case 235:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+        case 149:
+        case 13:
+        case 10:
+        case 236:
+        case 153:
+        case 9:
+        case 21:
+        case 22:
+        case 159:
+        case 154:
+        case 14:
+        case 77:
+        case 78:
+        case 139:
+        case 80:
+        case 81:
+        case 79:
+        case 82:
+        case 68:
+        case 67:
+        case 164:
+        case 11:
+        case 29:
+        case 47:
+        case 48:
+        case 95:
+        case 52:
+        case 51:
+        case 46:
+          return 200809;
+        case 27:
+        case 246:
+        case 127:
+        case 128:
+        case 23:
+        case 24:
+        case 160:
+        case 161:
+        case 181:
+        case 182:
+        case 242:
+        case 183:
+        case 184:
+        case 243:
+        case 244:
+        case 245:
+        case 165:
+        case 178:
+        case 179:
+        case 49:
+        case 50:
+        case 168:
+        case 169:
+        case 175:
+        case 170:
+        case 171:
+        case 172:
+        case 97:
+        case 76:
+        case 32:
+        case 173:
+        case 35:
+          return -1;
+        case 176:
+        case 177:
+        case 7:
+        case 155:
+        case 8:
+        case 157:
+        case 125:
+        case 126:
+        case 92:
+        case 93:
+        case 129:
+        case 130:
+        case 131:
+        case 94:
+        case 91:
+          return 1;
+        case 74:
+        case 60:
+        case 69:
+        case 70:
+        case 4:
+          return 1024;
+        case 31:
+        case 42:
+        case 72:
+          return 32;
+        case 87:
+        case 26:
+        case 33:
+          return 2147483647;
+        case 34:
+        case 1:
+          return 47839;
+        case 38:
+        case 36:
+          return 99;
+        case 43:
+        case 37:
+          return 2048;
+        case 0: return 2097152;
+        case 3: return 65536;
+        case 28: return 32768;
+        case 44: return 32767;
+        case 75: return 16384;
+        case 39: return 1000;
+        case 89: return 700;
+        case 71: return 256;
+        case 40: return 255;
+        case 2: return 100;
+        case 180: return 64;
+        case 25: return 20;
+        case 5: return 16;
+        case 6: return 6;
+        case 73: return 4;
+        case 84: return 1;
+      }
+      ___setErrNo(ERRNO_CODES.EINVAL);
+      return -1;
+    }
+
+  function _time(ptr) {
+      var ret = Math.floor(Date.now()/1000);
+      if (ptr) {
+        HEAP32[((ptr)>>2)]=ret;
+      }
+      return ret;
+    }
+
+
+   
+  Module["_memset"] = _memset;
+
+
+
+
+  
+  
+  
+  var ERRNO_MESSAGES={0:"Success",1:"Not super-user",2:"No such file or directory",3:"No such process",4:"Interrupted system call",5:"I/O error",6:"No such device or address",7:"Arg list too long",8:"Exec format error",9:"Bad file number",10:"No children",11:"No more processes",12:"Not enough core",13:"Permission denied",14:"Bad address",15:"Block device required",16:"Mount device busy",17:"File exists",18:"Cross-device link",19:"No such device",20:"Not a directory",21:"Is a directory",22:"Invalid argument",23:"Too many open files in system",24:"Too many open files",25:"Not a typewriter",26:"Text file busy",27:"File too large",28:"No space left on device",29:"Illegal seek",30:"Read only file system",31:"Too many links",32:"Broken pipe",33:"Math arg out of domain of func",34:"Math result not representable",35:"File locking deadlock error",36:"File or path name too long",37:"No record locks available",38:"Function not implemented",39:"Directory not empty",40:"Too many symbolic links",42:"No message of desired type",43:"Identifier removed",44:"Channel number out of range",45:"Level 2 not synchronized",46:"Level 3 halted",47:"Level 3 reset",48:"Link number out of range",49:"Protocol driver not attached",50:"No CSI structure available",51:"Level 2 halted",52:"Invalid exchange",53:"Invalid request descriptor",54:"Exchange full",55:"No anode",56:"Invalid request code",57:"Invalid slot",59:"Bad font file fmt",60:"Device not a stream",61:"No data (for no delay io)",62:"Timer expired",63:"Out of streams resources",64:"Machine is not on the network",65:"Package not installed",66:"The object is remote",67:"The link has been severed",68:"Advertise error",69:"Srmount error",70:"Communication error on send",71:"Protocol error",72:"Multihop attempted",73:"Cross mount point (not really error)",74:"Trying to read unreadable message",75:"Value too large for defined data type",76:"Given log. name not unique",77:"f.d. invalid for this operation",78:"Remote address changed",79:"Can   access a needed shared lib",80:"Accessing a corrupted shared lib",81:".lib section in a.out corrupted",82:"Attempting to link in too many libs",83:"Attempting to exec a shared library",84:"Illegal byte sequence",86:"Streams pipe error",87:"Too many users",88:"Socket operation on non-socket",89:"Destination address required",90:"Message too long",91:"Protocol wrong type for socket",92:"Protocol not available",93:"Unknown protocol",94:"Socket type not supported",95:"Not supported",96:"Protocol family not supported",97:"Address family not supported by protocol family",98:"Address already in use",99:"Address not available",100:"Network interface is not configured",101:"Network is unreachable",102:"Connection reset by network",103:"Connection aborted",104:"Connection reset by peer",105:"No buffer space available",106:"Socket is already connected",107:"Socket is not connected",108:"Can't send after socket shutdown",109:"Too many references",110:"Connection timed out",111:"Connection refused",112:"Host is down",113:"Host is unreachable",114:"Socket already connected",115:"Connection already in progress",116:"Stale file handle",122:"Quota exceeded",123:"No medium (in tape drive)",125:"Operation canceled",130:"Previous owner died",131:"State not recoverable"};
   
   var TTY={ttys:[],init:function () {
         // https://github.com/kripken/emscripten/pull/1555
@@ -4180,762 +4255,123 @@ function copyTempDouble(ptr) {
           transaction.onerror = onerror;
         };
         openRequest.onerror = onerror;
-      }};
-  
-  
-  
-  
-  var _mkport=undefined;var SOCKFS={mount:function (mount) {
-        return FS.createNode(null, '/', 16384 | 0777, 0);
-      },createSocket:function (family, type, protocol) {
-        var streaming = type == 1;
-        if (protocol) {
-          assert(streaming == (protocol == 6)); // if SOCK_STREAM, must be tcp
+      }};var PATH={splitPath:function (filename) {
+        var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+        return splitPathRe.exec(filename).slice(1);
+      },normalizeArray:function (parts, allowAboveRoot) {
+        // if the path tries to go above the root, `up` ends up > 0
+        var up = 0;
+        for (var i = parts.length - 1; i >= 0; i--) {
+          var last = parts[i];
+          if (last === '.') {
+            parts.splice(i, 1);
+          } else if (last === '..') {
+            parts.splice(i, 1);
+            up++;
+          } else if (up) {
+            parts.splice(i, 1);
+            up--;
+          }
         }
-  
-        // create our internal socket structure
-        var sock = {
-          family: family,
-          type: type,
-          protocol: protocol,
-          server: null,
-          peers: {},
-          pending: [],
-          recv_queue: [],
-          sock_ops: SOCKFS.websocket_sock_ops
-        };
-  
-        // create the filesystem node to store the socket structure
-        var name = SOCKFS.nextname();
-        var node = FS.createNode(SOCKFS.root, name, 49152, 0);
-        node.sock = sock;
-  
-        // and the wrapping stream that enables library functions such
-        // as read and write to indirectly interact with the socket
-        var stream = FS.createStream({
-          path: name,
-          node: node,
-          flags: FS.modeStringToFlags('r+'),
-          seekable: false,
-          stream_ops: SOCKFS.stream_ops
-        });
-  
-        // map the new stream to the socket structure (sockets have a 1:1
-        // relationship with a stream)
-        sock.stream = stream;
-  
-        return sock;
-      },getSocket:function (fd) {
-        var stream = FS.getStream(fd);
-        if (!stream || !FS.isSocket(stream.node.mode)) {
-          return null;
+        // if the path is allowed to go above the root, restore leading ..s
+        if (allowAboveRoot) {
+          for (; up--; up) {
+            parts.unshift('..');
+          }
         }
-        return stream.node.sock;
-      },stream_ops:{poll:function (stream) {
-          var sock = stream.node.sock;
-          return sock.sock_ops.poll(sock);
-        },ioctl:function (stream, request, varargs) {
-          var sock = stream.node.sock;
-          return sock.sock_ops.ioctl(sock, request, varargs);
-        },read:function (stream, buffer, offset, length, position /* ignored */) {
-          var sock = stream.node.sock;
-          var msg = sock.sock_ops.recvmsg(sock, length);
-          if (!msg) {
-            // socket is closed
-            return 0;
-          }
-          buffer.set(msg.buffer, offset);
-          return msg.buffer.length;
-        },write:function (stream, buffer, offset, length, position /* ignored */) {
-          var sock = stream.node.sock;
-          return sock.sock_ops.sendmsg(sock, buffer, offset, length);
-        },close:function (stream) {
-          var sock = stream.node.sock;
-          sock.sock_ops.close(sock);
-        }},nextname:function () {
-        if (!SOCKFS.nextname.current) {
-          SOCKFS.nextname.current = 0;
+        return parts;
+      },normalize:function (path) {
+        var isAbsolute = path.charAt(0) === '/',
+            trailingSlash = path.substr(-1) === '/';
+        // Normalize the path
+        path = PATH.normalizeArray(path.split('/').filter(function(p) {
+          return !!p;
+        }), !isAbsolute).join('/');
+        if (!path && !isAbsolute) {
+          path = '.';
         }
-        return 'socket[' + (SOCKFS.nextname.current++) + ']';
-      },websocket_sock_ops:{createPeer:function (sock, addr, port) {
-          var ws;
-  
-          if (typeof addr === 'object') {
-            ws = addr;
-            addr = null;
-            port = null;
+        if (path && trailingSlash) {
+          path += '/';
+        }
+        return (isAbsolute ? '/' : '') + path;
+      },dirname:function (path) {
+        var result = PATH.splitPath(path),
+            root = result[0],
+            dir = result[1];
+        if (!root && !dir) {
+          // No dirname whatsoever
+          return '.';
+        }
+        if (dir) {
+          // It has a dirname, strip trailing slash
+          dir = dir.substr(0, dir.length - 1);
+        }
+        return root + dir;
+      },basename:function (path) {
+        // EMSCRIPTEN return '/'' for '/', not an empty string
+        if (path === '/') return '/';
+        var lastSlash = path.lastIndexOf('/');
+        if (lastSlash === -1) return path;
+        return path.substr(lastSlash+1);
+      },extname:function (path) {
+        return PATH.splitPath(path)[3];
+      },join:function () {
+        var paths = Array.prototype.slice.call(arguments, 0);
+        return PATH.normalize(paths.join('/'));
+      },join2:function (l, r) {
+        return PATH.normalize(l + '/' + r);
+      },resolve:function () {
+        var resolvedPath = '',
+          resolvedAbsolute = false;
+        for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+          var path = (i >= 0) ? arguments[i] : FS.cwd();
+          // Skip empty and invalid entries
+          if (typeof path !== 'string') {
+            throw new TypeError('Arguments to path.resolve must be strings');
+          } else if (!path) {
+            continue;
           }
-  
-          if (ws) {
-            // for sockets that've already connected (e.g. we're the server)
-            // we can inspect the _socket property for the address
-            if (ws._socket) {
-              addr = ws._socket.remoteAddress;
-              port = ws._socket.remotePort;
-            }
-            // if we're just now initializing a connection to the remote,
-            // inspect the url property
-            else {
-              var result = /ws[s]?:\/\/([^:]+):(\d+)/.exec(ws.url);
-              if (!result) {
-                throw new Error('WebSocket URL must be in the format ws(s)://address:port');
-              }
-              addr = result[1];
-              port = parseInt(result[2], 10);
-            }
-          } else {
-            // create the actual websocket object and connect
-            try {
-              var url = 'ws://' + addr + ':' + port;
-              // the node ws library API is slightly different than the browser's
-              var opts = ENVIRONMENT_IS_NODE ? {headers: {'websocket-protocol': ['binary']}} : ['binary'];
-              // If node we use the ws library.
-              var WebSocket = ENVIRONMENT_IS_NODE ? require('ws') : window['WebSocket'];
-              ws = new WebSocket(url, opts);
-              ws.binaryType = 'arraybuffer';
-            } catch (e) {
-              throw new FS.ErrnoError(ERRNO_CODES.EHOSTUNREACH);
-            }
+          resolvedPath = path + '/' + resolvedPath;
+          resolvedAbsolute = path.charAt(0) === '/';
+        }
+        // At this point the path should be resolved to a full absolute path, but
+        // handle relative paths to be safe (might happen when process.cwd() fails)
+        resolvedPath = PATH.normalizeArray(resolvedPath.split('/').filter(function(p) {
+          return !!p;
+        }), !resolvedAbsolute).join('/');
+        return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+      },relative:function (from, to) {
+        from = PATH.resolve(from).substr(1);
+        to = PATH.resolve(to).substr(1);
+        function trim(arr) {
+          var start = 0;
+          for (; start < arr.length; start++) {
+            if (arr[start] !== '') break;
           }
-  
-  
-          var peer = {
-            addr: addr,
-            port: port,
-            socket: ws,
-            dgram_send_queue: []
-          };
-  
-          SOCKFS.websocket_sock_ops.addPeer(sock, peer);
-          SOCKFS.websocket_sock_ops.handlePeerEvents(sock, peer);
-  
-          // if this is a bound dgram socket, send the port number first to allow
-          // us to override the ephemeral port reported to us by remotePort on the
-          // remote end.
-          if (sock.type === 2 && typeof sock.sport !== 'undefined') {
-            peer.dgram_send_queue.push(new Uint8Array([
-                255, 255, 255, 255,
-                'p'.charCodeAt(0), 'o'.charCodeAt(0), 'r'.charCodeAt(0), 't'.charCodeAt(0),
-                ((sock.sport & 0xff00) >> 8) , (sock.sport & 0xff)
-            ]));
+          var end = arr.length - 1;
+          for (; end >= 0; end--) {
+            if (arr[end] !== '') break;
           }
-  
-          return peer;
-        },getPeer:function (sock, addr, port) {
-          return sock.peers[addr + ':' + port];
-        },addPeer:function (sock, peer) {
-          sock.peers[peer.addr + ':' + peer.port] = peer;
-        },removePeer:function (sock, peer) {
-          delete sock.peers[peer.addr + ':' + peer.port];
-        },handlePeerEvents:function (sock, peer) {
-          var first = true;
-  
-          var handleOpen = function () {
-            try {
-              var queued = peer.dgram_send_queue.shift();
-              while (queued) {
-                peer.socket.send(queued);
-                queued = peer.dgram_send_queue.shift();
-              }
-            } catch (e) {
-              // not much we can do here in the way of proper error handling as we've already
-              // lied and said this data was sent. shut it down.
-              peer.socket.close();
-            }
-          };
-  
-          function handleMessage(data) {
-            assert(typeof data !== 'string' && data.byteLength !== undefined);  // must receive an ArrayBuffer
-            data = new Uint8Array(data);  // make a typed array view on the array buffer
-  
-  
-            // if this is the port message, override the peer's port with it
-            var wasfirst = first;
-            first = false;
-            if (wasfirst &&
-                data.length === 10 &&
-                data[0] === 255 && data[1] === 255 && data[2] === 255 && data[3] === 255 &&
-                data[4] === 'p'.charCodeAt(0) && data[5] === 'o'.charCodeAt(0) && data[6] === 'r'.charCodeAt(0) && data[7] === 't'.charCodeAt(0)) {
-              // update the peer's port and it's key in the peer map
-              var newport = ((data[8] << 8) | data[9]);
-              SOCKFS.websocket_sock_ops.removePeer(sock, peer);
-              peer.port = newport;
-              SOCKFS.websocket_sock_ops.addPeer(sock, peer);
-              return;
-            }
-  
-            sock.recv_queue.push({ addr: peer.addr, port: peer.port, data: data });
-          };
-  
-          if (ENVIRONMENT_IS_NODE) {
-            peer.socket.on('open', handleOpen);
-            peer.socket.on('message', function(data, flags) {
-              if (!flags.binary) {
-                return;
-              }
-              handleMessage((new Uint8Array(data)).buffer);  // copy from node Buffer -> ArrayBuffer
-            });
-            peer.socket.on('error', function() {
-              // don't throw
-            });
-          } else {
-            peer.socket.onopen = handleOpen;
-            peer.socket.onmessage = function peer_socket_onmessage(event) {
-              handleMessage(event.data);
-            };
+          if (start > end) return [];
+          return arr.slice(start, end - start + 1);
+        }
+        var fromParts = trim(from.split('/'));
+        var toParts = trim(to.split('/'));
+        var length = Math.min(fromParts.length, toParts.length);
+        var samePartsLength = length;
+        for (var i = 0; i < length; i++) {
+          if (fromParts[i] !== toParts[i]) {
+            samePartsLength = i;
+            break;
           }
-        },poll:function (sock) {
-          if (sock.type === 1 && sock.server) {
-            // listen sockets should only say they're available for reading
-            // if there are pending clients.
-            return sock.pending.length ? (64 | 1) : 0;
-          }
-  
-          var mask = 0;
-          var dest = sock.type === 1 ?  // we only care about the socket state for connection-based sockets
-            SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport) :
-            null;
-  
-          if (sock.recv_queue.length ||
-              !dest ||  // connection-less sockets are always ready to read
-              (dest && dest.socket.readyState === dest.socket.CLOSING) ||
-              (dest && dest.socket.readyState === dest.socket.CLOSED)) {  // let recv return 0 once closed
-            mask |= (64 | 1);
-          }
-  
-          if (!dest ||  // connection-less sockets are always ready to write
-              (dest && dest.socket.readyState === dest.socket.OPEN)) {
-            mask |= 4;
-          }
-  
-          if ((dest && dest.socket.readyState === dest.socket.CLOSING) ||
-              (dest && dest.socket.readyState === dest.socket.CLOSED)) {
-            mask |= 16;
-          }
-  
-          return mask;
-        },ioctl:function (sock, request, arg) {
-          switch (request) {
-            case 21531:
-              var bytes = 0;
-              if (sock.recv_queue.length) {
-                bytes = sock.recv_queue[0].data.length;
-              }
-              HEAP32[((arg)>>2)]=bytes;
-              return 0;
-            default:
-              return ERRNO_CODES.EINVAL;
-          }
-        },close:function (sock) {
-          // if we've spawned a listen server, close it
-          if (sock.server) {
-            try {
-              sock.server.close();
-            } catch (e) {
-            }
-            sock.server = null;
-          }
-          // close any peer connections
-          var peers = Object.keys(sock.peers);
-          for (var i = 0; i < peers.length; i++) {
-            var peer = sock.peers[peers[i]];
-            try {
-              peer.socket.close();
-            } catch (e) {
-            }
-            SOCKFS.websocket_sock_ops.removePeer(sock, peer);
-          }
-          return 0;
-        },bind:function (sock, addr, port) {
-          if (typeof sock.saddr !== 'undefined' || typeof sock.sport !== 'undefined') {
-            throw new FS.ErrnoError(ERRNO_CODES.EINVAL);  // already bound
-          }
-          sock.saddr = addr;
-          sock.sport = port || _mkport();
-          // in order to emulate dgram sockets, we need to launch a listen server when
-          // binding on a connection-less socket
-          // note: this is only required on the server side
-          if (sock.type === 2) {
-            // close the existing server if it exists
-            if (sock.server) {
-              sock.server.close();
-              sock.server = null;
-            }
-            // swallow error operation not supported error that occurs when binding in the
-            // browser where this isn't supported
-            try {
-              sock.sock_ops.listen(sock, 0);
-            } catch (e) {
-              if (!(e instanceof FS.ErrnoError)) throw e;
-              if (e.errno !== ERRNO_CODES.EOPNOTSUPP) throw e;
-            }
-          }
-        },connect:function (sock, addr, port) {
-          if (sock.server) {
-            throw new FS.ErrnoError(ERRNO_CODS.EOPNOTSUPP);
-          }
-  
-          // TODO autobind
-          // if (!sock.addr && sock.type == 2) {
-          // }
-  
-          // early out if we're already connected / in the middle of connecting
-          if (typeof sock.daddr !== 'undefined' && typeof sock.dport !== 'undefined') {
-            var dest = SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport);
-            if (dest) {
-              if (dest.socket.readyState === dest.socket.CONNECTING) {
-                throw new FS.ErrnoError(ERRNO_CODES.EALREADY);
-              } else {
-                throw new FS.ErrnoError(ERRNO_CODES.EISCONN);
-              }
-            }
-          }
-  
-          // add the socket to our peer list and set our
-          // destination address / port to match
-          var peer = SOCKFS.websocket_sock_ops.createPeer(sock, addr, port);
-          sock.daddr = peer.addr;
-          sock.dport = peer.port;
-  
-          // always "fail" in non-blocking mode
-          throw new FS.ErrnoError(ERRNO_CODES.EINPROGRESS);
-        },listen:function (sock, backlog) {
-          if (!ENVIRONMENT_IS_NODE) {
-            throw new FS.ErrnoError(ERRNO_CODES.EOPNOTSUPP);
-          }
-          if (sock.server) {
-             throw new FS.ErrnoError(ERRNO_CODES.EINVAL);  // already listening
-          }
-          var WebSocketServer = require('ws').Server;
-          var host = sock.saddr;
-          sock.server = new WebSocketServer({
-            host: host,
-            port: sock.sport
-            // TODO support backlog
-          });
-  
-          sock.server.on('connection', function(ws) {
-            if (sock.type === 1) {
-              var newsock = SOCKFS.createSocket(sock.family, sock.type, sock.protocol);
-  
-              // create a peer on the new socket
-              var peer = SOCKFS.websocket_sock_ops.createPeer(newsock, ws);
-              newsock.daddr = peer.addr;
-              newsock.dport = peer.port;
-  
-              // push to queue for accept to pick up
-              sock.pending.push(newsock);
-            } else {
-              // create a peer on the listen socket so calling sendto
-              // with the listen socket and an address will resolve
-              // to the correct client
-              SOCKFS.websocket_sock_ops.createPeer(sock, ws);
-            }
-          });
-          sock.server.on('closed', function() {
-            sock.server = null;
-          });
-          sock.server.on('error', function() {
-            // don't throw
-          });
-        },accept:function (listensock) {
-          if (!listensock.server) {
-            throw new FS.ErrnoError(ERRNO_CODES.EINVAL);
-          }
-          var newsock = listensock.pending.shift();
-          newsock.stream.flags = listensock.stream.flags;
-          return newsock;
-        },getname:function (sock, peer) {
-          var addr, port;
-          if (peer) {
-            if (sock.daddr === undefined || sock.dport === undefined) {
-              throw new FS.ErrnoError(ERRNO_CODES.ENOTCONN);
-            }
-            addr = sock.daddr;
-            port = sock.dport;
-          } else {
-            // TODO saddr and sport will be set for bind()'d UDP sockets, but what
-            // should we be returning for TCP sockets that've been connect()'d?
-            addr = sock.saddr || 0;
-            port = sock.sport || 0;
-          }
-          return { addr: addr, port: port };
-        },sendmsg:function (sock, buffer, offset, length, addr, port) {
-          if (sock.type === 2) {
-            // connection-less sockets will honor the message address,
-            // and otherwise fall back to the bound destination address
-            if (addr === undefined || port === undefined) {
-              addr = sock.daddr;
-              port = sock.dport;
-            }
-            // if there was no address to fall back to, error out
-            if (addr === undefined || port === undefined) {
-              throw new FS.ErrnoError(ERRNO_CODES.EDESTADDRREQ);
-            }
-          } else {
-            // connection-based sockets will only use the bound
-            addr = sock.daddr;
-            port = sock.dport;
-          }
-  
-          // find the peer for the destination address
-          var dest = SOCKFS.websocket_sock_ops.getPeer(sock, addr, port);
-  
-          // early out if not connected with a connection-based socket
-          if (sock.type === 1) {
-            if (!dest || dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
-              throw new FS.ErrnoError(ERRNO_CODES.ENOTCONN);
-            } else if (dest.socket.readyState === dest.socket.CONNECTING) {
-              throw new FS.ErrnoError(ERRNO_CODES.EAGAIN);
-            }
-          }
-  
-          // create a copy of the incoming data to send, as the WebSocket API
-          // doesn't work entirely with an ArrayBufferView, it'll just send
-          // the entire underlying buffer
-          var data;
-          if (buffer instanceof Array || buffer instanceof ArrayBuffer) {
-            data = buffer.slice(offset, offset + length);
-          } else {  // ArrayBufferView
-            data = buffer.buffer.slice(buffer.byteOffset + offset, buffer.byteOffset + offset + length);
-          }
-  
-          // if we're emulating a connection-less dgram socket and don't have
-          // a cached connection, queue the buffer to send upon connect and
-          // lie, saying the data was sent now.
-          if (sock.type === 2) {
-            if (!dest || dest.socket.readyState !== dest.socket.OPEN) {
-              // if we're not connected, open a new connection
-              if (!dest || dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
-                dest = SOCKFS.websocket_sock_ops.createPeer(sock, addr, port);
-              }
-              dest.dgram_send_queue.push(data);
-              return length;
-            }
-          }
-  
-          try {
-            // send the actual data
-            dest.socket.send(data);
-            return length;
-          } catch (e) {
-            throw new FS.ErrnoError(ERRNO_CODES.EINVAL);
-          }
-        },recvmsg:function (sock, length) {
-          // http://pubs.opengroup.org/onlinepubs/7908799/xns/recvmsg.html
-          if (sock.type === 1 && sock.server) {
-            // tcp servers should not be recv()'ing on the listen socket
-            throw new FS.ErrnoError(ERRNO_CODES.ENOTCONN);
-          }
-  
-          var queued = sock.recv_queue.shift();
-          if (!queued) {
-            if (sock.type === 1) {
-              var dest = SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport);
-  
-              if (!dest) {
-                // if we have a destination address but are not connected, error out
-                throw new FS.ErrnoError(ERRNO_CODES.ENOTCONN);
-              }
-              else if (dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
-                // return null if the socket has closed
-                return null;
-              }
-              else {
-                // else, our socket is in a valid state but truly has nothing available
-                throw new FS.ErrnoError(ERRNO_CODES.EAGAIN);
-              }
-            } else {
-              throw new FS.ErrnoError(ERRNO_CODES.EAGAIN);
-            }
-          }
-  
-          // queued.data will be an ArrayBuffer if it's unadulterated, but if it's
-          // requeued TCP data it'll be an ArrayBufferView
-          var queuedLength = queued.data.byteLength || queued.data.length;
-          var queuedOffset = queued.data.byteOffset || 0;
-          var queuedBuffer = queued.data.buffer || queued.data;
-          var bytesRead = Math.min(length, queuedLength);
-          var res = {
-            buffer: new Uint8Array(queuedBuffer, queuedOffset, bytesRead),
-            addr: queued.addr,
-            port: queued.port
-          };
-  
-  
-          // push back any unread data for TCP connections
-          if (sock.type === 1 && bytesRead < queuedLength) {
-            var bytesRemaining = queuedLength - bytesRead;
-            queued.data = new Uint8Array(queuedBuffer, queuedOffset + bytesRead, bytesRemaining);
-            sock.recv_queue.unshift(queued);
-          }
-  
-          return res;
-        }}};function _send(fd, buf, len, flags) {
-      var sock = SOCKFS.getSocket(fd);
-      if (!sock) {
-        ___setErrNo(ERRNO_CODES.EBADF);
-        return -1;
-      }
-      // TODO honor flags
-      return _write(fd, buf, len);
-    }
-  
-  function _pwrite(fildes, buf, nbyte, offset) {
-      // ssize_t pwrite(int fildes, const void *buf, size_t nbyte, off_t offset);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/write.html
-      var stream = FS.getStream(fildes);
-      if (!stream) {
-        ___setErrNo(ERRNO_CODES.EBADF);
-        return -1;
-      }
-      try {
-        var slab = HEAP8;
-        return FS.write(stream, slab, buf, nbyte, offset);
-      } catch (e) {
-        FS.handleFSError(e);
-        return -1;
-      }
-    }function _write(fildes, buf, nbyte) {
-      // ssize_t write(int fildes, const void *buf, size_t nbyte);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/write.html
-      var stream = FS.getStream(fildes);
-      if (!stream) {
-        ___setErrNo(ERRNO_CODES.EBADF);
-        return -1;
-      }
-  
-  
-      try {
-        var slab = HEAP8;
-        return FS.write(stream, slab, buf, nbyte);
-      } catch (e) {
-        FS.handleFSError(e);
-        return -1;
-      }
-    }function _fwrite(ptr, size, nitems, stream) {
-      // size_t fwrite(const void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/fwrite.html
-      var bytesToWrite = nitems * size;
-      if (bytesToWrite == 0) return 0;
-      var bytesWritten = _write(stream, ptr, bytesToWrite);
-      if (bytesWritten == -1) {
-        var streamObj = FS.getStream(stream);
-        if (streamObj) streamObj.error = true;
-        return 0;
-      } else {
-        return Math.floor(bytesWritten / size);
-      }
-    }function _fprintf(stream, format, varargs) {
-      // int fprintf(FILE *restrict stream, const char *restrict format, ...);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/printf.html
-      var result = __formatString(format, varargs);
-      var stack = Runtime.stackSave();
-      var ret = _fwrite(allocate(result, 'i8', ALLOC_STACK), 1, result.length, stream);
-      Runtime.stackRestore(stack);
-      return ret;
-    }function _printf(format, varargs) {
-      // int printf(const char *restrict format, ...);
-      // http://pubs.opengroup.org/onlinepubs/000095399/functions/printf.html
-      var stdout = HEAP32[((_stdout)>>2)];
-      return _fprintf(stdout, format, varargs);
-    }
-
-  function ___assert_fail(condition, filename, line, func) {
-      ABORT = true;
-      throw 'Assertion failed: ' + Pointer_stringify(condition) + ', at: ' + [filename ? Pointer_stringify(filename) : 'unknown filename', line, func ? Pointer_stringify(func) : 'unknown function'] + ' at ' + stackTrace();
-    }
-
-  function _llvm_lifetime_start() {}
-
-  function _llvm_lifetime_end() {}
-
-  function _abort() {
-      Module['abort']();
-    }
-
-  function ___errno_location() {
-      return ___errno_state;
-    }
-
-  
-   
-  Module["_memcpy"] = _memcpy;var _llvm_memcpy_p0i8_p0i8_i32=_memcpy;
-
-  function _sbrk(bytes) {
-      // Implement a Linux-like 'memory area' for our 'process'.
-      // Changes the size of the memory area by |bytes|; returns the
-      // address of the previous top ('break') of the memory area
-      // We control the "dynamic" memory - DYNAMIC_BASE to DYNAMICTOP
-      var self = _sbrk;
-      if (!self.called) {
-        DYNAMICTOP = alignMemoryPage(DYNAMICTOP); // make sure we start out aligned
-        self.called = true;
-        assert(Runtime.dynamicAlloc);
-        self.alloc = Runtime.dynamicAlloc;
-        Runtime.dynamicAlloc = function() { abort('cannot dynamically allocate, sbrk now has control') };
-      }
-      var ret = DYNAMICTOP;
-      if (bytes != 0) self.alloc(bytes);
-      return ret;  // Previous break location.
-    }
-
-  function _sysconf(name) {
-      // long sysconf(int name);
-      // http://pubs.opengroup.org/onlinepubs/009695399/functions/sysconf.html
-      switch(name) {
-        case 30: return PAGE_SIZE;
-        case 132:
-        case 133:
-        case 12:
-        case 137:
-        case 138:
-        case 15:
-        case 235:
-        case 16:
-        case 17:
-        case 18:
-        case 19:
-        case 20:
-        case 149:
-        case 13:
-        case 10:
-        case 236:
-        case 153:
-        case 9:
-        case 21:
-        case 22:
-        case 159:
-        case 154:
-        case 14:
-        case 77:
-        case 78:
-        case 139:
-        case 80:
-        case 81:
-        case 79:
-        case 82:
-        case 68:
-        case 67:
-        case 164:
-        case 11:
-        case 29:
-        case 47:
-        case 48:
-        case 95:
-        case 52:
-        case 51:
-        case 46:
-          return 200809;
-        case 27:
-        case 246:
-        case 127:
-        case 128:
-        case 23:
-        case 24:
-        case 160:
-        case 161:
-        case 181:
-        case 182:
-        case 242:
-        case 183:
-        case 184:
-        case 243:
-        case 244:
-        case 245:
-        case 165:
-        case 178:
-        case 179:
-        case 49:
-        case 50:
-        case 168:
-        case 169:
-        case 175:
-        case 170:
-        case 171:
-        case 172:
-        case 97:
-        case 76:
-        case 32:
-        case 173:
-        case 35:
-          return -1;
-        case 176:
-        case 177:
-        case 7:
-        case 155:
-        case 8:
-        case 157:
-        case 125:
-        case 126:
-        case 92:
-        case 93:
-        case 129:
-        case 130:
-        case 131:
-        case 94:
-        case 91:
-          return 1;
-        case 74:
-        case 60:
-        case 69:
-        case 70:
-        case 4:
-          return 1024;
-        case 31:
-        case 42:
-        case 72:
-          return 32;
-        case 87:
-        case 26:
-        case 33:
-          return 2147483647;
-        case 34:
-        case 1:
-          return 47839;
-        case 38:
-        case 36:
-          return 99;
-        case 43:
-        case 37:
-          return 2048;
-        case 0: return 2097152;
-        case 3: return 65536;
-        case 28: return 32768;
-        case 44: return 32767;
-        case 75: return 16384;
-        case 39: return 1000;
-        case 89: return 700;
-        case 71: return 256;
-        case 40: return 255;
-        case 2: return 100;
-        case 180: return 64;
-        case 25: return 20;
-        case 5: return 16;
-        case 6: return 6;
-        case 73: return 4;
-        case 84: return 1;
-      }
-      ___setErrNo(ERRNO_CODES.EINVAL);
-      return -1;
-    }
-
-  function _time(ptr) {
-      var ret = Math.floor(Date.now()/1000);
-      if (ptr) {
-        HEAP32[((ptr)>>2)]=ret;
-      }
-      return ret;
-    }
-
-
-   
-  Module["_memset"] = _memset;
-
-
-
-
-  var Browser={mainLoop:{scheduler:null,shouldPause:false,paused:false,queue:[],pause:function () {
+        }
+        var outputParts = [];
+        for (var i = samePartsLength; i < fromParts.length; i++) {
+          outputParts.push('..');
+        }
+        outputParts = outputParts.concat(toParts.slice(samePartsLength));
+        return outputParts.join('/');
+      }};var Browser={mainLoop:{scheduler:null,shouldPause:false,paused:false,queue:[],pause:function () {
           Browser.mainLoop.shouldPause = true;
         },resume:function () {
           if (Browser.mainLoop.paused) {
@@ -5394,17 +4830,16 @@ function copyTempDouble(ptr) {
         }
         Browser.updateResizeListeners();
       }};
-FS.staticInit();__ATINIT__.unshift({ func: function() { if (!Module["noFSInit"] && !FS.init.initialized) FS.init() } });__ATMAIN__.push({ func: function() { FS.ignorePermissions = false } });__ATEXIT__.push({ func: function() { FS.quit() } });Module["FS_createFolder"] = FS.createFolder;Module["FS_createPath"] = FS.createPath;Module["FS_createDataFile"] = FS.createDataFile;Module["FS_createPreloadedFile"] = FS.createPreloadedFile;Module["FS_createLazyFile"] = FS.createLazyFile;Module["FS_createLink"] = FS.createLink;Module["FS_createDevice"] = FS.createDevice;
 ___errno_state = Runtime.staticAlloc(4); HEAP32[((___errno_state)>>2)]=0;
-__ATINIT__.unshift({ func: function() { TTY.init() } });__ATEXIT__.push({ func: function() { TTY.shutdown() } });TTY.utf8 = new Runtime.UTF8Processor();
-if (ENVIRONMENT_IS_NODE) { var fs = require("fs"); NODEFS.staticInit(); }
-__ATINIT__.push({ func: function() { SOCKFS.root = FS.mount(SOCKFS, {}, null); } });
 Module["requestFullScreen"] = function Module_requestFullScreen(lockPointer, resizeCanvas) { Browser.requestFullScreen(lockPointer, resizeCanvas) };
   Module["requestAnimationFrame"] = function Module_requestAnimationFrame(func) { Browser.requestAnimationFrame(func) };
   Module["setCanvasSize"] = function Module_setCanvasSize(width, height, noUpdates) { Browser.setCanvasSize(width, height, noUpdates) };
   Module["pauseMainLoop"] = function Module_pauseMainLoop() { Browser.mainLoop.pause() };
   Module["resumeMainLoop"] = function Module_resumeMainLoop() { Browser.mainLoop.resume() };
   Module["getUserMedia"] = function Module_getUserMedia() { Browser.getUserMedia() }
+FS.staticInit();__ATINIT__.unshift({ func: function() { if (!Module["noFSInit"] && !FS.init.initialized) FS.init() } });__ATMAIN__.push({ func: function() { FS.ignorePermissions = false } });__ATEXIT__.push({ func: function() { FS.quit() } });Module["FS_createFolder"] = FS.createFolder;Module["FS_createPath"] = FS.createPath;Module["FS_createDataFile"] = FS.createDataFile;Module["FS_createPreloadedFile"] = FS.createPreloadedFile;Module["FS_createLazyFile"] = FS.createLazyFile;Module["FS_createLink"] = FS.createLink;Module["FS_createDevice"] = FS.createDevice;
+__ATINIT__.unshift({ func: function() { TTY.init() } });__ATEXIT__.push({ func: function() { TTY.shutdown() } });TTY.utf8 = new Runtime.UTF8Processor();
+if (ENVIRONMENT_IS_NODE) { var fs = require("fs"); NODEFS.staticInit(); }
 STACK_BASE = STACKTOP = Runtime.alignMemory(STATICTOP);
 
 staticSealed = true; // seal the static portion of memory
@@ -5460,19 +4895,19 @@ function asmPrintFloat(x, y) {
   Module.print('float ' + x + ',' + y);// + ' ' + new Error().stack);
 }
 // EMSCRIPTEN_START_ASM
-var asm=(function(global,env,buffer){"use asm";var a=new global.Int8Array(buffer);var b=new global.Int16Array(buffer);var c=new global.Int32Array(buffer);var d=new global.Uint8Array(buffer);var e=new global.Uint16Array(buffer);var f=new global.Uint32Array(buffer);var g=new global.Float32Array(buffer);var h=new global.Float64Array(buffer);var i=env.STACKTOP|0;var j=env.STACK_MAX|0;var k=env.tempDoublePtr|0;var l=env.ABORT|0;var m=+env.NaN;var n=+env.Infinity;var o=0;var p=0;var q=0;var r=0;var s=0,t=0,u=0,v=0,w=0.0,x=0,y=0,z=0,A=0.0;var B=0;var C=0;var D=0;var E=0;var F=0;var G=0;var H=0;var I=0;var J=0;var K=0;var L=global.Math.floor;var M=global.Math.abs;var N=global.Math.sqrt;var O=global.Math.pow;var P=global.Math.cos;var Q=global.Math.sin;var R=global.Math.tan;var S=global.Math.acos;var T=global.Math.asin;var U=global.Math.atan;var V=global.Math.atan2;var W=global.Math.exp;var X=global.Math.log;var Y=global.Math.ceil;var Z=global.Math.imul;var _=env.abort;var $=env.assert;var aa=env.asmPrintInt;var ba=env.asmPrintFloat;var ca=env.min;var da=env.invoke_ii;var ea=env.invoke_v;var fa=env.invoke_iii;var ga=env.invoke_vi;var ha=env._llvm_lifetime_end;var ia=env._sysconf;var ja=env._abort;var ka=env._fprintf;var la=env.___assert_fail;var ma=env._printf;var na=env._fflush;var oa=env.__reallyNegative;var pa=env._snprintf;var qa=env.___setErrNo;var ra=env._fwrite;var sa=env._send;var ta=env._write;var ua=env._sprintf;var va=env.__formatString;var wa=env._pwrite;var xa=env._sbrk;var ya=env.___errno_location;var za=env._llvm_lifetime_start;var Aa=env._time;var Ba=env._emscripten_run_script;var Ca=0.0;
+var asm=(function(global,env,buffer){"use asm";var a=new global.Int8Array(buffer);var b=new global.Int16Array(buffer);var c=new global.Int32Array(buffer);var d=new global.Uint8Array(buffer);var e=new global.Uint16Array(buffer);var f=new global.Uint32Array(buffer);var g=new global.Float32Array(buffer);var h=new global.Float64Array(buffer);var i=env.STACKTOP|0;var j=env.STACK_MAX|0;var k=env.tempDoublePtr|0;var l=env.ABORT|0;var m=+env.NaN;var n=+env.Infinity;var o=0;var p=0;var q=0;var r=0;var s=0,t=0,u=0,v=0,w=0.0,x=0,y=0,z=0,A=0.0;var B=0;var C=0;var D=0;var E=0;var F=0;var G=0;var H=0;var I=0;var J=0;var K=0;var L=global.Math.floor;var M=global.Math.abs;var N=global.Math.sqrt;var O=global.Math.pow;var P=global.Math.cos;var Q=global.Math.sin;var R=global.Math.tan;var S=global.Math.acos;var T=global.Math.asin;var U=global.Math.atan;var V=global.Math.atan2;var W=global.Math.exp;var X=global.Math.log;var Y=global.Math.ceil;var Z=global.Math.imul;var _=env.abort;var $=env.assert;var aa=env.asmPrintInt;var ba=env.asmPrintFloat;var ca=env.min;var da=env.invoke_ii;var ea=env.invoke_v;var fa=env.invoke_iii;var ga=env.invoke_vi;var ha=env._llvm_lifetime_end;var ia=env._sysconf;var ja=env.___assert_fail;var ka=env._snprintf;var la=env.___setErrNo;var ma=env.__reallyNegative;var na=env.__formatString;var oa=env._sbrk;var pa=env._llvm_lifetime_start;var qa=env._abort;var ra=env._sprintf;var sa=env._time;var ta=env.___errno_location;var ua=env._fflush;var va=env._emscripten_run_script;var wa=0.0;
 // EMSCRIPTEN_START_FUNCS
-function Ha(a){a=a|0;var b=0;b=i;i=i+a|0;i=i+7&-8;return b|0}function Ia(){return i|0}function Ja(a){a=a|0;i=a}function Ka(a,b){a=a|0;b=b|0;if((o|0)==0){o=a;p=b}}function La(b){b=b|0;a[k]=a[b];a[k+1|0]=a[b+1|0];a[k+2|0]=a[b+2|0];a[k+3|0]=a[b+3|0]}function Ma(b){b=b|0;a[k]=a[b];a[k+1|0]=a[b+1|0];a[k+2|0]=a[b+2|0];a[k+3|0]=a[b+3|0];a[k+4|0]=a[b+4|0];a[k+5|0]=a[b+5|0];a[k+6|0]=a[b+6|0];a[k+7|0]=a[b+7|0]}function Na(a){a=a|0;B=a}function Oa(a){a=a|0;C=a}function Pa(a){a=a|0;D=a}function Qa(a){a=a|0;E=a}function Ra(a){a=a|0;F=a}function Sa(a){a=a|0;G=a}function Ta(a){a=a|0;H=a}function Ua(a){a=a|0;I=a}function Va(a){a=a|0;J=a}function Wa(a){a=a|0;K=a}function Xa(){}function Ya(b){b=b|0;var c=0,d=0,e=0;e=b|0;c=a[e]|0;d=c<<5<<24>>24>>5;if(d<<24>>24!=2){a[256]=a[256]&-8|d&7;c=a[e]|0}c=c<<2<<24>>24>>5;if(c<<24>>24!=2){a[256]=a[256]&-57|c<<3&56}d=b+1|0;c=a[d]|0;e=c<<5<<24>>24>>5;if(e<<24>>24!=2){a[257]=a[257]&-8|e&7;c=a[d]|0}c=c<<2<<24>>24>>5;if(c<<24>>24!=2){a[257]=a[257]&-57|c<<3&56}d=b+2|0;c=a[d]|0;e=c<<5<<24>>24>>5;if(e<<24>>24!=2){a[258]=a[258]&-8|e&7;c=a[d]|0}c=c<<2<<24>>24>>5;if(c<<24>>24!=2){a[258]=a[258]&-57|c<<3&56}d=b+3|0;b=a[d]|0;c=b<<5<<24>>24>>5;if(c<<24>>24!=2){a[259]=a[259]&-8|c&7;b=a[d]|0}b=b<<2<<24>>24>>5;if(b<<24>>24==2){return}a[259]=a[259]&-57|b<<3&56;return}function Za(){a[256]=a[256]&-64;a[257]=a[257]&-64;a[258]=a[258]&-64;a[259]=a[259]&-64;return}function _a(b){b=b|0;var d=0,e=0,f=0,g=0,h=0,i=0,j=0;if((a[b]|0)!=58){la(144,128,288,216)}e=a[b+1|0]|0;d=a[b+2|0]|0;g=((d&255)>>>0<58>>>0?-48:-55)+(d&255)+(((e&255)>>>0<58>>>0?268435408:268435401)+(e&255)<<4)|0;e=a[b+7|0]|0;d=a[b+8|0]|0;d=((d&255)>>>0<58>>>0?-48:-55)+(d&255)+(((e&255)>>>0<58>>>0?268435408:268435401)+(e&255)<<4)|0;if((d|0)==0){if((g|0)==0){return}j=7;h=c[6]|0;while(1){f=a[b+(j+2)|0]|0;e=a[b+(j+3)|0]|0;d=j+4|0;i=a[b+d|0]|0;j=a[b+(j+5)|0]|0;a[288+h|0]=(((j&255)>>>0<58>>>0?-48:-55)+j&255)+((((i&255)>>>0<58>>>0?0:9)+i&255)<<4);i=h+2|0;c[6]=i;a[h+289|0]=(((e&255)>>>0<58>>>0?-48:-55)+e&255)+((((f&255)>>>0<58>>>0?0:9)+f&255)<<4);g=g-2|0;if((g|0)==0){break}else{j=d;h=i}}return}else if((d|0)==1){return}else{la(120,128,308,216)}}function $a(b){b=b|0;var c=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0;if((a[b]|0)==58){g=2816;c=0}else{la(88,128,318,200)}a:while(1){d=a[b+(c+1)|0]|0;i=((d&255)>>>0<58>>>0?-48:-55)+(d&255)|0;l=a[b+(c+2)|0]|0;f=l&255;d=(l&255)>>>0<58>>>0?-48:-55;e=c+7|0;h=a[b+e|0]|0;j=a[b+(c+8)|0]|0;j=((j&255)>>>0<58>>>0?-48:-55)+(j&255)+(((h&255)>>>0<58>>>0?268435408:268435401)+(h&255)<<4)|0;h=d+f+(i<<4)|0;if((j|0)==1){c=11;break}else if((j|0)!=0){c=10;break}if((h|0)==0){f=g;c=e}else{d=(d-2+(i<<4)+f|0)>>>1;f=g+2+(d<<1)|0;d=d<<2;while(1){j=a[b+(e+2)|0]|0;l=a[b+(e+3)|0]|0;i=e+4|0;k=a[b+i|0]|0;e=a[b+(e+5)|0]|0;a[288+g|0]=(((e&255)>>>0<58>>>0?-48:-55)+e&255)+((((k&255)>>>0<58>>>0?0:9)+k&255)<<4);a[g+289|0]=(((l&255)>>>0<58>>>0?-48:-55)+l&255)+((((j&255)>>>0<58>>>0?0:9)+j&255)<<4);h=h-2|0;if((h|0)==0){break}else{g=g+2|0;e=i}}c=c+11+d|0}while(1){c=c+1|0;if((a[b+c|0]|0)==58){g=f;continue a}}}if((c|0)==10){la(120,128,340,200)}else if((c|0)==11){cb(b);return}}function ab(){var e=0,f=0,g=0,h=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0,q=0,r=0,s=0,t=0,u=0,v=0,w=0,x=0,y=0,z=0;e=i;i=i+264|0;l=e+256|0;m=c[4]|0;q=m&65535;b[16764]=q;if(q<<16>>16<=-1){i=e;return}g=l|0;f=l+1|0;k=l+2|0;h=l+3|0;j=e|0;r=m&65535;n=0;o=0;p=0;m=0;a:while(1){if((a[288+r|0]|0)==-107){if((a[r+289|0]|0)==-104){f=68;break}}r=n&-64;n=r|18;a[g]=n;s=o&-64;o=s|18;a[f]=o;t=p&-64;p=t|18;a[k]=p;m=m&-64|18;a[h]=m;v=q&65535;w=a[288+v|0]|0;u=w&255;b:do{switch(u|0){case 0:{if((a[v+289|0]|0)!=0){break b}b[16764]=q+2;break};case 1:{y=v+289|0;x=d[y]|0;a[288+(x>>>4<<1)|0]=a[288+(x<<1&30)|0]|0;y=d[y]|0;a[288+(y>>>3|1)|0]=a[288+(y<<1&30|1)|0]|0;b[16764]=q+2;break};case 4:case 5:case 6:case 7:{w=d[v+289|0]|0;n=a[288+(u<<4&16|w>>>4)|0]|0;w=a[288+(u<<3&16|w&15)|0]|0;v=(n&255)-(w&255)&65535;x=(a[256]&7)==1;u=x&1;y=v-u&65535;p=((w&15)+(n&15)&255)>>>1&8;a[k]=p|(t|2);do{if((w&n)<<24>>24>-1){if((w|n)<<24>>24<=-1){o=0;break}o=(w+n&255)>>>7}else{o=(w+n&255)>>>7^1}}while(0);z=o<<3&56;y=(y&65535)>>>7&1;o=z|y|s;a[f]=o;p=(y<<5^z<<2)<<24>>24>0|(p|t);a[k]=p;s=(x&1)+(w&255)|0;n=(((s|0)>-1?s:-s|0)|0)>(n&255|0)|(r|(v<<16>>16==u<<16>>16)<<3);a[g]=n;b[16764]=q+2;break};case 36:case 37:case 38:case 39:{n=v+289|0;o=d[n]|0;p=288+(o>>>4)|0;a[p]=a[288+(o&15)|0]^a[p];n=a[288+((d[n]|0)>>>4)|0]|0;p=(n&255)>>>7;o=s|p;a[f]=o;n=r|(n<<24>>24==0)<<3|2;a[g]=n;p=p|(t|16);a[k]=p;b[16764]=q+2;break};case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:case 58:case 59:case 60:case 61:case 62:case 63:{o=a[v+289|0]|0;v=o&255;p=a[288+(v>>>4|16)|0]|0;n=p&255;v=u<<4&240|v&15;u=n-v|0;w=v&255;do{if((w&p)<<24>>24>-1){if((w|p)<<24>>24<=-1){w=0;break}w=(w+p&255)>>>7}else{w=(w+p&255)>>>7^1}}while(0);y=u>>>7&1;z=s|w<<3&56|y;a[f]=z;p=(y^w)<<24>>24>0|(((p&15)+(o&15)&255)>>>1&8|t);a[k]=p;n=n>>>0<v>>>0|(r|((u&65535|0)==0)<<3);a[g]=n;b[16764]=q+2;o=z;break};case 130:case 131:{s=d[v+289|0]|0;if((s&15|0)!=0){break b}r=d[319]<<8|d[318];s=a[288+(u<<4&16|s>>>4)|0]|0;if((r|0)==37){ua(j|0,176,(q=i,i=i+8|0,c[q>>2]=s&255,q)|0)|0;i=q;Ba(j|0);q=b[16764]|0}a[288+r|0]=s;b[16764]=q+2;break};case 144:case 145:{r=d[v+289|0]|0;if((r&15|0)==5){z=d[318]|0;a[288+(u<<4&16|r>>>4)|0]=a[288+((z&254|d[319]<<8)+(c[4]|0)+(z&1^1))|0]|0;r=a[318]|0;if(r<<24>>24==-1){a[319]=(a[319]|0)+1;r=0}else{r=r+1&255}a[318]=r;q=q+2&65535;b[16764]=q}r=q&65535;s=a[r+289|0]|0;if((s&15)!=0){break b}a[288+(d[288+r|0]<<4&16|(s&255)>>>4)|0]=a[288+(d[r+290|0]<<8|d[r+291|0])|0]|0;b[16764]=q+4;break};case 146:case 147:{s=d[v+289|0]|0;if((s&15|0)==0){r=d[v+290|0]<<8|d[v+291|0];s=a[288+(u<<4&16|s>>>4)|0]|0;if((r|0)==37){ua(j|0,176,(q=i,i=i+8|0,c[q>>2]=s&255,q)|0)|0;i=q;Ba(j|0);q=b[16764]|0}a[288+r|0]=s;q=q+4&65535;b[16764]=q}s=q&65535;r=d[s+289|0]|0;if((r&15|0)==15){z=c[2]|0;a[288+z|0]=a[288+(d[288+s|0]<<4&16|r>>>4)|0]|0;c[2]=z-1;q=q+2&65535;b[16764]=q}r=q&65535;q=d[r+289|0]|0;if((q&15|0)!=13){break b}q=a[288+(d[288+r|0]<<4&16|q>>>4)|0]|0;r=d[315]<<8|d[314];if((r|0)==37){ua(j|0,176,(z=i,i=i+8|0,c[z>>2]=q&255,z)|0)|0;i=z;Ba(j|0)}a[288+r|0]=q;q=a[314]|0;if(q<<24>>24==-1){a[315]=(a[315]|0)+1;q=0}else{q=q+1&255}a[314]=q;b[16764]=(b[16764]|0)+2;break};case 148:case 149:{r=a[v+289|0]|0;if((r<<24>>24|0)==(-120|0)|(r<<24>>24|0)==(-88|0)){b[16764]=q+2;break b}s=r&255;r=s&15;if((r|0)==12|(r|0)==13){b[16764]=((d[v+290|0]<<8|d[v+291|0])<<1)+q;break b}else if((r|0)==14|(r|0)==15){b[16764]=((s<<17&31457280|u<<21&2097152|s<<16&65536|d[v+290|0]<<8|d[v+291|0])<<1)+(c[4]|0);break b}else{break b}break};case 176:case 177:case 178:case 179:case 180:case 181:case 182:case 183:{z=d[v+289|0]|0;a[288+(u<<4&16|z>>>4)|0]=a[288+(u<<3&48|z&15)|0]|0;b[16764]=q+2;break};case 184:case 185:case 186:case 187:case 188:case 189:case 190:case 191:{s=d[v+289|0]|0;r=(u<<3&48|s&15)+32|0;s=a[288+(u<<4&16|s>>>4)|0]|0;if((r|0)==37){ua(j|0,176,(q=i,i=i+8|0,c[q>>2]=s&255,q)|0)|0;i=q;Ba(j|0);q=b[16764]|0}a[288+r|0]=s;b[16764]=q+2;break};case 192:case 193:case 194:case 195:case 196:case 197:case 198:case 199:case 200:case 201:case 202:case 203:case 204:case 205:case 206:case 207:{z=(w&255)<<8;r=z&3840|d[v+289|0];q=q+2&65535;b[16764]=q;if((z&2048)==0){r=r<<1}else{r=r<<4<<16>>16>>3}b[16764]=r+q;break};case 224:case 225:case 226:case 227:case 228:case 229:case 230:case 231:case 232:case 233:case 234:case 235:case 236:case 237:case 238:case 239:{z=a[v+289|0]|0;a[288+((z&255)>>>4|16)|0]=z&15|w<<4;b[16764]=q+2;break};case 244:case 245:case 246:case 247:{if((u&12|0)!=4){break b}r=d[v+289|0]|0;if((r&7|0)!=1){break b}if((a[256]&56)==0){q=r>>>3|u<<5&96;if(q>>>0>64>>>0){q=v-(128-q<<1)|0}else{q=(q<<1)+v|0}q=q&65535;b[16764]=q}b[16764]=q+2;break};default:{f=66;break a}}}while(0);Ya(l);q=b[16764]|0;if(q<<16>>16>-1){r=q&65535}else{f=68;break}}if((f|0)==66){ma(40,(z=i,i=i+8|0,c[z>>2]=v,z)|0)|0;i=z;la(32,128,612,240)}else if((f|0)==68){i=e;return}}function bb(a){a=a|0;var b=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0,q=0;do{if(a>>>0<245>>>0){if(a>>>0<11>>>0){a=16}else{a=a+11&-8}f=a>>>3;e=c[8264]|0;b=e>>>(f>>>0);if((b&3|0)!=0){h=(b&1^1)+f|0;a=h<<1;d=33096+(a<<2)|0;a=33096+(a+2<<2)|0;g=c[a>>2]|0;f=g+8|0;b=c[f>>2]|0;do{if((d|0)==(b|0)){c[8264]=e&~(1<<h)}else{if(b>>>0<(c[8268]|0)>>>0){ja();return 0}e=b+12|0;if((c[e>>2]|0)==(g|0)){c[e>>2]=d;c[a>>2]=b;break}else{ja();return 0}}}while(0);q=h<<3;c[g+4>>2]=q|3;q=g+(q|4)|0;c[q>>2]=c[q>>2]|1;q=f;return q|0}if(a>>>0<=(c[8266]|0)>>>0){break}if((b|0)!=0){i=2<<f;i=b<<f&(i|-i);i=(i&-i)-1|0;b=i>>>12&16;i=i>>>(b>>>0);h=i>>>5&8;i=i>>>(h>>>0);f=i>>>2&4;i=i>>>(f>>>0);g=i>>>1&2;i=i>>>(g>>>0);d=i>>>1&1;d=(h|b|f|g|d)+(i>>>(d>>>0))|0;i=d<<1;g=33096+(i<<2)|0;i=33096+(i+2<<2)|0;f=c[i>>2]|0;b=f+8|0;h=c[b>>2]|0;do{if((g|0)==(h|0)){c[8264]=e&~(1<<d)}else{if(h>>>0<(c[8268]|0)>>>0){ja();return 0}e=h+12|0;if((c[e>>2]|0)==(f|0)){c[e>>2]=g;c[i>>2]=h;break}else{ja();return 0}}}while(0);q=d<<3;d=q-a|0;c[f+4>>2]=a|3;e=f+a|0;c[f+(a|4)>>2]=d|1;c[f+q>>2]=d;f=c[8266]|0;if((f|0)!=0){a=c[8269]|0;i=f>>>3;g=i<<1;f=33096+(g<<2)|0;h=c[8264]|0;i=1<<i;do{if((h&i|0)==0){c[8264]=h|i;h=f;g=33096+(g+2<<2)|0}else{g=33096+(g+2<<2)|0;h=c[g>>2]|0;if(h>>>0>=(c[8268]|0)>>>0){break}ja();return 0}}while(0);c[g>>2]=a;c[h+12>>2]=a;c[a+8>>2]=h;c[a+12>>2]=f}c[8266]=d;c[8269]=e;q=b;return q|0}b=c[8265]|0;if((b|0)==0){break}e=(b&-b)-1|0;p=e>>>12&16;e=e>>>(p>>>0);o=e>>>5&8;e=e>>>(o>>>0);q=e>>>2&4;e=e>>>(q>>>0);b=e>>>1&2;e=e>>>(b>>>0);d=e>>>1&1;d=c[33360+((o|p|q|b|d)+(e>>>(d>>>0))<<2)>>2]|0;e=d;b=d;d=(c[d+4>>2]&-8)-a|0;while(1){h=c[e+16>>2]|0;if((h|0)==0){h=c[e+20>>2]|0;if((h|0)==0){break}}g=(c[h+4>>2]&-8)-a|0;f=g>>>0<d>>>0;e=h;b=f?h:b;d=f?g:d}f=b;h=c[8268]|0;if(f>>>0<h>>>0){ja();return 0}q=f+a|0;e=q;if(f>>>0>=q>>>0){ja();return 0}g=c[b+24>>2]|0;i=c[b+12>>2]|0;do{if((i|0)==(b|0)){j=b+20|0;i=c[j>>2]|0;if((i|0)==0){j=b+16|0;i=c[j>>2]|0;if((i|0)==0){i=0;break}}while(1){l=i+20|0;k=c[l>>2]|0;if((k|0)!=0){i=k;j=l;continue}k=i+16|0;l=c[k>>2]|0;if((l|0)==0){break}else{i=l;j=k}}if(j>>>0<h>>>0){ja();return 0}else{c[j>>2]=0;break}}else{j=c[b+8>>2]|0;if(j>>>0<h>>>0){ja();return 0}h=j+12|0;if((c[h>>2]|0)!=(b|0)){ja();return 0}k=i+8|0;if((c[k>>2]|0)==(b|0)){c[h>>2]=i;c[k>>2]=j;break}else{ja();return 0}}}while(0);a:do{if((g|0)!=0){j=b+28|0;h=33360+(c[j>>2]<<2)|0;do{if((b|0)==(c[h>>2]|0)){c[h>>2]=i;if((i|0)!=0){break}c[8265]=c[8265]&~(1<<c[j>>2]);break a}else{if(g>>>0<(c[8268]|0)>>>0){ja();return 0}h=g+16|0;if((c[h>>2]|0)==(b|0)){c[h>>2]=i}else{c[g+20>>2]=i}if((i|0)==0){break a}}}while(0);if(i>>>0<(c[8268]|0)>>>0){ja();return 0}c[i+24>>2]=g;g=c[b+16>>2]|0;do{if((g|0)!=0){if(g>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[i+16>>2]=g;c[g+24>>2]=i;break}}}while(0);g=c[b+20>>2]|0;if((g|0)==0){break}if(g>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[i+20>>2]=g;c[g+24>>2]=i;break}}}while(0);if(d>>>0<16>>>0){q=d+a|0;c[b+4>>2]=q|3;q=f+(q+4)|0;c[q>>2]=c[q>>2]|1}else{c[b+4>>2]=a|3;c[f+(a|4)>>2]=d|1;c[f+(d+a)>>2]=d;f=c[8266]|0;if((f|0)!=0){a=c[8269]|0;h=f>>>3;g=h<<1;f=33096+(g<<2)|0;i=c[8264]|0;h=1<<h;do{if((i&h|0)==0){c[8264]=i|h;h=f;g=33096+(g+2<<2)|0}else{g=33096+(g+2<<2)|0;h=c[g>>2]|0;if(h>>>0>=(c[8268]|0)>>>0){break}ja();return 0}}while(0);c[g>>2]=a;c[h+12>>2]=a;c[a+8>>2]=h;c[a+12>>2]=f}c[8266]=d;c[8269]=e}q=b+8|0;return q|0}else{if(a>>>0>4294967231>>>0){a=-1;break}b=a+11|0;a=b&-8;f=c[8265]|0;if((f|0)==0){break}e=-a|0;b=b>>>8;do{if((b|0)==0){g=0}else{if(a>>>0>16777215>>>0){g=31;break}p=(b+1048320|0)>>>16&8;q=b<<p;o=(q+520192|0)>>>16&4;q=q<<o;g=(q+245760|0)>>>16&2;g=14-(o|p|g)+(q<<g>>>15)|0;g=a>>>((g+7|0)>>>0)&1|g<<1}}while(0);h=c[33360+(g<<2)>>2]|0;b:do{if((h|0)==0){b=0;j=0}else{if((g|0)==31){i=0}else{i=25-(g>>>1)|0}b=0;i=a<<i;j=0;while(1){l=c[h+4>>2]&-8;k=l-a|0;if(k>>>0<e>>>0){if((l|0)==(a|0)){b=h;e=k;j=h;break b}else{b=h;e=k}}k=c[h+20>>2]|0;h=c[h+16+(i>>>31<<2)>>2]|0;j=(k|0)==0|(k|0)==(h|0)?j:k;if((h|0)==0){break}else{i=i<<1}}}}while(0);if((j|0)==0&(b|0)==0){q=2<<g;f=f&(q|-q);if((f|0)==0){break}q=(f&-f)-1|0;n=q>>>12&16;q=q>>>(n>>>0);m=q>>>5&8;q=q>>>(m>>>0);o=q>>>2&4;q=q>>>(o>>>0);p=q>>>1&2;q=q>>>(p>>>0);j=q>>>1&1;j=c[33360+((m|n|o|p|j)+(q>>>(j>>>0))<<2)>>2]|0}if((j|0)!=0){while(1){g=(c[j+4>>2]&-8)-a|0;f=g>>>0<e>>>0;e=f?g:e;b=f?j:b;f=c[j+16>>2]|0;if((f|0)!=0){j=f;continue}j=c[j+20>>2]|0;if((j|0)==0){break}}}if((b|0)==0){break}if(e>>>0>=((c[8266]|0)-a|0)>>>0){break}d=b;i=c[8268]|0;if(d>>>0<i>>>0){ja();return 0}g=d+a|0;f=g;if(d>>>0>=g>>>0){ja();return 0}h=c[b+24>>2]|0;j=c[b+12>>2]|0;do{if((j|0)==(b|0)){k=b+20|0;j=c[k>>2]|0;if((j|0)==0){k=b+16|0;j=c[k>>2]|0;if((j|0)==0){j=0;break}}while(1){l=j+20|0;m=c[l>>2]|0;if((m|0)!=0){j=m;k=l;continue}l=j+16|0;m=c[l>>2]|0;if((m|0)==0){break}else{j=m;k=l}}if(k>>>0<i>>>0){ja();return 0}else{c[k>>2]=0;break}}else{k=c[b+8>>2]|0;if(k>>>0<i>>>0){ja();return 0}i=k+12|0;if((c[i>>2]|0)!=(b|0)){ja();return 0}l=j+8|0;if((c[l>>2]|0)==(b|0)){c[i>>2]=j;c[l>>2]=k;break}else{ja();return 0}}}while(0);c:do{if((h|0)!=0){i=b+28|0;k=33360+(c[i>>2]<<2)|0;do{if((b|0)==(c[k>>2]|0)){c[k>>2]=j;if((j|0)!=0){break}c[8265]=c[8265]&~(1<<c[i>>2]);break c}else{if(h>>>0<(c[8268]|0)>>>0){ja();return 0}i=h+16|0;if((c[i>>2]|0)==(b|0)){c[i>>2]=j}else{c[h+20>>2]=j}if((j|0)==0){break c}}}while(0);if(j>>>0<(c[8268]|0)>>>0){ja();return 0}c[j+24>>2]=h;h=c[b+16>>2]|0;do{if((h|0)!=0){if(h>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[j+16>>2]=h;c[h+24>>2]=j;break}}}while(0);h=c[b+20>>2]|0;if((h|0)==0){break}if(h>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[j+20>>2]=h;c[h+24>>2]=j;break}}}while(0);d:do{if(e>>>0<16>>>0){q=e+a|0;c[b+4>>2]=q|3;q=d+(q+4)|0;c[q>>2]=c[q>>2]|1}else{c[b+4>>2]=a|3;c[d+(a|4)>>2]=e|1;c[d+(e+a)>>2]=e;h=e>>>3;if(e>>>0<256>>>0){g=h<<1;e=33096+(g<<2)|0;i=c[8264]|0;h=1<<h;do{if((i&h|0)==0){c[8264]=i|h;h=e;g=33096+(g+2<<2)|0}else{g=33096+(g+2<<2)|0;h=c[g>>2]|0;if(h>>>0>=(c[8268]|0)>>>0){break}ja();return 0}}while(0);c[g>>2]=f;c[h+12>>2]=f;c[d+(a+8)>>2]=h;c[d+(a+12)>>2]=e;break}f=e>>>8;do{if((f|0)==0){h=0}else{if(e>>>0>16777215>>>0){h=31;break}p=(f+1048320|0)>>>16&8;q=f<<p;o=(q+520192|0)>>>16&4;q=q<<o;h=(q+245760|0)>>>16&2;h=14-(o|p|h)+(q<<h>>>15)|0;h=e>>>((h+7|0)>>>0)&1|h<<1}}while(0);f=33360+(h<<2)|0;c[d+(a+28)>>2]=h;c[d+(a+20)>>2]=0;c[d+(a+16)>>2]=0;j=c[8265]|0;i=1<<h;if((j&i|0)==0){c[8265]=j|i;c[f>>2]=g;c[d+(a+24)>>2]=f;c[d+(a+12)>>2]=g;c[d+(a+8)>>2]=g;break}f=c[f>>2]|0;if((h|0)==31){h=0}else{h=25-(h>>>1)|0}e:do{if((c[f+4>>2]&-8|0)!=(e|0)){h=e<<h;while(1){i=f+16+(h>>>31<<2)|0;j=c[i>>2]|0;if((j|0)==0){break}if((c[j+4>>2]&-8|0)==(e|0)){f=j;break e}else{f=j;h=h<<1}}if(i>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[i>>2]=g;c[d+(a+24)>>2]=f;c[d+(a+12)>>2]=g;c[d+(a+8)>>2]=g;break d}}}while(0);h=f+8|0;e=c[h>>2]|0;q=c[8268]|0;if(f>>>0>=q>>>0&e>>>0>=q>>>0){c[e+12>>2]=g;c[h>>2]=g;c[d+(a+8)>>2]=e;c[d+(a+12)>>2]=f;c[d+(a+24)>>2]=0;break}else{ja();return 0}}}while(0);q=b+8|0;return q|0}}while(0);b=c[8266]|0;if(b>>>0>=a>>>0){d=b-a|0;e=c[8269]|0;if(d>>>0>15>>>0){q=e;c[8269]=q+a;c[8266]=d;c[q+(a+4)>>2]=d|1;c[q+b>>2]=d;c[e+4>>2]=a|3}else{c[8266]=0;c[8269]=0;c[e+4>>2]=b|3;q=e+(b+4)|0;c[q>>2]=c[q>>2]|1}q=e+8|0;return q|0}b=c[8267]|0;if(b>>>0>a>>>0){o=b-a|0;c[8267]=o;q=c[8270]|0;p=q;c[8270]=p+a;c[p+(a+4)>>2]=o|1;c[q+4>>2]=a|3;q=q+8|0;return q|0}do{if((c[66]|0)==0){b=ia(30)|0;if((b-1&b|0)==0){c[68]=b;c[67]=b;c[69]=-1;c[70]=-1;c[71]=0;c[8375]=0;c[66]=(Aa(0)|0)&-16^1431655768;break}else{ja();return 0}}}while(0);h=a+48|0;e=c[68]|0;g=a+47|0;b=e+g|0;e=-e|0;f=b&e;if(f>>>0<=a>>>0){q=0;return q|0}i=c[8374]|0;do{if((i|0)!=0){p=c[8372]|0;q=p+f|0;if(q>>>0<=p>>>0|q>>>0>i>>>0){a=0}else{break}return a|0}}while(0);f:do{if((c[8375]&4|0)==0){k=c[8270]|0;g:do{if((k|0)==0){d=181}else{l=33504;while(1){j=l|0;m=c[j>>2]|0;if(m>>>0<=k>>>0){i=l+4|0;if((m+(c[i>>2]|0)|0)>>>0>k>>>0){break}}l=c[l+8>>2]|0;if((l|0)==0){d=181;break g}}if((l|0)==0){d=181;break}e=b-(c[8267]|0)&e;if(e>>>0>=2147483647>>>0){e=0;break}b=xa(e|0)|0;if((b|0)==((c[j>>2]|0)+(c[i>>2]|0)|0)){d=190}else{d=191}}}while(0);do{if((d|0)==181){i=xa(0)|0;if((i|0)==-1){e=0;break}e=i;b=c[67]|0;j=b-1|0;if((j&e|0)==0){e=f}else{e=f-e+(j+e&-b)|0}j=c[8372]|0;b=j+e|0;if(!(e>>>0>a>>>0&e>>>0<2147483647>>>0)){e=0;break}k=c[8374]|0;if((k|0)!=0){if(b>>>0<=j>>>0|b>>>0>k>>>0){e=0;break}}b=xa(e|0)|0;if((b|0)==(i|0)){b=i;d=190}else{d=191}}}while(0);h:do{if((d|0)==190){if((b|0)!=-1){d=201;break f}}else if((d|0)==191){d=-e|0;do{if((b|0)!=-1&e>>>0<2147483647>>>0&h>>>0>e>>>0){q=c[68]|0;g=g-e+q&-q;if(g>>>0>=2147483647>>>0){break}if((xa(g|0)|0)==-1){xa(d|0)|0;e=0;break h}else{e=g+e|0;break}}}while(0);if((b|0)==-1){e=0}else{d=201;break f}}}while(0);c[8375]=c[8375]|4;d=198}else{e=0;d=198}}while(0);do{if((d|0)==198){if(f>>>0>=2147483647>>>0){break}b=xa(f|0)|0;f=xa(0)|0;if(!((b|0)!=-1&(f|0)!=-1&b>>>0<f>>>0)){break}g=f-b|0;f=g>>>0>(a+40|0)>>>0;if(f){e=f?g:e;d=201}}}while(0);do{if((d|0)==201){f=(c[8372]|0)+e|0;c[8372]=f;if(f>>>0>(c[8373]|0)>>>0){c[8373]=f}f=c[8270]|0;i:do{if((f|0)==0){q=c[8268]|0;if((q|0)==0|b>>>0<q>>>0){c[8268]=b}c[8376]=b;c[8377]=e;c[8379]=0;c[8273]=c[66];c[8272]=-1;d=0;do{q=d<<1;p=33096+(q<<2)|0;c[33096+(q+3<<2)>>2]=p;c[33096+(q+2<<2)>>2]=p;d=d+1|0;}while(d>>>0<32>>>0);d=b+8|0;if((d&7|0)==0){d=0}else{d=-d&7}q=e-40-d|0;c[8270]=b+d;c[8267]=q;c[b+(d+4)>>2]=q|1;c[b+(e-36)>>2]=40;c[8271]=c[70]}else{g=33504;do{j=c[g>>2]|0;i=g+4|0;h=c[i>>2]|0;if((b|0)==(j+h|0)){d=213;break}g=c[g+8>>2]|0;}while((g|0)!=0);do{if((d|0)==213){if((c[g+12>>2]&8|0)!=0){break}q=f;if(!(q>>>0>=j>>>0&q>>>0<b>>>0)){break}c[i>>2]=h+e;q=c[8270]|0;b=(c[8267]|0)+e|0;d=q;e=q+8|0;if((e&7|0)==0){e=0}else{e=-e&7}q=b-e|0;c[8270]=d+e;c[8267]=q;c[d+(e+4)>>2]=q|1;c[d+(b+4)>>2]=40;c[8271]=c[70];break i}}while(0);if(b>>>0<(c[8268]|0)>>>0){c[8268]=b}g=b+e|0;i=33504;do{h=i|0;if((c[h>>2]|0)==(g|0)){d=223;break}i=c[i+8>>2]|0;}while((i|0)!=0);do{if((d|0)==223){if((c[i+12>>2]&8|0)!=0){break}c[h>>2]=b;d=i+4|0;c[d>>2]=(c[d>>2]|0)+e;d=b+8|0;if((d&7|0)==0){d=0}else{d=-d&7}f=b+(e+8)|0;if((f&7|0)==0){j=0}else{j=-f&7}m=b+(j+e)|0;l=m;f=d+a|0;h=b+f|0;g=h;i=m-(b+d)-a|0;c[b+(d+4)>>2]=a|3;j:do{if((l|0)==(c[8270]|0)){q=(c[8267]|0)+i|0;c[8267]=q;c[8270]=g;c[b+(f+4)>>2]=q|1}else{if((l|0)==(c[8269]|0)){q=(c[8266]|0)+i|0;c[8266]=q;c[8269]=g;c[b+(f+4)>>2]=q|1;c[b+(q+f)>>2]=q;break}k=e+4|0;o=c[b+(k+j)>>2]|0;if((o&3|0)==1){a=o&-8;n=o>>>3;k:do{if(o>>>0<256>>>0){k=c[b+((j|8)+e)>>2]|0;m=c[b+(e+12+j)>>2]|0;o=33096+(n<<1<<2)|0;do{if((k|0)!=(o|0)){if(k>>>0<(c[8268]|0)>>>0){ja();return 0}if((c[k+12>>2]|0)==(l|0)){break}ja();return 0}}while(0);if((m|0)==(k|0)){c[8264]=c[8264]&~(1<<n);break}do{if((m|0)==(o|0)){n=m+8|0}else{if(m>>>0<(c[8268]|0)>>>0){ja();return 0}n=m+8|0;if((c[n>>2]|0)==(l|0)){break}ja();return 0}}while(0);c[k+12>>2]=m;c[n>>2]=k}else{l=c[b+((j|24)+e)>>2]|0;n=c[b+(e+12+j)>>2]|0;do{if((n|0)==(m|0)){p=j|16;o=b+(k+p)|0;n=c[o>>2]|0;if((n|0)==0){o=b+(p+e)|0;n=c[o>>2]|0;if((n|0)==0){n=0;break}}while(1){q=n+20|0;p=c[q>>2]|0;if((p|0)!=0){n=p;o=q;continue}p=n+16|0;q=c[p>>2]|0;if((q|0)==0){break}else{n=q;o=p}}if(o>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[o>>2]=0;break}}else{q=c[b+((j|8)+e)>>2]|0;if(q>>>0<(c[8268]|0)>>>0){ja();return 0}o=q+12|0;if((c[o>>2]|0)!=(m|0)){ja();return 0}p=n+8|0;if((c[p>>2]|0)==(m|0)){c[o>>2]=n;c[p>>2]=q;break}else{ja();return 0}}}while(0);if((l|0)==0){break}o=b+(e+28+j)|0;p=33360+(c[o>>2]<<2)|0;do{if((m|0)==(c[p>>2]|0)){c[p>>2]=n;if((n|0)!=0){break}c[8265]=c[8265]&~(1<<c[o>>2]);break k}else{if(l>>>0<(c[8268]|0)>>>0){ja();return 0}o=l+16|0;if((c[o>>2]|0)==(m|0)){c[o>>2]=n}else{c[l+20>>2]=n}if((n|0)==0){break k}}}while(0);if(n>>>0<(c[8268]|0)>>>0){ja();return 0}c[n+24>>2]=l;m=j|16;l=c[b+(m+e)>>2]|0;do{if((l|0)!=0){if(l>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[n+16>>2]=l;c[l+24>>2]=n;break}}}while(0);k=c[b+(k+m)>>2]|0;if((k|0)==0){break}if(k>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[n+20>>2]=k;c[k+24>>2]=n;break}}}while(0);l=b+((a|j)+e)|0;i=a+i|0}e=l+4|0;c[e>>2]=c[e>>2]&-2;c[b+(f+4)>>2]=i|1;c[b+(i+f)>>2]=i;e=i>>>3;if(i>>>0<256>>>0){h=e<<1;a=33096+(h<<2)|0;i=c[8264]|0;e=1<<e;do{if((i&e|0)==0){c[8264]=i|e;e=a;h=33096+(h+2<<2)|0}else{h=33096+(h+2<<2)|0;e=c[h>>2]|0;if(e>>>0>=(c[8268]|0)>>>0){break}ja();return 0}}while(0);c[h>>2]=g;c[e+12>>2]=g;c[b+(f+8)>>2]=e;c[b+(f+12)>>2]=a;break}a=i>>>8;do{if((a|0)==0){e=0}else{if(i>>>0>16777215>>>0){e=31;break}p=(a+1048320|0)>>>16&8;q=a<<p;o=(q+520192|0)>>>16&4;q=q<<o;e=(q+245760|0)>>>16&2;e=14-(o|p|e)+(q<<e>>>15)|0;e=i>>>((e+7|0)>>>0)&1|e<<1}}while(0);a=33360+(e<<2)|0;c[b+(f+28)>>2]=e;c[b+(f+20)>>2]=0;c[b+(f+16)>>2]=0;j=c[8265]|0;g=1<<e;if((j&g|0)==0){c[8265]=j|g;c[a>>2]=h;c[b+(f+24)>>2]=a;c[b+(f+12)>>2]=h;c[b+(f+8)>>2]=h;break}a=c[a>>2]|0;if((e|0)==31){e=0}else{e=25-(e>>>1)|0}l:do{if((c[a+4>>2]&-8|0)!=(i|0)){j=i<<e;while(1){g=a+16+(j>>>31<<2)|0;e=c[g>>2]|0;if((e|0)==0){break}if((c[e+4>>2]&-8|0)==(i|0)){a=e;break l}else{a=e;j=j<<1}}if(g>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[g>>2]=h;c[b+(f+24)>>2]=a;c[b+(f+12)>>2]=h;c[b+(f+8)>>2]=h;break j}}}while(0);e=a+8|0;g=c[e>>2]|0;q=c[8268]|0;if(a>>>0>=q>>>0&g>>>0>=q>>>0){c[g+12>>2]=h;c[e>>2]=h;c[b+(f+8)>>2]=g;c[b+(f+12)>>2]=a;c[b+(f+24)>>2]=0;break}else{ja();return 0}}}while(0);q=b+(d|8)|0;return q|0}}while(0);d=f;j=33504;while(1){i=c[j>>2]|0;if(i>>>0<=d>>>0){h=c[j+4>>2]|0;g=i+h|0;if(g>>>0>d>>>0){break}}j=c[j+8>>2]|0}j=i+(h-39)|0;if((j&7|0)==0){j=0}else{j=-j&7}h=i+(h-47+j)|0;h=h>>>0<(f+16|0)>>>0?d:h;i=h+8|0;j=b+8|0;if((j&7|0)==0){j=0}else{j=-j&7}q=e-40-j|0;c[8270]=b+j;c[8267]=q;c[b+(j+4)>>2]=q|1;c[b+(e-36)>>2]=40;c[8271]=c[70];c[h+4>>2]=27;c[i>>2]=c[8376];c[i+4>>2]=c[8377];c[i+8>>2]=c[8378];c[i+12>>2]=c[8379];c[8376]=b;c[8377]=e;c[8379]=0;c[8378]=i;e=h+28|0;c[e>>2]=7;if((h+32|0)>>>0<g>>>0){while(1){b=e+4|0;c[b>>2]=7;if((e+8|0)>>>0<g>>>0){e=b}else{break}}}if((h|0)==(d|0)){break}e=h-f|0;g=d+(e+4)|0;c[g>>2]=c[g>>2]&-2;c[f+4>>2]=e|1;c[d+e>>2]=e;g=e>>>3;if(e>>>0<256>>>0){d=g<<1;b=33096+(d<<2)|0;e=c[8264]|0;g=1<<g;do{if((e&g|0)==0){c[8264]=e|g;e=b;d=33096+(d+2<<2)|0}else{d=33096+(d+2<<2)|0;e=c[d>>2]|0;if(e>>>0>=(c[8268]|0)>>>0){break}ja();return 0}}while(0);c[d>>2]=f;c[e+12>>2]=f;c[f+8>>2]=e;c[f+12>>2]=b;break}b=f;d=e>>>8;do{if((d|0)==0){d=0}else{if(e>>>0>16777215>>>0){d=31;break}p=(d+1048320|0)>>>16&8;q=d<<p;o=(q+520192|0)>>>16&4;q=q<<o;d=(q+245760|0)>>>16&2;d=14-(o|p|d)+(q<<d>>>15)|0;d=e>>>((d+7|0)>>>0)&1|d<<1}}while(0);g=33360+(d<<2)|0;c[f+28>>2]=d;c[f+20>>2]=0;c[f+16>>2]=0;i=c[8265]|0;h=1<<d;if((i&h|0)==0){c[8265]=i|h;c[g>>2]=b;c[f+24>>2]=g;c[f+12>>2]=f;c[f+8>>2]=f;break}i=c[g>>2]|0;if((d|0)==31){g=0}else{g=25-(d>>>1)|0}m:do{if((c[i+4>>2]&-8|0)!=(e|0)){d=i;h=e<<g;while(1){g=d+16+(h>>>31<<2)|0;i=c[g>>2]|0;if((i|0)==0){break}if((c[i+4>>2]&-8|0)==(e|0)){break m}else{d=i;h=h<<1}}if(g>>>0<(c[8268]|0)>>>0){ja();return 0}else{c[g>>2]=b;c[f+24>>2]=d;c[f+12>>2]=f;c[f+8>>2]=f;break i}}}while(0);d=i+8|0;e=c[d>>2]|0;q=c[8268]|0;if(i>>>0>=q>>>0&e>>>0>=q>>>0){c[e+12>>2]=b;c[d>>2]=b;c[f+8>>2]=e;c[f+12>>2]=i;c[f+24>>2]=0;break}else{ja();return 0}}}while(0);b=c[8267]|0;if(b>>>0<=a>>>0){break}o=b-a|0;c[8267]=o;q=c[8270]|0;p=q;c[8270]=p+a;c[p+(a+4)>>2]=o|1;c[q+4>>2]=a|3;q=q+8|0;return q|0}}while(0);c[(ya()|0)>>2]=12;q=0;return q|0}function cb(a){a=a|0;var b=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0,q=0,r=0,s=0,t=0,u=0,v=0,w=0;if((a|0)==0){return}p=a-8|0;r=p;q=c[8268]|0;if(p>>>0<q>>>0){ja()}n=c[a-4>>2]|0;m=n&3;if((m|0)==1){ja()}h=n&-8;k=a+(h-8)|0;i=k;a:do{if((n&1|0)==0){u=c[p>>2]|0;if((m|0)==0){return}p=-8-u|0;r=a+p|0;m=r;n=u+h|0;if(r>>>0<q>>>0){ja()}if((m|0)==(c[8269]|0)){b=a+(h-4)|0;if((c[b>>2]&3|0)!=3){b=m;l=n;break}c[8266]=n;c[b>>2]=c[b>>2]&-2;c[a+(p+4)>>2]=n|1;c[k>>2]=n;return}t=u>>>3;if(u>>>0<256>>>0){b=c[a+(p+8)>>2]|0;l=c[a+(p+12)>>2]|0;o=33096+(t<<1<<2)|0;do{if((b|0)!=(o|0)){if(b>>>0<q>>>0){ja()}if((c[b+12>>2]|0)==(m|0)){break}ja()}}while(0);if((l|0)==(b|0)){c[8264]=c[8264]&~(1<<t);b=m;l=n;break}do{if((l|0)==(o|0)){s=l+8|0}else{if(l>>>0<q>>>0){ja()}o=l+8|0;if((c[o>>2]|0)==(m|0)){s=o;break}ja()}}while(0);c[b+12>>2]=l;c[s>>2]=b;b=m;l=n;break}s=c[a+(p+24)>>2]|0;u=c[a+(p+12)>>2]|0;do{if((u|0)==(r|0)){u=a+(p+20)|0;t=c[u>>2]|0;if((t|0)==0){u=a+(p+16)|0;t=c[u>>2]|0;if((t|0)==0){o=0;break}}while(1){w=t+20|0;v=c[w>>2]|0;if((v|0)!=0){t=v;u=w;continue}v=t+16|0;w=c[v>>2]|0;if((w|0)==0){break}else{t=w;u=v}}if(u>>>0<q>>>0){ja()}else{c[u>>2]=0;o=t;break}}else{t=c[a+(p+8)>>2]|0;if(t>>>0<q>>>0){ja()}q=t+12|0;if((c[q>>2]|0)!=(r|0)){ja()}v=u+8|0;if((c[v>>2]|0)==(r|0)){c[q>>2]=u;c[v>>2]=t;o=u;break}else{ja()}}}while(0);if((s|0)==0){b=m;l=n;break}q=a+(p+28)|0;t=33360+(c[q>>2]<<2)|0;do{if((r|0)==(c[t>>2]|0)){c[t>>2]=o;if((o|0)!=0){break}c[8265]=c[8265]&~(1<<c[q>>2]);b=m;l=n;break a}else{if(s>>>0<(c[8268]|0)>>>0){ja()}q=s+16|0;if((c[q>>2]|0)==(r|0)){c[q>>2]=o}else{c[s+20>>2]=o}if((o|0)==0){b=m;l=n;break a}}}while(0);if(o>>>0<(c[8268]|0)>>>0){ja()}c[o+24>>2]=s;q=c[a+(p+16)>>2]|0;do{if((q|0)!=0){if(q>>>0<(c[8268]|0)>>>0){ja()}else{c[o+16>>2]=q;c[q+24>>2]=o;break}}}while(0);p=c[a+(p+20)>>2]|0;if((p|0)==0){b=m;l=n;break}if(p>>>0<(c[8268]|0)>>>0){ja()}else{c[o+20>>2]=p;c[p+24>>2]=o;b=m;l=n;break}}else{b=r;l=h}}while(0);m=b;if(m>>>0>=k>>>0){ja()}n=a+(h-4)|0;o=c[n>>2]|0;if((o&1|0)==0){ja()}do{if((o&2|0)==0){if((i|0)==(c[8270]|0)){w=(c[8267]|0)+l|0;c[8267]=w;c[8270]=b;c[b+4>>2]=w|1;if((b|0)!=(c[8269]|0)){return}c[8269]=0;c[8266]=0;return}if((i|0)==(c[8269]|0)){w=(c[8266]|0)+l|0;c[8266]=w;c[8269]=b;c[b+4>>2]=w|1;c[m+w>>2]=w;return}l=(o&-8)+l|0;n=o>>>3;b:do{if(o>>>0<256>>>0){g=c[a+h>>2]|0;h=c[a+(h|4)>>2]|0;a=33096+(n<<1<<2)|0;do{if((g|0)!=(a|0)){if(g>>>0<(c[8268]|0)>>>0){ja()}if((c[g+12>>2]|0)==(i|0)){break}ja()}}while(0);if((h|0)==(g|0)){c[8264]=c[8264]&~(1<<n);break}do{if((h|0)==(a|0)){j=h+8|0}else{if(h>>>0<(c[8268]|0)>>>0){ja()}a=h+8|0;if((c[a>>2]|0)==(i|0)){j=a;break}ja()}}while(0);c[g+12>>2]=h;c[j>>2]=g}else{i=c[a+(h+16)>>2]|0;n=c[a+(h|4)>>2]|0;do{if((n|0)==(k|0)){n=a+(h+12)|0;j=c[n>>2]|0;if((j|0)==0){n=a+(h+8)|0;j=c[n>>2]|0;if((j|0)==0){g=0;break}}while(1){p=j+20|0;o=c[p>>2]|0;if((o|0)!=0){j=o;n=p;continue}o=j+16|0;p=c[o>>2]|0;if((p|0)==0){break}else{j=p;n=o}}if(n>>>0<(c[8268]|0)>>>0){ja()}else{c[n>>2]=0;g=j;break}}else{o=c[a+h>>2]|0;if(o>>>0<(c[8268]|0)>>>0){ja()}p=o+12|0;if((c[p>>2]|0)!=(k|0)){ja()}j=n+8|0;if((c[j>>2]|0)==(k|0)){c[p>>2]=n;c[j>>2]=o;g=n;break}else{ja()}}}while(0);if((i|0)==0){break}j=a+(h+20)|0;n=33360+(c[j>>2]<<2)|0;do{if((k|0)==(c[n>>2]|0)){c[n>>2]=g;if((g|0)!=0){break}c[8265]=c[8265]&~(1<<c[j>>2]);break b}else{if(i>>>0<(c[8268]|0)>>>0){ja()}j=i+16|0;if((c[j>>2]|0)==(k|0)){c[j>>2]=g}else{c[i+20>>2]=g}if((g|0)==0){break b}}}while(0);if(g>>>0<(c[8268]|0)>>>0){ja()}c[g+24>>2]=i;i=c[a+(h+8)>>2]|0;do{if((i|0)!=0){if(i>>>0<(c[8268]|0)>>>0){ja()}else{c[g+16>>2]=i;c[i+24>>2]=g;break}}}while(0);h=c[a+(h+12)>>2]|0;if((h|0)==0){break}if(h>>>0<(c[8268]|0)>>>0){ja()}else{c[g+20>>2]=h;c[h+24>>2]=g;break}}}while(0);c[b+4>>2]=l|1;c[m+l>>2]=l;if((b|0)!=(c[8269]|0)){break}c[8266]=l;return}else{c[n>>2]=o&-2;c[b+4>>2]=l|1;c[m+l>>2]=l}}while(0);g=l>>>3;if(l>>>0<256>>>0){a=g<<1;d=33096+(a<<2)|0;h=c[8264]|0;g=1<<g;do{if((h&g|0)==0){c[8264]=h|g;f=d;e=33096+(a+2<<2)|0}else{h=33096+(a+2<<2)|0;g=c[h>>2]|0;if(g>>>0>=(c[8268]|0)>>>0){f=g;e=h;break}ja()}}while(0);c[e>>2]=b;c[f+12>>2]=b;c[b+8>>2]=f;c[b+12>>2]=d;return}e=b;f=l>>>8;do{if((f|0)==0){f=0}else{if(l>>>0>16777215>>>0){f=31;break}v=(f+1048320|0)>>>16&8;w=f<<v;u=(w+520192|0)>>>16&4;w=w<<u;f=(w+245760|0)>>>16&2;f=14-(u|v|f)+(w<<f>>>15)|0;f=l>>>((f+7|0)>>>0)&1|f<<1}}while(0);g=33360+(f<<2)|0;c[b+28>>2]=f;c[b+20>>2]=0;c[b+16>>2]=0;a=c[8265]|0;h=1<<f;c:do{if((a&h|0)==0){c[8265]=a|h;c[g>>2]=e;c[b+24>>2]=g;c[b+12>>2]=b;c[b+8>>2]=b}else{h=c[g>>2]|0;if((f|0)==31){g=0}else{g=25-(f>>>1)|0}d:do{if((c[h+4>>2]&-8|0)==(l|0)){d=h}else{f=h;h=l<<g;while(1){a=f+16+(h>>>31<<2)|0;g=c[a>>2]|0;if((g|0)==0){break}if((c[g+4>>2]&-8|0)==(l|0)){d=g;break d}else{f=g;h=h<<1}}if(a>>>0<(c[8268]|0)>>>0){ja()}else{c[a>>2]=e;c[b+24>>2]=f;c[b+12>>2]=b;c[b+8>>2]=b;break c}}}while(0);f=d+8|0;g=c[f>>2]|0;w=c[8268]|0;if(d>>>0>=w>>>0&g>>>0>=w>>>0){c[g+12>>2]=e;c[f>>2]=e;c[b+8>>2]=g;c[b+12>>2]=d;c[b+24>>2]=0;break}else{ja()}}}while(0);w=(c[8272]|0)-1|0;c[8272]=w;if((w|0)==0){b=33512}else{return}while(1){b=c[b>>2]|0;if((b|0)==0){break}else{b=b+8|0}}c[8272]=-1;return}function db(b){b=b|0;var c=0;c=b;while(a[c]|0){c=c+1|0}return c-b|0}function eb(b,d,e){b=b|0;d=d|0;e=e|0;var f=0;f=b|0;if((b&3)==(d&3)){while(b&3){if((e|0)==0)return f|0;a[b]=a[d]|0;b=b+1|0;d=d+1|0;e=e-1|0}while((e|0)>=4){c[b>>2]=c[d>>2];b=b+4|0;d=d+4|0;e=e-4|0}}while((e|0)>0){a[b]=a[d]|0;b=b+1|0;d=d+1|0;e=e-1|0}return f|0}function fb(b,d,e){b=b|0;d=d|0;e=e|0;var f=0,g=0,h=0,i=0;f=b+e|0;if((e|0)>=20){d=d&255;i=b&3;h=d|d<<8|d<<16|d<<24;g=f&~3;if(i){i=b+4-i|0;while((b|0)<(i|0)){a[b]=d;b=b+1|0}}while((b|0)<(g|0)){c[b>>2]=h;b=b+4|0}}while((b|0)<(f|0)){a[b]=d;b=b+1|0}return b-e|0}function gb(a,b){a=a|0;b=b|0;return Da[a&1](b|0)|0}function hb(a){a=a|0;Ea[a&1]()}function ib(a,b,c){a=a|0;b=b|0;c=c|0;return Fa[a&1](b|0,c|0)|0}function jb(a,b){a=a|0;b=b|0;Ga[a&1](b|0)}function kb(a){a=a|0;_(0);return 0}function lb(){_(1)}function mb(a,b){a=a|0;b=b|0;_(2);return 0}function nb(a){a=a|0;_(3)}
+function Ba(a){a=a|0;var b=0;b=i;i=i+a|0;i=i+7&-8;return b|0}function Ca(){return i|0}function Da(a){a=a|0;i=a}function Ea(a,b){a=a|0;b=b|0;if((o|0)==0){o=a;p=b}}function Fa(b){b=b|0;a[k]=a[b];a[k+1|0]=a[b+1|0];a[k+2|0]=a[b+2|0];a[k+3|0]=a[b+3|0]}function Ga(b){b=b|0;a[k]=a[b];a[k+1|0]=a[b+1|0];a[k+2|0]=a[b+2|0];a[k+3|0]=a[b+3|0];a[k+4|0]=a[b+4|0];a[k+5|0]=a[b+5|0];a[k+6|0]=a[b+6|0];a[k+7|0]=a[b+7|0]}function Ha(a){a=a|0;B=a}function Ia(a){a=a|0;C=a}function Ja(a){a=a|0;D=a}function Ka(a){a=a|0;E=a}function La(a){a=a|0;F=a}function Ma(a){a=a|0;G=a}function Na(a){a=a|0;H=a}function Oa(a){a=a|0;I=a}function Pa(a){a=a|0;J=a}function Qa(a){a=a|0;K=a}function Ra(){}function Sa(b){b=b|0;var c=0,d=0,e=0;e=b|0;c=a[e]|0;d=c<<5<<24>>24>>5;if(d<<24>>24!=2){a[280]=a[280]&-8|d&7;c=a[e]|0}c=c<<2<<24>>24>>5;if(c<<24>>24!=2){a[280]=a[280]&-57|c<<3&56}d=b+1|0;c=a[d]|0;e=c<<5<<24>>24>>5;if(e<<24>>24!=2){a[281]=a[281]&-8|e&7;c=a[d]|0}c=c<<2<<24>>24>>5;if(c<<24>>24!=2){a[281]=a[281]&-57|c<<3&56}d=b+2|0;c=a[d]|0;e=c<<5<<24>>24>>5;if(e<<24>>24!=2){a[282]=a[282]&-8|e&7;c=a[d]|0}c=c<<2<<24>>24>>5;if(c<<24>>24!=2){a[282]=a[282]&-57|c<<3&56}d=b+3|0;b=a[d]|0;c=b<<5<<24>>24>>5;if(c<<24>>24!=2){a[283]=a[283]&-8|c&7;b=a[d]|0}b=b<<2<<24>>24>>5;if(b<<24>>24==2){return}a[283]=a[283]&-57|b<<3&56;return}function Ta(){a[280]=a[280]&-64;a[281]=a[281]&-64;a[282]=a[282]&-64;a[283]=a[283]&-64;return}function Ua(b){b=b|0;var d=0,e=0,f=0,g=0,h=0,i=0,j=0;if((a[b]|0)!=58){ja(144,128,304,240)}e=a[b+1|0]|0;d=a[b+2|0]|0;g=((d&255)>>>0<58>>>0?-48:-55)+(d&255)+(((e&255)>>>0<58>>>0?268435408:268435401)+(e&255)<<4)|0;e=a[b+7|0]|0;d=a[b+8|0]|0;d=((d&255)>>>0<58>>>0?-48:-55)+(d&255)+(((e&255)>>>0<58>>>0?268435408:268435401)+(e&255)<<4)|0;if((d|0)==0){if((g|0)==0){return}j=7;h=c[6]|0;while(1){f=a[b+(j+2)|0]|0;e=a[b+(j+3)|0]|0;d=j+4|0;i=a[b+d|0]|0;j=a[b+(j+5)|0]|0;a[312+h|0]=(((j&255)>>>0<58>>>0?-48:-55)+j&255)+((((i&255)>>>0<58>>>0?0:9)+i&255)<<4);i=h+2|0;c[6]=i;a[h+313|0]=(((e&255)>>>0<58>>>0?-48:-55)+e&255)+((((f&255)>>>0<58>>>0?0:9)+f&255)<<4);g=g-2|0;if((g|0)==0){break}else{j=d;h=i}}return}else if((d|0)==1){return}else{ja(120,128,324,240)}}function Va(b){b=b|0;var c=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0;if((a[b]|0)==58){g=2816;c=0}else{ja(88,128,334,224)}a:while(1){d=a[b+(c+1)|0]|0;i=((d&255)>>>0<58>>>0?-48:-55)+(d&255)|0;l=a[b+(c+2)|0]|0;f=l&255;d=(l&255)>>>0<58>>>0?-48:-55;e=c+7|0;h=a[b+e|0]|0;j=a[b+(c+8)|0]|0;j=((j&255)>>>0<58>>>0?-48:-55)+(j&255)+(((h&255)>>>0<58>>>0?268435408:268435401)+(h&255)<<4)|0;h=d+f+(i<<4)|0;if((j|0)==1){c=11;break}else if((j|0)!=0){c=10;break}if((h|0)==0){f=g;c=e}else{d=(d-2+(i<<4)+f|0)>>>1;f=g+2+(d<<1)|0;d=d<<2;while(1){j=a[b+(e+2)|0]|0;l=a[b+(e+3)|0]|0;i=e+4|0;k=a[b+i|0]|0;e=a[b+(e+5)|0]|0;a[312+g|0]=(((e&255)>>>0<58>>>0?-48:-55)+e&255)+((((k&255)>>>0<58>>>0?0:9)+k&255)<<4);a[g+313|0]=(((l&255)>>>0<58>>>0?-48:-55)+l&255)+((((j&255)>>>0<58>>>0?0:9)+j&255)<<4);h=h-2|0;if((h|0)==0){break}else{g=g+2|0;e=i}}c=c+11+d|0}while(1){c=c+1|0;if((a[b+c|0]|0)==58){g=f;continue a}}}if((c|0)==10){ja(120,128,356,224)}else if((c|0)==11){Ya(b);return}}function Wa(){var e=0,f=0,g=0,h=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0,q=0,r=0,s=0,t=0,u=0,v=0,w=0,x=0,y=0,z=0,A=0,B=0;e=i;i=i+2312|0;g=e+256|0;m=e+1280|0;f=e+1288|0;o=c[4]|0;p=o&65535;b[16776]=p;if(p<<16>>16<=-1){i=e;return}k=m|0;h=m+1|0;j=m+2|0;l=m+3|0;n=e|0;t=o&65535;r=0;s=0;q=0;o=0;a:while(1){if((a[312+t|0]|0)==-107){if((a[t+313|0]|0)==-104){h=73;break}}t=r&-64;r=t|18;a[k]=r;u=s&-64;s=u|18;a[h]=s;v=q&-64;q=v|18;a[j]=q;o=o&-64|18;a[l]=o;x=p&65535;y=a[312+x|0]|0;w=y&255;b:do{switch(w|0){case 0:{if((a[x+313|0]|0)!=0){break b}b[16776]=p+2;break};case 1:{A=x+313|0;z=d[A]|0;a[312+(z>>>4<<1)|0]=a[312+(z<<1&30)|0]|0;A=d[A]|0;a[312+(A>>>3|1)|0]=a[312+(A<<1&30|1)|0]|0;b[16776]=p+2;break};case 4:case 5:case 6:case 7:{z=d[x+313|0]|0;r=a[312+(w<<4&16|z>>>4)|0]|0;z=a[312+(w<<3&16|z&15)|0]|0;w=(r&255)-(z&255)&65535;y=(a[280]&7)==1;x=y&1;A=w-x&65535;q=((z&15)+(r&15)&255)>>>1&8;a[j]=q|(v|2);do{if((z&r)<<24>>24>-1){if((z|r)<<24>>24<=-1){s=0;break}s=(z+r&255)>>>7}else{s=(z+r&255)>>>7^1}}while(0);B=s<<3&56;A=(A&65535)>>>7&1;s=B|A|u;a[h]=s;q=(A<<5^B<<2)<<24>>24>0|(q|v);a[j]=q;u=(y&1)+(z&255)|0;r=(((u|0)>-1?u:-u|0)|0)>(r&255|0)|(t|(w<<16>>16==x<<16>>16)<<3);a[k]=r;b[16776]=p+2;break};case 12:case 13:case 14:case 15:{x=d[x+313|0]|0;q=312+(w<<4&16|x>>>4)|0;s=a[q]|0;x=a[312+(w<<3&16|x&15)|0]|0;r=(x&255)+(s&255)&65535;w=((x&15)+(s&15)&255)>>>1&8;a[j]=w|(v|2);do{if((x&s)<<24>>24>-1){if((x|s)<<24>>24<=-1){s=0;break}s=(x+s&255)>>>7}else{s=(x+s&255)>>>7^1}}while(0);B=((s^2)<<24>>24<<29>>29|0)>0<<29>>29&1|(w|v);a[j]=B;s=u|s<<3&56|(r&65535)>>>7&1;a[h]=s;A=(r<<16>>16==0)<<3|(r&65535)>>>0>255>>>0|t;a[k]=A;a[q]=r;b[16776]=p+2;r=A;q=B;break};case 36:case 37:case 38:case 39:{r=x+313|0;s=d[r]|0;q=312+(s>>>4)|0;a[q]=a[312+(s&15)|0]^a[q];r=a[312+((d[r]|0)>>>4)|0]|0;q=(r&255)>>>7;s=u|q;a[h]=s;r=t|(r<<24>>24==0)<<3|2;a[k]=r;q=q|(v|16);a[j]=q;b[16776]=p+2;break};case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:case 58:case 59:case 60:case 61:case 62:case 63:{q=a[x+313|0]|0;x=q&255;r=a[312+(x>>>4|16)|0]|0;s=r&255;w=w<<4&240|x&15;x=s-w|0;y=w&255;do{if((y&r)<<24>>24>-1){if((y|r)<<24>>24<=-1){y=0;break}y=(y+r&255)>>>7}else{y=(y+r&255)>>>7^1}}while(0);A=x>>>7&1;B=u|y<<3&56|A;a[h]=B;q=(A^y)<<24>>24>0|(((r&15)+(q&15)&255)>>>1&8|v);a[j]=q;r=s>>>0<w>>>0|(t|((x&65535|0)==0)<<3);a[k]=r;b[16776]=p+2;s=B;break};case 130:case 131:{u=d[x+313|0]|0;if((u&15|0)!=0){break b}t=d[343]<<8|d[342];u=a[312+(w<<4&16|u>>>4)|0]|0;if((t|0)==37){ra(n|0,176,(p=i,i=i+8|0,c[p>>2]=u&255,p)|0)|0;i=p;va(n|0);p=b[16776]|0}a[312+t|0]=u;b[16776]=p+2;break};case 144:case 145:{t=d[x+313|0]|0;if((t&15|0)==5){B=d[342]|0;a[312+(w<<4&16|t>>>4)|0]=a[312+((B&254|d[343]<<8)+(c[4]|0)+(B&1^1))|0]|0;t=a[342]|0;if(t<<24>>24==-1){a[343]=(a[343]|0)+1;t=0}else{t=t+1&255}a[342]=t;p=p+2&65535;b[16776]=p}t=p&65535;u=a[t+313|0]|0;if((u&15)!=0){break b}a[312+(d[312+t|0]<<4&16|(u&255)>>>4)|0]=a[312+(d[t+314|0]<<8|d[t+315|0])|0]|0;b[16776]=p+4;break};case 146:case 147:{u=d[x+313|0]|0;if((u&15|0)==0){t=d[x+314|0]<<8|d[x+315|0];u=a[312+(w<<4&16|u>>>4)|0]|0;if((t|0)==37){ra(n|0,176,(p=i,i=i+8|0,c[p>>2]=u&255,p)|0)|0;i=p;va(n|0);p=b[16776]|0}a[312+t|0]=u;p=p+4&65535;b[16776]=p}u=p&65535;t=d[u+313|0]|0;if((t&15|0)==15){B=c[2]|0;a[312+B|0]=a[312+(d[312+u|0]<<4&16|t>>>4)|0]|0;c[2]=B-1;p=p+2&65535;b[16776]=p}t=p&65535;p=d[t+313|0]|0;if((p&15|0)!=13){break b}p=a[312+(d[312+t|0]<<4&16|p>>>4)|0]|0;t=d[339]<<8|d[338];if((t|0)==37){ra(n|0,176,(B=i,i=i+8|0,c[B>>2]=p&255,B)|0)|0;i=B;va(n|0)}a[312+t|0]=p;p=a[338]|0;if(p<<24>>24==-1){a[339]=(a[339]|0)+1;p=0}else{p=p+1&255}a[338]=p;b[16776]=(b[16776]|0)+2;break};case 148:case 149:{t=a[x+313|0]|0;if((t<<24>>24|0)==(-120|0)|(t<<24>>24|0)==(-88|0)){b[16776]=p+2;break b}t=t&255;u=t&15;if((u|0)==12|(u|0)==13){b[16776]=((d[x+314|0]<<8|d[x+315|0])<<1)+p;break b}else if((u|0)==14|(u|0)==15){b[16776]=((t<<17&31457280|w<<21&2097152|t<<16&65536|d[x+314|0]<<8|d[x+315|0])<<1)+(c[4]|0);break b}else{break b}break};case 176:case 177:case 178:case 179:case 180:case 181:case 182:case 183:{B=d[x+313|0]|0;a[312+(w<<4&16|B>>>4)|0]=a[312+(w<<3&48|B&15)|0]|0;b[16776]=p+2;break};case 184:case 185:case 186:case 187:case 188:case 189:case 190:case 191:{u=d[x+313|0]|0;t=(w<<3&48|u&15)+32|0;u=a[312+(w<<4&16|u>>>4)|0]|0;if((t|0)==37){ra(n|0,176,(p=i,i=i+8|0,c[p>>2]=u&255,p)|0)|0;i=p;va(n|0);p=b[16776]|0}a[312+t|0]=u;b[16776]=p+2;break};case 192:case 193:case 194:case 195:case 196:case 197:case 198:case 199:case 200:case 201:case 202:case 203:case 204:case 205:case 206:case 207:{B=(y&255)<<8;t=B&3840|d[x+313|0];p=p+2&65535;b[16776]=p;if((B&2048)==0){t=t<<1}else{t=t<<4<<16>>16>>3}b[16776]=t+p;break};case 224:case 225:case 226:case 227:case 228:case 229:case 230:case 231:case 232:case 233:case 234:case 235:case 236:case 237:case 238:case 239:{B=a[x+313|0]|0;a[312+((B&255)>>>4|16)|0]=B&15|y<<4;b[16776]=p+2;break};case 244:case 245:case 246:case 247:{if((w&12|0)!=4){break b}t=d[x+313|0]|0;if((t&7|0)!=1){break b}if((a[280]&56)==0){p=t>>>3|w<<5&96;if(p>>>0>64>>>0){p=x-(128-p<<1)|0}else{p=(p<<1)+x|0}p=p&65535;b[16776]=p}b[16776]=p+2;break};default:{h=71;break a}}}while(0);Sa(m);p=b[16776]|0;if(p<<16>>16>-1){t=p&65535}else{h=73;break}}if((h|0)==71){z=f|0;ra(z|0,40,(B=i,i=i+8|0,c[B>>2]=x,B)|0)|0;i=B;B=g|0;ra(B|0,200,(A=i,i=i+8|0,c[A>>2]=z,A)|0)|0;i=A;va(B|0);ja(32,128,644,264)}else if((h|0)==73){i=e;return}}function Xa(a){a=a|0;var b=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0,q=0;do{if(a>>>0<245>>>0){if(a>>>0<11>>>0){a=16}else{a=a+11&-8}f=a>>>3;e=c[8270]|0;b=e>>>(f>>>0);if((b&3|0)!=0){h=(b&1^1)+f|0;a=h<<1;d=33120+(a<<2)|0;a=33120+(a+2<<2)|0;g=c[a>>2]|0;f=g+8|0;b=c[f>>2]|0;do{if((d|0)==(b|0)){c[8270]=e&~(1<<h)}else{if(b>>>0<(c[8274]|0)>>>0){qa();return 0}e=b+12|0;if((c[e>>2]|0)==(g|0)){c[e>>2]=d;c[a>>2]=b;break}else{qa();return 0}}}while(0);q=h<<3;c[g+4>>2]=q|3;q=g+(q|4)|0;c[q>>2]=c[q>>2]|1;q=f;return q|0}if(a>>>0<=(c[8272]|0)>>>0){break}if((b|0)!=0){i=2<<f;i=b<<f&(i|-i);i=(i&-i)-1|0;b=i>>>12&16;i=i>>>(b>>>0);h=i>>>5&8;i=i>>>(h>>>0);f=i>>>2&4;i=i>>>(f>>>0);g=i>>>1&2;i=i>>>(g>>>0);d=i>>>1&1;d=(h|b|f|g|d)+(i>>>(d>>>0))|0;i=d<<1;g=33120+(i<<2)|0;i=33120+(i+2<<2)|0;f=c[i>>2]|0;b=f+8|0;h=c[b>>2]|0;do{if((g|0)==(h|0)){c[8270]=e&~(1<<d)}else{if(h>>>0<(c[8274]|0)>>>0){qa();return 0}e=h+12|0;if((c[e>>2]|0)==(f|0)){c[e>>2]=g;c[i>>2]=h;break}else{qa();return 0}}}while(0);q=d<<3;d=q-a|0;c[f+4>>2]=a|3;e=f+a|0;c[f+(a|4)>>2]=d|1;c[f+q>>2]=d;f=c[8272]|0;if((f|0)!=0){a=c[8275]|0;i=f>>>3;g=i<<1;f=33120+(g<<2)|0;h=c[8270]|0;i=1<<i;do{if((h&i|0)==0){c[8270]=h|i;h=f;g=33120+(g+2<<2)|0}else{g=33120+(g+2<<2)|0;h=c[g>>2]|0;if(h>>>0>=(c[8274]|0)>>>0){break}qa();return 0}}while(0);c[g>>2]=a;c[h+12>>2]=a;c[a+8>>2]=h;c[a+12>>2]=f}c[8272]=d;c[8275]=e;q=b;return q|0}b=c[8271]|0;if((b|0)==0){break}e=(b&-b)-1|0;p=e>>>12&16;e=e>>>(p>>>0);o=e>>>5&8;e=e>>>(o>>>0);q=e>>>2&4;e=e>>>(q>>>0);b=e>>>1&2;e=e>>>(b>>>0);d=e>>>1&1;d=c[33384+((o|p|q|b|d)+(e>>>(d>>>0))<<2)>>2]|0;e=d;b=d;d=(c[d+4>>2]&-8)-a|0;while(1){h=c[e+16>>2]|0;if((h|0)==0){h=c[e+20>>2]|0;if((h|0)==0){break}}g=(c[h+4>>2]&-8)-a|0;f=g>>>0<d>>>0;e=h;b=f?h:b;d=f?g:d}f=b;h=c[8274]|0;if(f>>>0<h>>>0){qa();return 0}q=f+a|0;e=q;if(f>>>0>=q>>>0){qa();return 0}g=c[b+24>>2]|0;i=c[b+12>>2]|0;do{if((i|0)==(b|0)){j=b+20|0;i=c[j>>2]|0;if((i|0)==0){j=b+16|0;i=c[j>>2]|0;if((i|0)==0){i=0;break}}while(1){l=i+20|0;k=c[l>>2]|0;if((k|0)!=0){i=k;j=l;continue}k=i+16|0;l=c[k>>2]|0;if((l|0)==0){break}else{i=l;j=k}}if(j>>>0<h>>>0){qa();return 0}else{c[j>>2]=0;break}}else{j=c[b+8>>2]|0;if(j>>>0<h>>>0){qa();return 0}h=j+12|0;if((c[h>>2]|0)!=(b|0)){qa();return 0}k=i+8|0;if((c[k>>2]|0)==(b|0)){c[h>>2]=i;c[k>>2]=j;break}else{qa();return 0}}}while(0);a:do{if((g|0)!=0){j=b+28|0;h=33384+(c[j>>2]<<2)|0;do{if((b|0)==(c[h>>2]|0)){c[h>>2]=i;if((i|0)!=0){break}c[8271]=c[8271]&~(1<<c[j>>2]);break a}else{if(g>>>0<(c[8274]|0)>>>0){qa();return 0}h=g+16|0;if((c[h>>2]|0)==(b|0)){c[h>>2]=i}else{c[g+20>>2]=i}if((i|0)==0){break a}}}while(0);if(i>>>0<(c[8274]|0)>>>0){qa();return 0}c[i+24>>2]=g;g=c[b+16>>2]|0;do{if((g|0)!=0){if(g>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[i+16>>2]=g;c[g+24>>2]=i;break}}}while(0);g=c[b+20>>2]|0;if((g|0)==0){break}if(g>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[i+20>>2]=g;c[g+24>>2]=i;break}}}while(0);if(d>>>0<16>>>0){q=d+a|0;c[b+4>>2]=q|3;q=f+(q+4)|0;c[q>>2]=c[q>>2]|1}else{c[b+4>>2]=a|3;c[f+(a|4)>>2]=d|1;c[f+(d+a)>>2]=d;f=c[8272]|0;if((f|0)!=0){a=c[8275]|0;h=f>>>3;g=h<<1;f=33120+(g<<2)|0;i=c[8270]|0;h=1<<h;do{if((i&h|0)==0){c[8270]=i|h;h=f;g=33120+(g+2<<2)|0}else{g=33120+(g+2<<2)|0;h=c[g>>2]|0;if(h>>>0>=(c[8274]|0)>>>0){break}qa();return 0}}while(0);c[g>>2]=a;c[h+12>>2]=a;c[a+8>>2]=h;c[a+12>>2]=f}c[8272]=d;c[8275]=e}q=b+8|0;return q|0}else{if(a>>>0>4294967231>>>0){a=-1;break}b=a+11|0;a=b&-8;f=c[8271]|0;if((f|0)==0){break}e=-a|0;b=b>>>8;do{if((b|0)==0){g=0}else{if(a>>>0>16777215>>>0){g=31;break}p=(b+1048320|0)>>>16&8;q=b<<p;o=(q+520192|0)>>>16&4;q=q<<o;g=(q+245760|0)>>>16&2;g=14-(o|p|g)+(q<<g>>>15)|0;g=a>>>((g+7|0)>>>0)&1|g<<1}}while(0);h=c[33384+(g<<2)>>2]|0;b:do{if((h|0)==0){b=0;j=0}else{if((g|0)==31){i=0}else{i=25-(g>>>1)|0}b=0;i=a<<i;j=0;while(1){l=c[h+4>>2]&-8;k=l-a|0;if(k>>>0<e>>>0){if((l|0)==(a|0)){b=h;e=k;j=h;break b}else{b=h;e=k}}k=c[h+20>>2]|0;h=c[h+16+(i>>>31<<2)>>2]|0;j=(k|0)==0|(k|0)==(h|0)?j:k;if((h|0)==0){break}else{i=i<<1}}}}while(0);if((j|0)==0&(b|0)==0){q=2<<g;f=f&(q|-q);if((f|0)==0){break}q=(f&-f)-1|0;n=q>>>12&16;q=q>>>(n>>>0);m=q>>>5&8;q=q>>>(m>>>0);o=q>>>2&4;q=q>>>(o>>>0);p=q>>>1&2;q=q>>>(p>>>0);j=q>>>1&1;j=c[33384+((m|n|o|p|j)+(q>>>(j>>>0))<<2)>>2]|0}if((j|0)!=0){while(1){g=(c[j+4>>2]&-8)-a|0;f=g>>>0<e>>>0;e=f?g:e;b=f?j:b;f=c[j+16>>2]|0;if((f|0)!=0){j=f;continue}j=c[j+20>>2]|0;if((j|0)==0){break}}}if((b|0)==0){break}if(e>>>0>=((c[8272]|0)-a|0)>>>0){break}d=b;i=c[8274]|0;if(d>>>0<i>>>0){qa();return 0}g=d+a|0;f=g;if(d>>>0>=g>>>0){qa();return 0}h=c[b+24>>2]|0;j=c[b+12>>2]|0;do{if((j|0)==(b|0)){k=b+20|0;j=c[k>>2]|0;if((j|0)==0){k=b+16|0;j=c[k>>2]|0;if((j|0)==0){j=0;break}}while(1){l=j+20|0;m=c[l>>2]|0;if((m|0)!=0){j=m;k=l;continue}l=j+16|0;m=c[l>>2]|0;if((m|0)==0){break}else{j=m;k=l}}if(k>>>0<i>>>0){qa();return 0}else{c[k>>2]=0;break}}else{k=c[b+8>>2]|0;if(k>>>0<i>>>0){qa();return 0}i=k+12|0;if((c[i>>2]|0)!=(b|0)){qa();return 0}l=j+8|0;if((c[l>>2]|0)==(b|0)){c[i>>2]=j;c[l>>2]=k;break}else{qa();return 0}}}while(0);c:do{if((h|0)!=0){i=b+28|0;k=33384+(c[i>>2]<<2)|0;do{if((b|0)==(c[k>>2]|0)){c[k>>2]=j;if((j|0)!=0){break}c[8271]=c[8271]&~(1<<c[i>>2]);break c}else{if(h>>>0<(c[8274]|0)>>>0){qa();return 0}i=h+16|0;if((c[i>>2]|0)==(b|0)){c[i>>2]=j}else{c[h+20>>2]=j}if((j|0)==0){break c}}}while(0);if(j>>>0<(c[8274]|0)>>>0){qa();return 0}c[j+24>>2]=h;h=c[b+16>>2]|0;do{if((h|0)!=0){if(h>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[j+16>>2]=h;c[h+24>>2]=j;break}}}while(0);h=c[b+20>>2]|0;if((h|0)==0){break}if(h>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[j+20>>2]=h;c[h+24>>2]=j;break}}}while(0);d:do{if(e>>>0<16>>>0){q=e+a|0;c[b+4>>2]=q|3;q=d+(q+4)|0;c[q>>2]=c[q>>2]|1}else{c[b+4>>2]=a|3;c[d+(a|4)>>2]=e|1;c[d+(e+a)>>2]=e;h=e>>>3;if(e>>>0<256>>>0){g=h<<1;e=33120+(g<<2)|0;i=c[8270]|0;h=1<<h;do{if((i&h|0)==0){c[8270]=i|h;h=e;g=33120+(g+2<<2)|0}else{g=33120+(g+2<<2)|0;h=c[g>>2]|0;if(h>>>0>=(c[8274]|0)>>>0){break}qa();return 0}}while(0);c[g>>2]=f;c[h+12>>2]=f;c[d+(a+8)>>2]=h;c[d+(a+12)>>2]=e;break}f=e>>>8;do{if((f|0)==0){h=0}else{if(e>>>0>16777215>>>0){h=31;break}p=(f+1048320|0)>>>16&8;q=f<<p;o=(q+520192|0)>>>16&4;q=q<<o;h=(q+245760|0)>>>16&2;h=14-(o|p|h)+(q<<h>>>15)|0;h=e>>>((h+7|0)>>>0)&1|h<<1}}while(0);f=33384+(h<<2)|0;c[d+(a+28)>>2]=h;c[d+(a+20)>>2]=0;c[d+(a+16)>>2]=0;j=c[8271]|0;i=1<<h;if((j&i|0)==0){c[8271]=j|i;c[f>>2]=g;c[d+(a+24)>>2]=f;c[d+(a+12)>>2]=g;c[d+(a+8)>>2]=g;break}f=c[f>>2]|0;if((h|0)==31){h=0}else{h=25-(h>>>1)|0}e:do{if((c[f+4>>2]&-8|0)!=(e|0)){h=e<<h;while(1){i=f+16+(h>>>31<<2)|0;j=c[i>>2]|0;if((j|0)==0){break}if((c[j+4>>2]&-8|0)==(e|0)){f=j;break e}else{f=j;h=h<<1}}if(i>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[i>>2]=g;c[d+(a+24)>>2]=f;c[d+(a+12)>>2]=g;c[d+(a+8)>>2]=g;break d}}}while(0);h=f+8|0;e=c[h>>2]|0;q=c[8274]|0;if(f>>>0>=q>>>0&e>>>0>=q>>>0){c[e+12>>2]=g;c[h>>2]=g;c[d+(a+8)>>2]=e;c[d+(a+12)>>2]=f;c[d+(a+24)>>2]=0;break}else{qa();return 0}}}while(0);q=b+8|0;return q|0}}while(0);b=c[8272]|0;if(b>>>0>=a>>>0){d=b-a|0;e=c[8275]|0;if(d>>>0>15>>>0){q=e;c[8275]=q+a;c[8272]=d;c[q+(a+4)>>2]=d|1;c[q+b>>2]=d;c[e+4>>2]=a|3}else{c[8272]=0;c[8275]=0;c[e+4>>2]=b|3;q=e+(b+4)|0;c[q>>2]=c[q>>2]|1}q=e+8|0;return q|0}b=c[8273]|0;if(b>>>0>a>>>0){o=b-a|0;c[8273]=o;q=c[8276]|0;p=q;c[8276]=p+a;c[p+(a+4)>>2]=o|1;c[q+4>>2]=a|3;q=q+8|0;return q|0}do{if((c[72]|0)==0){b=ia(30)|0;if((b-1&b|0)==0){c[74]=b;c[73]=b;c[75]=-1;c[76]=-1;c[77]=0;c[8381]=0;c[72]=(sa(0)|0)&-16^1431655768;break}else{qa();return 0}}}while(0);h=a+48|0;e=c[74]|0;g=a+47|0;b=e+g|0;e=-e|0;f=b&e;if(f>>>0<=a>>>0){q=0;return q|0}i=c[8380]|0;do{if((i|0)!=0){p=c[8378]|0;q=p+f|0;if(q>>>0<=p>>>0|q>>>0>i>>>0){a=0}else{break}return a|0}}while(0);f:do{if((c[8381]&4|0)==0){k=c[8276]|0;g:do{if((k|0)==0){d=181}else{l=33528;while(1){j=l|0;m=c[j>>2]|0;if(m>>>0<=k>>>0){i=l+4|0;if((m+(c[i>>2]|0)|0)>>>0>k>>>0){break}}l=c[l+8>>2]|0;if((l|0)==0){d=181;break g}}if((l|0)==0){d=181;break}e=b-(c[8273]|0)&e;if(e>>>0>=2147483647>>>0){e=0;break}b=oa(e|0)|0;if((b|0)==((c[j>>2]|0)+(c[i>>2]|0)|0)){d=190}else{d=191}}}while(0);do{if((d|0)==181){i=oa(0)|0;if((i|0)==-1){e=0;break}e=i;b=c[73]|0;j=b-1|0;if((j&e|0)==0){e=f}else{e=f-e+(j+e&-b)|0}j=c[8378]|0;b=j+e|0;if(!(e>>>0>a>>>0&e>>>0<2147483647>>>0)){e=0;break}k=c[8380]|0;if((k|0)!=0){if(b>>>0<=j>>>0|b>>>0>k>>>0){e=0;break}}b=oa(e|0)|0;if((b|0)==(i|0)){b=i;d=190}else{d=191}}}while(0);h:do{if((d|0)==190){if((b|0)!=-1){d=201;break f}}else if((d|0)==191){d=-e|0;do{if((b|0)!=-1&e>>>0<2147483647>>>0&h>>>0>e>>>0){q=c[74]|0;g=g-e+q&-q;if(g>>>0>=2147483647>>>0){break}if((oa(g|0)|0)==-1){oa(d|0)|0;e=0;break h}else{e=g+e|0;break}}}while(0);if((b|0)==-1){e=0}else{d=201;break f}}}while(0);c[8381]=c[8381]|4;d=198}else{e=0;d=198}}while(0);do{if((d|0)==198){if(f>>>0>=2147483647>>>0){break}b=oa(f|0)|0;f=oa(0)|0;if(!((b|0)!=-1&(f|0)!=-1&b>>>0<f>>>0)){break}g=f-b|0;f=g>>>0>(a+40|0)>>>0;if(f){e=f?g:e;d=201}}}while(0);do{if((d|0)==201){f=(c[8378]|0)+e|0;c[8378]=f;if(f>>>0>(c[8379]|0)>>>0){c[8379]=f}f=c[8276]|0;i:do{if((f|0)==0){q=c[8274]|0;if((q|0)==0|b>>>0<q>>>0){c[8274]=b}c[8382]=b;c[8383]=e;c[8385]=0;c[8279]=c[72];c[8278]=-1;d=0;do{q=d<<1;p=33120+(q<<2)|0;c[33120+(q+3<<2)>>2]=p;c[33120+(q+2<<2)>>2]=p;d=d+1|0;}while(d>>>0<32>>>0);d=b+8|0;if((d&7|0)==0){d=0}else{d=-d&7}q=e-40-d|0;c[8276]=b+d;c[8273]=q;c[b+(d+4)>>2]=q|1;c[b+(e-36)>>2]=40;c[8277]=c[76]}else{g=33528;do{j=c[g>>2]|0;i=g+4|0;h=c[i>>2]|0;if((b|0)==(j+h|0)){d=213;break}g=c[g+8>>2]|0;}while((g|0)!=0);do{if((d|0)==213){if((c[g+12>>2]&8|0)!=0){break}q=f;if(!(q>>>0>=j>>>0&q>>>0<b>>>0)){break}c[i>>2]=h+e;q=c[8276]|0;b=(c[8273]|0)+e|0;d=q;e=q+8|0;if((e&7|0)==0){e=0}else{e=-e&7}q=b-e|0;c[8276]=d+e;c[8273]=q;c[d+(e+4)>>2]=q|1;c[d+(b+4)>>2]=40;c[8277]=c[76];break i}}while(0);if(b>>>0<(c[8274]|0)>>>0){c[8274]=b}g=b+e|0;i=33528;do{h=i|0;if((c[h>>2]|0)==(g|0)){d=223;break}i=c[i+8>>2]|0;}while((i|0)!=0);do{if((d|0)==223){if((c[i+12>>2]&8|0)!=0){break}c[h>>2]=b;d=i+4|0;c[d>>2]=(c[d>>2]|0)+e;d=b+8|0;if((d&7|0)==0){d=0}else{d=-d&7}f=b+(e+8)|0;if((f&7|0)==0){j=0}else{j=-f&7}m=b+(j+e)|0;l=m;f=d+a|0;h=b+f|0;g=h;i=m-(b+d)-a|0;c[b+(d+4)>>2]=a|3;j:do{if((l|0)==(c[8276]|0)){q=(c[8273]|0)+i|0;c[8273]=q;c[8276]=g;c[b+(f+4)>>2]=q|1}else{if((l|0)==(c[8275]|0)){q=(c[8272]|0)+i|0;c[8272]=q;c[8275]=g;c[b+(f+4)>>2]=q|1;c[b+(q+f)>>2]=q;break}k=e+4|0;o=c[b+(k+j)>>2]|0;if((o&3|0)==1){a=o&-8;n=o>>>3;k:do{if(o>>>0<256>>>0){k=c[b+((j|8)+e)>>2]|0;m=c[b+(e+12+j)>>2]|0;o=33120+(n<<1<<2)|0;do{if((k|0)!=(o|0)){if(k>>>0<(c[8274]|0)>>>0){qa();return 0}if((c[k+12>>2]|0)==(l|0)){break}qa();return 0}}while(0);if((m|0)==(k|0)){c[8270]=c[8270]&~(1<<n);break}do{if((m|0)==(o|0)){n=m+8|0}else{if(m>>>0<(c[8274]|0)>>>0){qa();return 0}n=m+8|0;if((c[n>>2]|0)==(l|0)){break}qa();return 0}}while(0);c[k+12>>2]=m;c[n>>2]=k}else{l=c[b+((j|24)+e)>>2]|0;n=c[b+(e+12+j)>>2]|0;do{if((n|0)==(m|0)){p=j|16;o=b+(k+p)|0;n=c[o>>2]|0;if((n|0)==0){o=b+(p+e)|0;n=c[o>>2]|0;if((n|0)==0){n=0;break}}while(1){q=n+20|0;p=c[q>>2]|0;if((p|0)!=0){n=p;o=q;continue}p=n+16|0;q=c[p>>2]|0;if((q|0)==0){break}else{n=q;o=p}}if(o>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[o>>2]=0;break}}else{q=c[b+((j|8)+e)>>2]|0;if(q>>>0<(c[8274]|0)>>>0){qa();return 0}o=q+12|0;if((c[o>>2]|0)!=(m|0)){qa();return 0}p=n+8|0;if((c[p>>2]|0)==(m|0)){c[o>>2]=n;c[p>>2]=q;break}else{qa();return 0}}}while(0);if((l|0)==0){break}o=b+(e+28+j)|0;p=33384+(c[o>>2]<<2)|0;do{if((m|0)==(c[p>>2]|0)){c[p>>2]=n;if((n|0)!=0){break}c[8271]=c[8271]&~(1<<c[o>>2]);break k}else{if(l>>>0<(c[8274]|0)>>>0){qa();return 0}o=l+16|0;if((c[o>>2]|0)==(m|0)){c[o>>2]=n}else{c[l+20>>2]=n}if((n|0)==0){break k}}}while(0);if(n>>>0<(c[8274]|0)>>>0){qa();return 0}c[n+24>>2]=l;m=j|16;l=c[b+(m+e)>>2]|0;do{if((l|0)!=0){if(l>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[n+16>>2]=l;c[l+24>>2]=n;break}}}while(0);k=c[b+(k+m)>>2]|0;if((k|0)==0){break}if(k>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[n+20>>2]=k;c[k+24>>2]=n;break}}}while(0);l=b+((a|j)+e)|0;i=a+i|0}e=l+4|0;c[e>>2]=c[e>>2]&-2;c[b+(f+4)>>2]=i|1;c[b+(i+f)>>2]=i;e=i>>>3;if(i>>>0<256>>>0){h=e<<1;a=33120+(h<<2)|0;i=c[8270]|0;e=1<<e;do{if((i&e|0)==0){c[8270]=i|e;e=a;h=33120+(h+2<<2)|0}else{h=33120+(h+2<<2)|0;e=c[h>>2]|0;if(e>>>0>=(c[8274]|0)>>>0){break}qa();return 0}}while(0);c[h>>2]=g;c[e+12>>2]=g;c[b+(f+8)>>2]=e;c[b+(f+12)>>2]=a;break}a=i>>>8;do{if((a|0)==0){e=0}else{if(i>>>0>16777215>>>0){e=31;break}p=(a+1048320|0)>>>16&8;q=a<<p;o=(q+520192|0)>>>16&4;q=q<<o;e=(q+245760|0)>>>16&2;e=14-(o|p|e)+(q<<e>>>15)|0;e=i>>>((e+7|0)>>>0)&1|e<<1}}while(0);a=33384+(e<<2)|0;c[b+(f+28)>>2]=e;c[b+(f+20)>>2]=0;c[b+(f+16)>>2]=0;j=c[8271]|0;g=1<<e;if((j&g|0)==0){c[8271]=j|g;c[a>>2]=h;c[b+(f+24)>>2]=a;c[b+(f+12)>>2]=h;c[b+(f+8)>>2]=h;break}a=c[a>>2]|0;if((e|0)==31){e=0}else{e=25-(e>>>1)|0}l:do{if((c[a+4>>2]&-8|0)!=(i|0)){j=i<<e;while(1){g=a+16+(j>>>31<<2)|0;e=c[g>>2]|0;if((e|0)==0){break}if((c[e+4>>2]&-8|0)==(i|0)){a=e;break l}else{a=e;j=j<<1}}if(g>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[g>>2]=h;c[b+(f+24)>>2]=a;c[b+(f+12)>>2]=h;c[b+(f+8)>>2]=h;break j}}}while(0);e=a+8|0;g=c[e>>2]|0;q=c[8274]|0;if(a>>>0>=q>>>0&g>>>0>=q>>>0){c[g+12>>2]=h;c[e>>2]=h;c[b+(f+8)>>2]=g;c[b+(f+12)>>2]=a;c[b+(f+24)>>2]=0;break}else{qa();return 0}}}while(0);q=b+(d|8)|0;return q|0}}while(0);d=f;j=33528;while(1){i=c[j>>2]|0;if(i>>>0<=d>>>0){h=c[j+4>>2]|0;g=i+h|0;if(g>>>0>d>>>0){break}}j=c[j+8>>2]|0}j=i+(h-39)|0;if((j&7|0)==0){j=0}else{j=-j&7}h=i+(h-47+j)|0;h=h>>>0<(f+16|0)>>>0?d:h;i=h+8|0;j=b+8|0;if((j&7|0)==0){j=0}else{j=-j&7}q=e-40-j|0;c[8276]=b+j;c[8273]=q;c[b+(j+4)>>2]=q|1;c[b+(e-36)>>2]=40;c[8277]=c[76];c[h+4>>2]=27;c[i>>2]=c[8382];c[i+4>>2]=c[8383];c[i+8>>2]=c[8384];c[i+12>>2]=c[8385];c[8382]=b;c[8383]=e;c[8385]=0;c[8384]=i;e=h+28|0;c[e>>2]=7;if((h+32|0)>>>0<g>>>0){while(1){b=e+4|0;c[b>>2]=7;if((e+8|0)>>>0<g>>>0){e=b}else{break}}}if((h|0)==(d|0)){break}e=h-f|0;g=d+(e+4)|0;c[g>>2]=c[g>>2]&-2;c[f+4>>2]=e|1;c[d+e>>2]=e;g=e>>>3;if(e>>>0<256>>>0){d=g<<1;b=33120+(d<<2)|0;e=c[8270]|0;g=1<<g;do{if((e&g|0)==0){c[8270]=e|g;e=b;d=33120+(d+2<<2)|0}else{d=33120+(d+2<<2)|0;e=c[d>>2]|0;if(e>>>0>=(c[8274]|0)>>>0){break}qa();return 0}}while(0);c[d>>2]=f;c[e+12>>2]=f;c[f+8>>2]=e;c[f+12>>2]=b;break}b=f;d=e>>>8;do{if((d|0)==0){d=0}else{if(e>>>0>16777215>>>0){d=31;break}p=(d+1048320|0)>>>16&8;q=d<<p;o=(q+520192|0)>>>16&4;q=q<<o;d=(q+245760|0)>>>16&2;d=14-(o|p|d)+(q<<d>>>15)|0;d=e>>>((d+7|0)>>>0)&1|d<<1}}while(0);g=33384+(d<<2)|0;c[f+28>>2]=d;c[f+20>>2]=0;c[f+16>>2]=0;i=c[8271]|0;h=1<<d;if((i&h|0)==0){c[8271]=i|h;c[g>>2]=b;c[f+24>>2]=g;c[f+12>>2]=f;c[f+8>>2]=f;break}i=c[g>>2]|0;if((d|0)==31){g=0}else{g=25-(d>>>1)|0}m:do{if((c[i+4>>2]&-8|0)!=(e|0)){d=i;h=e<<g;while(1){g=d+16+(h>>>31<<2)|0;i=c[g>>2]|0;if((i|0)==0){break}if((c[i+4>>2]&-8|0)==(e|0)){break m}else{d=i;h=h<<1}}if(g>>>0<(c[8274]|0)>>>0){qa();return 0}else{c[g>>2]=b;c[f+24>>2]=d;c[f+12>>2]=f;c[f+8>>2]=f;break i}}}while(0);d=i+8|0;e=c[d>>2]|0;q=c[8274]|0;if(i>>>0>=q>>>0&e>>>0>=q>>>0){c[e+12>>2]=b;c[d>>2]=b;c[f+8>>2]=e;c[f+12>>2]=i;c[f+24>>2]=0;break}else{qa();return 0}}}while(0);b=c[8273]|0;if(b>>>0<=a>>>0){break}o=b-a|0;c[8273]=o;q=c[8276]|0;p=q;c[8276]=p+a;c[p+(a+4)>>2]=o|1;c[q+4>>2]=a|3;q=q+8|0;return q|0}}while(0);c[(ta()|0)>>2]=12;q=0;return q|0}function Ya(a){a=a|0;var b=0,d=0,e=0,f=0,g=0,h=0,i=0,j=0,k=0,l=0,m=0,n=0,o=0,p=0,q=0,r=0,s=0,t=0,u=0,v=0,w=0;if((a|0)==0){return}p=a-8|0;r=p;q=c[8274]|0;if(p>>>0<q>>>0){qa()}n=c[a-4>>2]|0;m=n&3;if((m|0)==1){qa()}h=n&-8;k=a+(h-8)|0;i=k;a:do{if((n&1|0)==0){u=c[p>>2]|0;if((m|0)==0){return}p=-8-u|0;r=a+p|0;m=r;n=u+h|0;if(r>>>0<q>>>0){qa()}if((m|0)==(c[8275]|0)){b=a+(h-4)|0;if((c[b>>2]&3|0)!=3){b=m;l=n;break}c[8272]=n;c[b>>2]=c[b>>2]&-2;c[a+(p+4)>>2]=n|1;c[k>>2]=n;return}t=u>>>3;if(u>>>0<256>>>0){b=c[a+(p+8)>>2]|0;l=c[a+(p+12)>>2]|0;o=33120+(t<<1<<2)|0;do{if((b|0)!=(o|0)){if(b>>>0<q>>>0){qa()}if((c[b+12>>2]|0)==(m|0)){break}qa()}}while(0);if((l|0)==(b|0)){c[8270]=c[8270]&~(1<<t);b=m;l=n;break}do{if((l|0)==(o|0)){s=l+8|0}else{if(l>>>0<q>>>0){qa()}o=l+8|0;if((c[o>>2]|0)==(m|0)){s=o;break}qa()}}while(0);c[b+12>>2]=l;c[s>>2]=b;b=m;l=n;break}s=c[a+(p+24)>>2]|0;u=c[a+(p+12)>>2]|0;do{if((u|0)==(r|0)){u=a+(p+20)|0;t=c[u>>2]|0;if((t|0)==0){u=a+(p+16)|0;t=c[u>>2]|0;if((t|0)==0){o=0;break}}while(1){w=t+20|0;v=c[w>>2]|0;if((v|0)!=0){t=v;u=w;continue}v=t+16|0;w=c[v>>2]|0;if((w|0)==0){break}else{t=w;u=v}}if(u>>>0<q>>>0){qa()}else{c[u>>2]=0;o=t;break}}else{t=c[a+(p+8)>>2]|0;if(t>>>0<q>>>0){qa()}q=t+12|0;if((c[q>>2]|0)!=(r|0)){qa()}v=u+8|0;if((c[v>>2]|0)==(r|0)){c[q>>2]=u;c[v>>2]=t;o=u;break}else{qa()}}}while(0);if((s|0)==0){b=m;l=n;break}q=a+(p+28)|0;t=33384+(c[q>>2]<<2)|0;do{if((r|0)==(c[t>>2]|0)){c[t>>2]=o;if((o|0)!=0){break}c[8271]=c[8271]&~(1<<c[q>>2]);b=m;l=n;break a}else{if(s>>>0<(c[8274]|0)>>>0){qa()}q=s+16|0;if((c[q>>2]|0)==(r|0)){c[q>>2]=o}else{c[s+20>>2]=o}if((o|0)==0){b=m;l=n;break a}}}while(0);if(o>>>0<(c[8274]|0)>>>0){qa()}c[o+24>>2]=s;q=c[a+(p+16)>>2]|0;do{if((q|0)!=0){if(q>>>0<(c[8274]|0)>>>0){qa()}else{c[o+16>>2]=q;c[q+24>>2]=o;break}}}while(0);p=c[a+(p+20)>>2]|0;if((p|0)==0){b=m;l=n;break}if(p>>>0<(c[8274]|0)>>>0){qa()}else{c[o+20>>2]=p;c[p+24>>2]=o;b=m;l=n;break}}else{b=r;l=h}}while(0);m=b;if(m>>>0>=k>>>0){qa()}n=a+(h-4)|0;o=c[n>>2]|0;if((o&1|0)==0){qa()}do{if((o&2|0)==0){if((i|0)==(c[8276]|0)){w=(c[8273]|0)+l|0;c[8273]=w;c[8276]=b;c[b+4>>2]=w|1;if((b|0)!=(c[8275]|0)){return}c[8275]=0;c[8272]=0;return}if((i|0)==(c[8275]|0)){w=(c[8272]|0)+l|0;c[8272]=w;c[8275]=b;c[b+4>>2]=w|1;c[m+w>>2]=w;return}l=(o&-8)+l|0;n=o>>>3;b:do{if(o>>>0<256>>>0){g=c[a+h>>2]|0;h=c[a+(h|4)>>2]|0;a=33120+(n<<1<<2)|0;do{if((g|0)!=(a|0)){if(g>>>0<(c[8274]|0)>>>0){qa()}if((c[g+12>>2]|0)==(i|0)){break}qa()}}while(0);if((h|0)==(g|0)){c[8270]=c[8270]&~(1<<n);break}do{if((h|0)==(a|0)){j=h+8|0}else{if(h>>>0<(c[8274]|0)>>>0){qa()}a=h+8|0;if((c[a>>2]|0)==(i|0)){j=a;break}qa()}}while(0);c[g+12>>2]=h;c[j>>2]=g}else{i=c[a+(h+16)>>2]|0;n=c[a+(h|4)>>2]|0;do{if((n|0)==(k|0)){n=a+(h+12)|0;j=c[n>>2]|0;if((j|0)==0){n=a+(h+8)|0;j=c[n>>2]|0;if((j|0)==0){g=0;break}}while(1){p=j+20|0;o=c[p>>2]|0;if((o|0)!=0){j=o;n=p;continue}o=j+16|0;p=c[o>>2]|0;if((p|0)==0){break}else{j=p;n=o}}if(n>>>0<(c[8274]|0)>>>0){qa()}else{c[n>>2]=0;g=j;break}}else{o=c[a+h>>2]|0;if(o>>>0<(c[8274]|0)>>>0){qa()}p=o+12|0;if((c[p>>2]|0)!=(k|0)){qa()}j=n+8|0;if((c[j>>2]|0)==(k|0)){c[p>>2]=n;c[j>>2]=o;g=n;break}else{qa()}}}while(0);if((i|0)==0){break}j=a+(h+20)|0;n=33384+(c[j>>2]<<2)|0;do{if((k|0)==(c[n>>2]|0)){c[n>>2]=g;if((g|0)!=0){break}c[8271]=c[8271]&~(1<<c[j>>2]);break b}else{if(i>>>0<(c[8274]|0)>>>0){qa()}j=i+16|0;if((c[j>>2]|0)==(k|0)){c[j>>2]=g}else{c[i+20>>2]=g}if((g|0)==0){break b}}}while(0);if(g>>>0<(c[8274]|0)>>>0){qa()}c[g+24>>2]=i;i=c[a+(h+8)>>2]|0;do{if((i|0)!=0){if(i>>>0<(c[8274]|0)>>>0){qa()}else{c[g+16>>2]=i;c[i+24>>2]=g;break}}}while(0);h=c[a+(h+12)>>2]|0;if((h|0)==0){break}if(h>>>0<(c[8274]|0)>>>0){qa()}else{c[g+20>>2]=h;c[h+24>>2]=g;break}}}while(0);c[b+4>>2]=l|1;c[m+l>>2]=l;if((b|0)!=(c[8275]|0)){break}c[8272]=l;return}else{c[n>>2]=o&-2;c[b+4>>2]=l|1;c[m+l>>2]=l}}while(0);g=l>>>3;if(l>>>0<256>>>0){a=g<<1;d=33120+(a<<2)|0;h=c[8270]|0;g=1<<g;do{if((h&g|0)==0){c[8270]=h|g;f=d;e=33120+(a+2<<2)|0}else{h=33120+(a+2<<2)|0;g=c[h>>2]|0;if(g>>>0>=(c[8274]|0)>>>0){f=g;e=h;break}qa()}}while(0);c[e>>2]=b;c[f+12>>2]=b;c[b+8>>2]=f;c[b+12>>2]=d;return}e=b;f=l>>>8;do{if((f|0)==0){f=0}else{if(l>>>0>16777215>>>0){f=31;break}v=(f+1048320|0)>>>16&8;w=f<<v;u=(w+520192|0)>>>16&4;w=w<<u;f=(w+245760|0)>>>16&2;f=14-(u|v|f)+(w<<f>>>15)|0;f=l>>>((f+7|0)>>>0)&1|f<<1}}while(0);g=33384+(f<<2)|0;c[b+28>>2]=f;c[b+20>>2]=0;c[b+16>>2]=0;a=c[8271]|0;h=1<<f;c:do{if((a&h|0)==0){c[8271]=a|h;c[g>>2]=e;c[b+24>>2]=g;c[b+12>>2]=b;c[b+8>>2]=b}else{h=c[g>>2]|0;if((f|0)==31){g=0}else{g=25-(f>>>1)|0}d:do{if((c[h+4>>2]&-8|0)==(l|0)){d=h}else{f=h;h=l<<g;while(1){a=f+16+(h>>>31<<2)|0;g=c[a>>2]|0;if((g|0)==0){break}if((c[g+4>>2]&-8|0)==(l|0)){d=g;break d}else{f=g;h=h<<1}}if(a>>>0<(c[8274]|0)>>>0){qa()}else{c[a>>2]=e;c[b+24>>2]=f;c[b+12>>2]=b;c[b+8>>2]=b;break c}}}while(0);f=d+8|0;g=c[f>>2]|0;w=c[8274]|0;if(d>>>0>=w>>>0&g>>>0>=w>>>0){c[g+12>>2]=e;c[f>>2]=e;c[b+8>>2]=g;c[b+12>>2]=d;c[b+24>>2]=0;break}else{qa()}}}while(0);w=(c[8278]|0)-1|0;c[8278]=w;if((w|0)==0){b=33536}else{return}while(1){b=c[b>>2]|0;if((b|0)==0){break}else{b=b+8|0}}c[8278]=-1;return}function Za(b){b=b|0;var c=0;c=b;while(a[c]|0){c=c+1|0}return c-b|0}function _a(b,d,e){b=b|0;d=d|0;e=e|0;var f=0;f=b|0;if((b&3)==(d&3)){while(b&3){if((e|0)==0)return f|0;a[b]=a[d]|0;b=b+1|0;d=d+1|0;e=e-1|0}while((e|0)>=4){c[b>>2]=c[d>>2];b=b+4|0;d=d+4|0;e=e-4|0}}while((e|0)>0){a[b]=a[d]|0;b=b+1|0;d=d+1|0;e=e-1|0}return f|0}function $a(b,d,e){b=b|0;d=d|0;e=e|0;var f=0,g=0,h=0,i=0;f=b+e|0;if((e|0)>=20){d=d&255;i=b&3;h=d|d<<8|d<<16|d<<24;g=f&~3;if(i){i=b+4-i|0;while((b|0)<(i|0)){a[b]=d;b=b+1|0}}while((b|0)<(g|0)){c[b>>2]=h;b=b+4|0}}while((b|0)<(f|0)){a[b]=d;b=b+1|0}return b-e|0}function ab(a,b){a=a|0;b=b|0;return xa[a&1](b|0)|0}function bb(a){a=a|0;ya[a&1]()}function cb(a,b,c){a=a|0;b=b|0;c=c|0;return za[a&1](b|0,c|0)|0}function db(a,b){a=a|0;b=b|0;Aa[a&1](b|0)}function eb(a){a=a|0;_(0);return 0}function fb(){_(1)}function gb(a,b){a=a|0;b=b|0;_(2);return 0}function hb(a){a=a|0;_(3)}
 
 
 
 
 // EMSCRIPTEN_END_FUNCS
-var Da=[kb,kb];var Ea=[lb,lb];var Fa=[mb,mb];var Ga=[nb,nb];return{_loadProgram:$a,_strlen:db,_free:cb,_loadPartialProgram:_a,_execProgram:ab,_memset:fb,_malloc:bb,_memcpy:eb,_engineInit:Za,runPostSets:Xa,stackAlloc:Ha,stackSave:Ia,stackRestore:Ja,setThrew:Ka,setTempRet0:Na,setTempRet1:Oa,setTempRet2:Pa,setTempRet3:Qa,setTempRet4:Ra,setTempRet5:Sa,setTempRet6:Ta,setTempRet7:Ua,setTempRet8:Va,setTempRet9:Wa,dynCall_ii:gb,dynCall_v:hb,dynCall_iii:ib,dynCall_vi:jb}})
+var xa=[eb,eb];var ya=[fb,fb];var za=[gb,gb];var Aa=[hb,hb];return{_loadProgram:Va,_strlen:Za,_free:Ya,_loadPartialProgram:Ua,_execProgram:Wa,_memset:$a,_malloc:Xa,_memcpy:_a,_engineInit:Ta,runPostSets:Ra,stackAlloc:Ba,stackSave:Ca,stackRestore:Da,setThrew:Ea,setTempRet0:Ha,setTempRet1:Ia,setTempRet2:Ja,setTempRet3:Ka,setTempRet4:La,setTempRet5:Ma,setTempRet6:Na,setTempRet7:Oa,setTempRet8:Pa,setTempRet9:Qa,dynCall_ii:ab,dynCall_v:bb,dynCall_iii:cb,dynCall_vi:db}})
 
 
 // EMSCRIPTEN_END_ASM
-({ "Math": Math, "Int8Array": Int8Array, "Int16Array": Int16Array, "Int32Array": Int32Array, "Uint8Array": Uint8Array, "Uint16Array": Uint16Array, "Uint32Array": Uint32Array, "Float32Array": Float32Array, "Float64Array": Float64Array }, { "abort": abort, "assert": assert, "asmPrintInt": asmPrintInt, "asmPrintFloat": asmPrintFloat, "min": Math_min, "invoke_ii": invoke_ii, "invoke_v": invoke_v, "invoke_iii": invoke_iii, "invoke_vi": invoke_vi, "_llvm_lifetime_end": _llvm_lifetime_end, "_sysconf": _sysconf, "_abort": _abort, "_fprintf": _fprintf, "___assert_fail": ___assert_fail, "_printf": _printf, "_fflush": _fflush, "__reallyNegative": __reallyNegative, "_snprintf": _snprintf, "___setErrNo": ___setErrNo, "_fwrite": _fwrite, "_send": _send, "_write": _write, "_sprintf": _sprintf, "__formatString": __formatString, "_pwrite": _pwrite, "_sbrk": _sbrk, "___errno_location": ___errno_location, "_llvm_lifetime_start": _llvm_lifetime_start, "_time": _time, "_emscripten_run_script": _emscripten_run_script, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "NaN": NaN, "Infinity": Infinity }, buffer);
+({ "Math": Math, "Int8Array": Int8Array, "Int16Array": Int16Array, "Int32Array": Int32Array, "Uint8Array": Uint8Array, "Uint16Array": Uint16Array, "Uint32Array": Uint32Array, "Float32Array": Float32Array, "Float64Array": Float64Array }, { "abort": abort, "assert": assert, "asmPrintInt": asmPrintInt, "asmPrintFloat": asmPrintFloat, "min": Math_min, "invoke_ii": invoke_ii, "invoke_v": invoke_v, "invoke_iii": invoke_iii, "invoke_vi": invoke_vi, "_llvm_lifetime_end": _llvm_lifetime_end, "_sysconf": _sysconf, "___assert_fail": ___assert_fail, "_snprintf": _snprintf, "___setErrNo": ___setErrNo, "__reallyNegative": __reallyNegative, "__formatString": __formatString, "_sbrk": _sbrk, "_llvm_lifetime_start": _llvm_lifetime_start, "_abort": _abort, "_sprintf": _sprintf, "_time": _time, "___errno_location": ___errno_location, "_fflush": _fflush, "_emscripten_run_script": _emscripten_run_script, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "NaN": NaN, "Infinity": Infinity }, buffer);
 var _loadProgram = Module["_loadProgram"] = asm["_loadProgram"];
 var _strlen = Module["_strlen"] = asm["_strlen"];
 var _free = Module["_free"] = asm["_free"];

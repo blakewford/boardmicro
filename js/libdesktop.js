@@ -31,6 +31,29 @@ function reportCallFrame(frame)
   console.log(frame);
 }
 
+// New APIs
+function writePort(port, value)
+{
+  switch(port)
+  {
+    case 0:
+      console.log("PortB");
+      break;
+    case 1:
+      console.log("PortC");
+      break;
+    case 2:
+      console.log("PortD");
+      break;
+    case 3:
+      console.log("PortE");
+      break;
+    case 4:
+      console.log("PortF");
+  }
+  console.log(value);
+}
+
 function getCommandLineArgs()
 {
   var length = process.argv.length;
