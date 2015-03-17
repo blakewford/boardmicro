@@ -175,7 +175,7 @@
                           Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
                         }
                         Module.ccall('engineInit');
-                        Module.ccall('execProgram');
+                        execProgram();
                       }
                       else
                       {
@@ -254,7 +254,7 @@
                     Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
                   }
                   Module.ccall('engineInit');
-                  Module.ccall('execProgram');
+                  execProgram();
                 }
                 else
                 {
@@ -658,4 +658,16 @@
           }
         }
       }
+  }
+
+  function execProgram()
+  {
+    var success = true;
+    var batch = batchSize;
+    while(success && batch)
+    {
+      success = Module.ccall('fetch', 'number');
+      batch--;
+    }
+    success && setTimeout(execProgram, batchDelay);
   }
