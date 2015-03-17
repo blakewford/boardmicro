@@ -664,10 +664,14 @@
   {
     var success = true;
     var batch = batchSize;
+    var start = new Date().getTime();
     while(success && batch)
     {
       success = Module.ccall('fetch', 'number');
       batch--;
     }
+    var end = new Date().getTime();
+    var mhz = (batchSize/(end-start))/1000;
+    reportMhz(mhz);
     success && setTimeout(execProgram, batchDelay);
   }
