@@ -37,7 +37,7 @@ $(BASENAME).elf: $(SRC_DIR)$(SRC).c libplatform.a
 	avr-gcc -gdwarf-4 -I$(LIB_DIR) $< -o $(BASENAME).elf -D$(TARGET) -L. -lplatform -mmcu=$(TARGET)
 
 $(BASENAME).dis: $(BASENAME).elf
-	avr-objdump -d $(BASENAME).elf > $(BASENAME).hex.dis
+	avr-objdump -S $(BASENAME).elf > $(BASENAME).hex.dis
 
 $(BASENAME).hex: $(BASENAME).elf
 	avr-objcopy -I elf32-avr -O ihex $(BASENAME).elf $(BASENAME).hex
