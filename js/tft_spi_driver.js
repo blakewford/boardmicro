@@ -67,3 +67,78 @@ function peripheralSPIWrite(a) {
     }
   }
 }
+
+//New API
+var videoMemory = new Array(10);
+function writeVideoMemory(address, value) {
+  videoMemory[address] = value;
+  if(address == 0 || address == 1) {
+    screenDataOffset = -1;
+  } else {
+    if(address == 9 || address == 8) {
+      var startX = videoMemory[1] << 8 | videoMemory[0];
+      var endX = videoMemory[3] << 8 | videoMemory[2];
+      var Y = videoMemory[5] << 8 | videoMemory[4];
+      var endY = videoMemory[7] << 8 | videoMemory[6];
+      var color = videoMemory[9] << 8 | videoMemory[8];
+
+      var colorString = (8 * (color >> 11) << 16) + (4 * (color >> 5 & 63) << 8);
+      colorString += 8 * (color & 31);
+      for(colorString = colorString.toString(16);6 > colorString.length;) {
+        colorString = "0" + colorString;
+      }
+      color = "#" + colorString;
+      if(-1 != screenDataOffset)
+      {
+        drawPixel(startX + screenDataOffset, Y, color);
+      }
+      startX + screenDataOffset != endX ? screenDataOffset++ : (screenDataOffset = 0, Y != endY && (Y++, videoMemory[5] = (Y >> 8)), videoMemory[4] = (Y & 255));
+    }
+  }
+}
+
+function writeSPI(value) {
+  if (0 == (eState & 64) && 0 == (dState & 4)) {
+    42 == value ? colset = 4 : 43 == value && (rowset = 4);
+  } else {
+    if (0 == (eState & 64) && 0 != (dState & 4)) {
+      if (0 < colset) {
+        optimizationEnabled = !0;
+        switch(colset) {
+          case 4:
+            writeVideoMemory(1, value);
+            break;
+          case 3:
+            writeVideoMemory(0, value);
+            break;
+          case 2:
+            writeVideoMemory(3, value);
+            break;
+          case 1:
+            writeVideoMemory(2, value);
+        }
+        colset--;
+      } else {
+        if (0 < rowset) {
+          switch(rowset) {
+            case 4:
+              writeVideoMemory(5, value);
+              break;
+            case 3:
+              writeVideoMemory(4, value);
+              break;
+            case 2:
+              writeVideoMemory(7, value);
+              break;
+            case 1:
+              writeVideoMemory(6, value);
+          }
+          rowset--;
+          optimizationEnabled = !1;
+        } else {
+          0 == datasent % 2 ? writeVideoMemory(8, value) : writeVideoMemory(9, value), datasent++;
+        }
+      }
+    }
+  }
+}

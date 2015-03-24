@@ -629,34 +629,26 @@
 
   //New API
   var shouldBeBitsPerPort = 8;
+  var bState, cState, dState, eState, fState;
   function writePort(port, value)
   {
-      var pin = null;
-      // Disable all port pins
-      for(i = 0; i < shouldBeBitsPerPort; i++)
+      switch(port)
       {
-        pin = pinNumberToPinObject(parseInt(i + port*8));
-        if(pin)
-        {
-          //IsGreen?
-          var data = pin.getContext('2d').getImageData(0, 0, 1, 1).data[1];
-          if(data == 0xFF)
-          {
-            fillCanvas(pin, red_color);
-          }
-        }
-      }
-      // Enable selected port pins
-      for(i = 0; i < shouldBeBitsPerPort; i++)
-      {
-        if(parseInt(value) & 1 << i)
-        {
-          pin = pinNumberToPinObject(parseInt(i + port*8));
-          if(pin)
-          {
-            fillCanvas(pin, green_color);
-          }
-        }
+        case 0:
+          bState = value;
+          break;
+        case 1:
+          cState = value;
+          break;
+        case 2:
+          dState = value;
+          break;
+        case 3:
+          eState = value;
+          break;
+        case 4:
+          fState = value;
+          break;
       }
   }
 
@@ -668,4 +660,45 @@
     var mhz = (batchSize/(end-start))/1000;
     reportMhz(mhz);
     success && setTimeout(execProgram, batchDelay);
+  }
+
+  function refreshPort(port, value)
+  {
+    var pin = null;
+    // Disable all port pins
+    for(i = 0; i < shouldBeBitsPerPort; i++)
+    {
+      pin = pinNumberToPinObject(parseInt(i + port*8));
+      if(pin)
+      {
+        //IsGreen?
+        var data = pin.getContext('2d').getImageData(0, 0, 1, 1).data[1];
+        if(data == 0xFF)
+        {
+          fillCanvas(pin, red_color);
+        }
+      }
+    }
+    // Enable selected port pins
+    for(i = 0; i < shouldBeBitsPerPort; i++)
+    {
+      if(parseInt(value) & 1 << i)
+      {
+        pin = pinNumberToPinObject(parseInt(i + port*8));
+        if(pin)
+        {
+          fillCanvas(pin, green_color);
+        }
+      }
+    }
+  }
+
+  function refreshUI()
+  {
+    refreshScreen();
+    refreshPort(0, bState);
+    refreshPort(1, cState);
+    refreshPort(2, dState);
+    refreshPort(3, eState);
+    refreshPort(4, fState);
   }
