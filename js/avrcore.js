@@ -1,19 +1,19 @@
-/* AVR simulation code for pichai.
+/* AVR simulation code for boardmicro.
 
- This file is part of pichai.
+ This file is part of boardmicro.
 
- pichai is free software; you can redistribute it and/or modify it under
+ boardmicro is free software; you can redistribute it and/or modify it under
  the terms of the GNU General Public License as published by the Free
  Software Foundation; either version 3, or (at your option) any later
  version.
 
- pichai is distributed in the hope that it will be useful, but WITHOUT ANY
+ boardmicro is distributed in the hope that it will be useful, but WITHOUT ANY
  WARRANTY; without even the implied warranty of MERCHANTABILITY or
  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  for more details.
 
  You should have received a copy of the GNU General Public License
- along with pichai; see the file LICENSE.  If not see
+ along with boardmicro; see the file LICENSE.  If not see
  <http://www.gnu.org/licenses/>.  */
 
 var timedInstructions, scalerTicks = 64, timerInterrupt = 92, TCNT0 = 70, TIFR0 = 53, ADCSRA = 122, ADCH = 121, ADCL = 120, SP = 95, SPH = 94, SPL = 93, r = Array(32), calculatedOffset = 0, SREG, C = 0, Z = 0, N = 0, V = 0, S = 0, H = 0, T = 0, I = 0, dataQueueB = [], dataQueueC = [], dataQueueD = [], dataQueueE = [], dataQueueF = [], pixelQueue = [], softBreakpoints = [], isPaused = !0, forceBreak = !1, hasDeviceSignature = !1, simulationManufacturerID = 191, uartBufferLength = 32, sdr, spsr, udr, ucsra, ucsrb, udri, memory,
