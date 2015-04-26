@@ -175,6 +175,7 @@
                           Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
                         }
                         Module.ccall('engineInit');
+                        initScreen();
                         execProgram();
                       }
                       else
@@ -254,6 +255,7 @@
                     Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
                   }
                   Module.ccall('engineInit');
+                  initScreen();
                   execProgram();
                 }
                 else

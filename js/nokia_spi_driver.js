@@ -52,3 +52,47 @@ function peripheralSPIWrite(a) {
       x = 0;
   }
 }
+
+//New API
+var videoMemory = new Array(9);
+function writeVideoMemory(address, value) {
+  videoMemory[address] = value;
+  if(address === 8){
+    var x = videoMemory[8];
+    for(var i = 0; i < 8; i++)
+    {
+      var base = y+i;
+      var color = videoMemory[i] === 0 ? "#CCFF66": "#293314";
+      drawPixel( x, base, color );
+      var k = {};
+      k.x = x;
+      k.y = base;
+      k.color = color;
+    }
+  }
+}
+
+function writeSPI(value) {
+  var LCDHEIGHT_NOROT = 48;
+  var LCDWIDTH_NOROT = 84;
+  var PCD8544_SETYADDR = 0x40;
+  var PCD8544_SETXADDR = 0x80;
+  if(readMemory(portC) == 5)
+  {
+      for(var i=0; i < 8; i++)
+      {
+        var bit = a & (1 << i);
+        writeVideoMemory(i, bit);
+      }
+      writeVideoMemory(8, x++);
+  }
+  if(a >= PCD8544_SETYADDR && a <= PCD8544_SETYADDR+5 && (readMemory(portC) == 1))
+  {
+      y = (a - PCD8544_SETYADDR)*8;
+  }
+  if(a == PCD8544_SETXADDR && (readMemory(portC) == 1))
+  {
+      writeVideoMemory(8, 0);
+      x = 0;
+  }
+}
