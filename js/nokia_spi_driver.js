@@ -86,11 +86,11 @@ function writeSPI(value) {
       }
       writeVideoMemory(8, x++);
   }
-  if(a >= PCD8544_SETYADDR && a <= PCD8544_SETYADDR+5 && (readMemory(portC) == 1))
+  if(value >= PCD8544_SETYADDR && value <= PCD8544_SETYADDR+5 && (readMemory(portC) == 1))
   {
-      y = (a - PCD8544_SETYADDR)*8;
+      y = (value - PCD8544_SETYADDR)*8;
   }
-  if(a == PCD8544_SETXADDR && (readMemory(portC) == 1))
+  if(value == PCD8544_SETXADDR && (readMemory(portC) == 1))
   {
       writeVideoMemory(8, 0);
       x = 0;
