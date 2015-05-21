@@ -7,7 +7,6 @@ import android.widget.*;
 import android.content.Intent;
 import android.webkit.WebViewClient;
 import android.view.*;
-import com.dropbox.chooser.android.DbxChooser;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -22,6 +21,10 @@ import android.view.View.*;
 import android.hardware.SensorManager;
 import android.content.*;
 import android.graphics.Matrix;
+import android.widget.AdapterView.*;
+
+import java.io.*;
+import com.dropbox.chooser.android.DbxChooser;
 
 public abstract class MainActivity extends Activity implements SurfaceHolder.Callback, BoardMicroInterface{
 
@@ -284,7 +287,6 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState){
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			LayoutInflater inflater = getActivity().getLayoutInflater();
 			builder.setMessage(R.string.choose_source_location)
 			.setPositiveButton(R.string.dropbox, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -293,10 +295,49 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 			})
 			.setNegativeButton(R.string.examples, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					Toast.makeText(MainActivity.this, "Not Yet Implemented", Toast.LENGTH_SHORT).show();
+					new ExampleListFragment().show(getFragmentManager(),"");
 				}
 			});
 			return builder.create();
+		}
+	}
+
+	private class ExampleListFragment extends DialogFragment
+	{
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState){
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			View view = inflater.inflate(R.layout.examples, null);
+			try{
+				final String[] examples = MainActivity.this.getAssets().list("boardmicro");
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+					android.R.layout.simple_list_item_1, android.R.id.text1, examples);
+				final ListView listView = ((ListView)view.findViewById(R.id.example_list));
+				listView.setAdapter(adapter);
+				listView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						String file = (String)listView.getItemAtPosition(position);
+						try{
+							String line = null;
+							StringBuilder stringBuilder = new StringBuilder();
+							BufferedReader reader = new BufferedReader(new InputStreamReader(MainActivity.this.getAssets().open("boardmicro/"+file)));
+							while((line = reader.readLine()) != null)
+							{
+								stringBuilder.append(line+"|");
+							}
+							startProcess("javascript:loadMemory('"+stringBuilder.toString()+"', true)");
+							dismiss();
+						}catch(Exception e)
+						{
+						}
+					}
+				});
+			}catch(Exception e)
+			{
+			}
+			return builder.setView(view).create();
 		}
 	}
 }
