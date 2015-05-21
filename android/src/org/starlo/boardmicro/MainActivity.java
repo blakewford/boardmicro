@@ -1,7 +1,7 @@
 package org.starlo.boardmicro;
 
 import android.os.Bundle;
-import android.app.Activity;
+import android.app.*;
 import android.webkit.WebView;
 import android.widget.*;
 import android.content.Intent;
@@ -243,7 +243,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 				@Override
 				public void onLongPress(MotionEvent event){
 					mBackgroundWebView.loadUrl(ASSET_URL);
-					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+					new SourceFragment().show(getFragmentManager(),"");
 				}
 
 				@Override
@@ -271,11 +271,32 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 			public void onPageFinished(WebView view, String loc) {
 				if(DropboxConstants.USE_DROPBOX && !mDropboxCalled){
 					mDropboxCalled = true;
-					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+					new SourceFragment().show(getFragmentManager(),"");
 				}else if(!DropboxConstants.USE_DROPBOX){
 					startProcess("javascript:loadDefault()");
 				}
 			}
 		});
+	}
+
+	private class SourceFragment extends DialogFragment
+	{
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState){
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			builder.setMessage(R.string.choose_source_location)
+			.setPositiveButton(R.string.dropbox, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
+				}
+			})
+			.setNegativeButton(R.string.examples, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Toast.makeText(MainActivity.this, "Not Yet Implemented", Toast.LENGTH_SHORT).show();
+				}
+			});
+			return builder.create();
+		}
 	}
 }

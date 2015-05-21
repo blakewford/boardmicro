@@ -2,4 +2,7 @@
 <resources>
     <string name="boardmicro">BoardMicro</string>
     <string name="gamebuino">Gamebuino</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="examples">Examples</string>
+    <string name="choose_source_location">Choose Source Location</string>
 </resources>
