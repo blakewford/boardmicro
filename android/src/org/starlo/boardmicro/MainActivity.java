@@ -171,11 +171,22 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	protected abstract SurfaceView getDisplay();
 	protected abstract void startDebugActivity();
 
+	protected abstract View findExampleListView(View view);
+	protected abstract View getExampleView();
+	protected abstract String getExampleDir();
+	protected abstract String getMessageString();
+	protected abstract String getDropboxString();
+	protected abstract String getExampleString();
+
 	protected void setConfiguration( int layout, int width, int height ){
 		mLayout = layout;
 		SCREEN_WIDTH = width;
 		SCREEN_HEIGHT = height;
 		mPixelArray = new int[SCREEN_WIDTH*SCREEN_HEIGHT];
+	}
+
+	protected String getUIString(int id){
+		return getResources().getString(id);
 	}
 
 	private void startRefreshThread(){
@@ -287,13 +298,13 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState){
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(R.string.choose_source_location)
-			.setPositiveButton(R.string.dropbox, new DialogInterface.OnClickListener() {
+			builder.setMessage(getMessageString())
+			.setPositiveButton(getDropboxString(), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
 				}
 			})
-			.setNegativeButton(R.string.examples, new DialogInterface.OnClickListener() {
+			.setNegativeButton(getExampleString(), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					new ExampleListFragment().show(getFragmentManager(),"");
 				}
@@ -307,13 +318,12 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState){
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			View view = inflater.inflate(R.layout.examples, null);
+			View view = getExampleView();
 			try{
-				final String[] examples = MainActivity.this.getAssets().list("boardmicro");
+				final String[] examples = MainActivity.this.getAssets().list(getExampleDir());
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
 					android.R.layout.simple_list_item_1, android.R.id.text1, examples);
-				final ListView listView = ((ListView)view.findViewById(R.id.example_list));
+				final ListView listView = (ListView)findExampleListView(view);
 				listView.setAdapter(adapter);
 				listView.setOnItemClickListener(new OnItemClickListener() {
 					@Override
@@ -322,7 +332,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 						try{
 							String line = null;
 							StringBuilder stringBuilder = new StringBuilder();
-							BufferedReader reader = new BufferedReader(new InputStreamReader(MainActivity.this.getAssets().open("boardmicro/"+file)));
+							BufferedReader reader = new BufferedReader(new InputStreamReader(MainActivity.this.getAssets().open(getExampleDir()+"/"+file)));
 							while((line = reader.readLine()) != null)
 							{
 								stringBuilder.append(line+"|");

@@ -26,6 +26,37 @@ public class GamebuinoActivity extends MainActivity
         public void setDebugResult(final String result){}
 
         @Override
+        protected View findExampleListView(View view){
+            return view.findViewById(R.id.example_list);
+        }
+
+        @Override
+        public View getExampleView(){
+            LayoutInflater inflater = getLayoutInflater();
+            return inflater.inflate(R.layout.examples, null);
+        }
+
+        @Override
+        public String getExampleDir(){
+            return "gamebuino";
+        }
+
+        @Override
+        public String getMessageString(){
+            return getUIString(R.string.choose_source_location);
+        }
+
+        @Override
+        public String getDropboxString(){
+            return getUIString(R.string.dropbox);
+        }
+
+        @Override
+        public String getExampleString(){
+            return getUIString(R.string.examples);
+        }
+
+        @Override
         public void setPinState(char port, byte pin, boolean status) {}
 
 	@Override
