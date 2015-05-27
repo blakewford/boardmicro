@@ -1,11 +1,12 @@
   var emcc = false;
   var nokiaScreen = target == "atmega328";
+  var arduboy = variant == "arduboy";
   screen_driver.setAttribute("type", "text/javascript");
   if(nokiaScreen)
   {
       screen_driver.setAttribute("src", "js/nokia_spi_driver.js");
   }
-  else if(variant == "arduboy")
+  else if(arduboy)
   {
       screen_driver.setAttribute("src", "js/oled_spi_driver.js");
   }
@@ -14,8 +15,8 @@
       screen_driver.setAttribute("src", "js/tft_spi_driver.js");
   }
   layout.appendChild(screen_driver);
-  screen_buffer.width = nokiaScreen ? 84: 160;
-  screen_buffer.height = nokiaScreen ? 48: 128;
+  screen_buffer.width = nokiaScreen ? 84: arduboy ? 128: 160;
+  screen_buffer.height = nokiaScreen ? 48: arduboy ? 64: 128;
   var scale = width/screen_buffer.width;
 
   function reportMhz(mhz)
