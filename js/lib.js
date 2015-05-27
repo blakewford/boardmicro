@@ -1,7 +1,18 @@
   var emcc = false;
   var nokiaScreen = target == "atmega328";
   screen_driver.setAttribute("type", "text/javascript");
-  screen_driver.setAttribute("src", nokiaScreen ? "js/nokia_spi_driver.js": "js/tft_spi_driver.js");
+  if(nokiaScreen)
+  {
+      screen_driver.setAttribute("src", "js/nokia_spi_driver.js");
+  }
+  else if(variant == "arduboy")
+  {
+      screen_driver.setAttribute("src", "js/oled_spi_driver.js");
+  }
+  else
+  {
+      screen_driver.setAttribute("src", "js/tft_spi_driver.js");
+  }
   layout.appendChild(screen_driver);
   screen_buffer.width = nokiaScreen ? 84: 160;
   screen_buffer.height = nokiaScreen ? 48: 128;
