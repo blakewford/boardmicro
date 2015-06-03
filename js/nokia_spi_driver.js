@@ -77,20 +77,20 @@ function writeSPI(value) {
   var LCDWIDTH_NOROT = 84;
   var PCD8544_SETYADDR = 0x40;
   var PCD8544_SETXADDR = 0x80;
-  if(readMemory(portC) == 5)
+  if(cState & 0x5)
   {
       for(var i=0; i < 8; i++)
       {
-        var bit = a & (1 << i);
+        var bit = value & (1 << i);
         writeVideoMemory(i, bit);
       }
       writeVideoMemory(8, x++);
   }
-  if(value >= PCD8544_SETYADDR && value <= PCD8544_SETYADDR+5 && (readMemory(portC) == 1))
+  if(value >= PCD8544_SETYADDR && value <= PCD8544_SETYADDR+5 && (cState & 0x1) && !(cState & 0x4))
   {
       y = (value - PCD8544_SETYADDR)*8;
   }
-  if(value == PCD8544_SETXADDR && (readMemory(portC) == 1))
+  if(value == PCD8544_SETXADDR && (cState & 0x1) && !(cState & 0x4))
   {
       writeVideoMemory(8, 0);
       x = 0;
