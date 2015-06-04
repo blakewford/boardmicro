@@ -186,6 +186,8 @@
                         {
                           Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
                         }
+                        document.getElementById("A").onclick =
+                            function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0x0]); };
                         Module.ccall('engineInit');
                         initScreen();
                         execProgram();

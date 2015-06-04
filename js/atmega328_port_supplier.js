@@ -92,6 +92,7 @@ function GetCustomLayout()
 
   var final_buttons = document.createElement("div");
   var a_button = document.createElement("canvas");
+  a_button.id = "A";
   drawButton(a_button, button_width, button_height, button_width*6, "green", 20);
   var b_button = document.createElement("canvas");
   drawButton(b_button, button_width, button_height, 0, "red", 18);
