@@ -10,7 +10,7 @@ function initScreen(){
       isNative() ? pixelQueue.push(k): drawPixel(k.x, k.y, k.color);
     }
   }
-  writeMemory(pinF, 0x80); //Normally done through software in driver initialization
+  //writeMemory(pinF, 0x80); //Normally done through software in driver initialization
 }
 
 function writeDMARegion(c, b){
@@ -18,7 +18,7 @@ function writeDMARegion(c, b){
 
 var x=0, y=0;
 function peripheralSPIWrite(data) {
-  if(readMemory(portD) == 0x50)
+  if(dState == 0x50)
   {
     for(var i = 0; i < 8; i++)
     {
