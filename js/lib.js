@@ -186,9 +186,8 @@
                         {
                           Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
                         }
-                        document.getElementById("A").onclick =
-                            function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0x0]); };
-                        Module.ccall('engineInit');
+                        UseEmccClicks();
+                        Module.ccall('engineInit', null, ['string'],[target]);
                         initScreen();
                         execProgram();
                       }
@@ -268,7 +267,7 @@
                   {
                     Module.ccall('loadPartialProgram',null,['string'],[lines[current]]);
                   }
-                  Module.ccall('engineInit');
+                  Module.ccall('engineInit', null, ['string'],[target]);
                   initScreen();
                   execProgram();
                 }

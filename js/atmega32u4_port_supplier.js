@@ -45,3 +45,8 @@ function setupInactivePorts()
   fillCanvas(F2, default_color);
   fillCanvas(F3, default_color);
 }
+
+function UseEmccClicks()
+{
+
+}

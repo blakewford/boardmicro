@@ -61,6 +61,12 @@ function drawButton(canvas, width, height, margin, color, pin)
   context.fill();
 }
 
+function UseEmccClicks()
+{
+    document.getElementById("A").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0x0]); };
+}
+
 function GetCustomLayout()
 {
   var custom_ports = document.createElement("div");

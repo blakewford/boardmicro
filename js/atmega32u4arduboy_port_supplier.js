@@ -102,3 +102,8 @@ function GetCustomLayout()
   custom_ports.style.background = "springgreen";
   return custom_ports;
 }
+
+function UseEmccClicks()
+{
+
+}
