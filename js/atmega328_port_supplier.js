@@ -63,8 +63,20 @@ function drawButton(canvas, width, height, margin, color, pin)
 
 function UseEmccClicks()
 {
+    document.getElementById("up").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x23,0xFD]); };
+    document.getElementById("left").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x23,0xFE]); };
+    document.getElementById("down").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0xBF]); };
+    document.getElementById("right").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0x7F]); };
     document.getElementById("A").onclick =
-        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0x0]); };
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0xEF]); };
+    document.getElementById("B").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x29,0xFB]); };
+    document.getElementById("C").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x26,0xF7]); };
 }
 
 function GetCustomLayout()
@@ -75,24 +87,29 @@ function GetCustomLayout()
 
   var top_buttons = document.createElement("div");
   var c_button = document.createElement("canvas");
+  c_button.id = "C";
   drawButton(c_button, button_width, button_height, button_width*5, "yellow", 11);
   top_buttons.appendChild(c_button);
 
   var second_level_buttons = document.createElement("div");
   var up_button = document.createElement("canvas");
+  up_button.id = "up";
   drawButton(up_button, button_width, button_height, button_width*2, "blue", 1);
   second_level_buttons.appendChild(up_button);
 
   var middle_buttons = document.createElement("div");
   var left_button = document.createElement("canvas");
+  left_button.id = "left";
   drawButton(left_button, button_width, button_height, button_width*1, "blue", 23);
   var right_button = document.createElement("canvas");
+  right_button.id = "right";
   drawButton(right_button, button_width, button_height, button_width*1, "blue", 0);
   middle_buttons.appendChild(left_button);
   middle_buttons.appendChild(right_button);
 
   var fourth_level_buttons = document.createElement("div");
   var down_button = document.createElement("canvas");
+  down_button.id = "down";
   drawButton(down_button, button_width, button_height, button_width*2, "blue", 22);
   fourth_level_buttons.appendChild(down_button);
 
@@ -101,6 +118,7 @@ function GetCustomLayout()
   a_button.id = "A";
   drawButton(a_button, button_width, button_height, button_width*6, "green", 20);
   var b_button = document.createElement("canvas");
+  b_button.id = "B";
   drawButton(b_button, button_width, button_height, 0, "red", 18);
   final_buttons.appendChild(a_button);
   final_buttons.appendChild(b_button);
