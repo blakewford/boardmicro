@@ -10,7 +10,7 @@ function initScreen(){
       isNative() ? pixelQueue.push(k): drawPixel(k.x, k.y, k.color);
     }
   }
-  //writeMemory(pinF, 0x80); //Normally done through software in driver initialization
+  Module.ccall('buttonHit',null,['number', 'number'],[0x2F,0x80]); //Normally done through software in driver initialization
 }
 
 function writeDMARegion(c, b){

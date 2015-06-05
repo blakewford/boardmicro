@@ -70,26 +70,32 @@ function GetCustomLayout()
 
   var second_level_buttons = document.createElement("div");
   var up_button = document.createElement("canvas");
+  up_button.id = "up";
   drawButton(up_button, button_width, button_height, button_width*2, "blue", 1);
   second_level_buttons.appendChild(up_button);
 
   var middle_buttons = document.createElement("div");
   var left_button = document.createElement("canvas");
+  left_button.id = "left";
   drawButton(left_button, button_width, button_height, button_width*1, "blue", 23);
   var right_button = document.createElement("canvas");
+  right_button.id = "right";
   drawButton(right_button, button_width, button_height, button_width*1, "blue", 0);
   middle_buttons.appendChild(left_button);
   middle_buttons.appendChild(right_button);
 
   var fourth_level_buttons = document.createElement("div");
   var down_button = document.createElement("canvas");
+  down_button.id = "down";
   drawButton(down_button, button_width, button_height, button_width*2, "blue", 22);
   fourth_level_buttons.appendChild(down_button);
 
   var final_buttons = document.createElement("div");
   var fire_button = document.createElement("canvas");
+  fire_button.id = "fire";
   drawButton(fire_button, button_width, button_height, button_width*6, "green", 39);
   var b_button = document.createElement("canvas");
+  b_button.id = "b";
   drawButton(b_button, button_width, button_height, 0, "red", 18);
   final_buttons.appendChild(fire_button);
   final_buttons.appendChild(b_button);
@@ -105,5 +111,16 @@ function GetCustomLayout()
 
 function UseEmccClicks()
 {
-
+    document.getElementById("up").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x23,0xEF]); };
+    document.getElementById("left").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x23,0xDF]); };
+    document.getElementById("down").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x23,0xBF]); };
+    document.getElementById("right").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x26,0x80]); };
+    document.getElementById("fire").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x2F,0x7F]); };
+    document.getElementById("b").onclick =
+        function() { Module.ccall('buttonHit',null,['number', 'number'],[0x2F,0xBF]); };
 }
