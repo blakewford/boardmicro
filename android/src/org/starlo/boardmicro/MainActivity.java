@@ -56,6 +56,8 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	private int[] mPixelArray;
 	private int mLayout;
 
+	private NativeInterface mRunAVR = new NativeInterface();
+
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
