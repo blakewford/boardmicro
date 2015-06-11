@@ -100,4 +100,9 @@ public class GamebuinoActivity extends MainActivity
                 if(pinNumber >= 0)
                         mBackgroundWebView.loadUrl("javascript:handlePinInput("+pinNumber+")");
         }
+
+	@Override
+	protected String getTarget(){
+		return "atmega328";
+	}
 }

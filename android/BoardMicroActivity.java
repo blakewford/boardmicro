@@ -108,4 +108,9 @@ public class BoardMicroActivity extends MainActivity
                 findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
                 findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
         }
+
+	@Override
+	protected String getTarget(){
+		return "atmega32u4";
+	}
 }

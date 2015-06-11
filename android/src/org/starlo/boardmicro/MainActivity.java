@@ -56,7 +56,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	private int[] mPixelArray;
 	private int mLayout;
 
-	private NativeInterface mRunAVR = new NativeInterface();
+	private NativeInterface mRunAVR = null;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -75,6 +75,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		filter.addAction(SEND_COMMAND_ACTION);
 		registerReceiver(receiver, filter);
 		//WebView.setWebContentsDebuggingEnabled(true);
+		mRunAVR = new NativeInterface(this);
 	}
 
 	@Override
@@ -179,6 +180,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	protected abstract String getMessageString();
 	protected abstract String getDropboxString();
 	protected abstract String getExampleString();
+	protected abstract String getTarget();
 
 	protected void setConfiguration( int layout, int width, int height ){
 		mLayout = layout;
@@ -196,6 +198,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		mRefreshThread = new Thread(new Runnable(){
 			public void run(){
 				while(!mProgramEnded){
+					//mProgramEnded = mRunAVR.fetchN(1024) == 0;
 					refreshScreenLoop();
 					try{
 						Thread.yield();
@@ -337,9 +340,10 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 							BufferedReader reader = new BufferedReader(new InputStreamReader(MainActivity.this.getAssets().open(getExampleDir()+"/"+file)));
 							while((line = reader.readLine()) != null)
 							{
-								stringBuilder.append(line+"|");
+								mRunAVR.loadPartialProgram(line);
 							}
-							startProcess("javascript:loadMemory('"+stringBuilder.toString()+"', true)");
+							mRunAVR.engineInit(getTarget());
+							startRefreshThread();
 							dismiss();
 						}catch(Exception e)
 						{
