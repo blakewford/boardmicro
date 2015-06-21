@@ -115,6 +115,25 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	@Override
+        public void writePort(final int port, final int value) {
+		mSurfaceView.post(new Runnable(){
+			public void run(){
+				mBackgroundWebView.loadUrl("javascript:writePort("+port+","+value+")");
+//				mBackgroundWebView.loadUrl("javascript:Android.writePort("+port+","+value+")");
+			}
+		});
+	}
+
+	@Override
+        public void writeSPI(final int value) {
+		mSurfaceView.post(new Runnable(){
+			public void run(){
+				mBackgroundWebView.loadUrl("javascript:writeSPI("+value+")");
+			}
+		});
+	}
+
+	@Override
         public void writeToUARTBuffer(String buffer) {
 		Log.v("UART", buffer);
 		Toast.makeText(this, buffer, Toast.LENGTH_SHORT).show();
@@ -140,7 +159,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	public void updateADCRegister(final int value){
 		if(mPaused)
 			return;
-                mSurfaceView.post(new Runnable(){
+		mSurfaceView.post(new Runnable(){
                         public void run(){
 				mBackgroundWebView.loadUrl("javascript:writeADCDataRegister("+value+")");
                         }
@@ -198,7 +217,14 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		mRefreshThread = new Thread(new Runnable(){
 			public void run(){
 				while(!mProgramEnded){
-					//mProgramEnded = mRunAVR.fetchN(1024) == 0;
+					//mProgramEnded = mRunAVR.fetchN(2000000) == 0;
+/*
+					mSurfaceView.post(new Runnable(){
+						public void run(){
+							mBackgroundWebView.loadUrl("javascript:flushPixelBuffer()");
+						}
+					});
+*/
 					refreshScreenLoop();
 					try{
 						Thread.yield();

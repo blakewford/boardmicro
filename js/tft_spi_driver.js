@@ -91,6 +91,7 @@ function writeVideoMemory(address, value) {
       if(-1 != screenDataOffset)
       {
         drawPixel(startX + screenDataOffset, Y, color);
+        (k = {}, k.x = startX + screenDataOffset, k.y = Y, k.color = color, pixelQueue.push(k));
       }
       startX + screenDataOffset != endX ? screenDataOffset++ : (screenDataOffset = 0, Y != endY && (Y++, videoMemory[5] = (Y >> 8)), videoMemory[4] = (Y & 255));
     }
