@@ -74,6 +74,7 @@ endif
 	echo '<script>' >> $@.html
 	cat js/elfcore.js >> $@.html
 	cat js/avrcore.js >> $@.html
+	cat js/common.js >> $@.html
 ifeq ($(TARGET),atmega328)
 	cat js/nokia_spi_driver.js >> $@.html
 else

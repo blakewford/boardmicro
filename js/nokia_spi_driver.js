@@ -68,6 +68,7 @@ function writeVideoMemory(address, value) {
       k.x = x;
       k.y = base;
       k.color = color;
+      pixelQueue.push(k);
     }
   }
 }

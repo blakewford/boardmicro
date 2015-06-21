@@ -217,8 +217,8 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		mRefreshThread = new Thread(new Runnable(){
 			public void run(){
 				while(!mProgramEnded){
-					//mProgramEnded = mRunAVR.fetchN(2000000) == 0;
 /*
+					mProgramEnded = mRunAVR.fetchN(2000000) == 0;
 					mSurfaceView.post(new Runnable(){
 						public void run(){
 							mBackgroundWebView.loadUrl("javascript:flushPixelBuffer()");
@@ -370,6 +370,11 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 							}
 							mRunAVR.engineInit(getTarget());
 							startRefreshThread();
+							mSurfaceView.post(new Runnable(){
+								public void run(){
+									mBackgroundWebView.loadUrl("javascript:initScreen()");
+								}
+							});
 							dismiss();
 						}catch(Exception e)
 						{
