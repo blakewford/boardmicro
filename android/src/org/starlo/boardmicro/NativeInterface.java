@@ -26,6 +26,9 @@ public class NativeInterface
 		mBoardMicro.writeSPI(value);
 	}
 
+	public void writeSPI(String jsonString) {
+	}
+
 	private int getUnsigned(byte value) {
 		return value & 0xFF;
 	}
