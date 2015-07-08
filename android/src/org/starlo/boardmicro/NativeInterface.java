@@ -16,6 +16,7 @@ public class NativeInterface
 	public native void loadPartialProgram(String line);
 	public native void engineInit(String target);
 	public native int fetchN(int n);
+	public native void buttonHit(int r, int v);
 
 	public NativeInterface(BoardMicroInterface boardMicro){
 		mBoardMicro = boardMicro;

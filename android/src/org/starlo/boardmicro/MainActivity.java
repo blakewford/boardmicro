@@ -191,6 +191,11 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	@Override
+	public void buttonHit(int r, int v){
+		mRunAVR.buttonHit(r, v);
+	}
+
+	@Override
         public void endProgram(){
 		mProgramEnded = true;
 	}

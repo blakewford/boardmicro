@@ -15,5 +15,6 @@ public interface BoardMicroInterface {
 	public void writeSPI(JsonSpiUpdate[] updates);
 	public int  getScreenWidth();
 	public int  getScreenHeight();
+	public void buttonHit(int r, int v);
 	public void endProgram();
 }

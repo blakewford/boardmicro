@@ -70,8 +70,6 @@ public class GamebuinoActivity extends MainActivity
 		return (SurfaceView)findViewById(R.id.display);
 	}
 
-	private void buttonHit(int r, int v){};
-
 	@Override
 	public void handleButtonPress(View view) {
                 switch(view.getId())
