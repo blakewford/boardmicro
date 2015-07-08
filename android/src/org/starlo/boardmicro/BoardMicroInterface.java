@@ -12,6 +12,6 @@ public interface BoardMicroInterface {
 	public void sendDebugCommand(String command);
 	public void setDebugResult(String result);
 	public void writePort(int port, int value);
-	public void writeSPI(int value);
+	public void writeSPI(JsonSpiUpdate[] updates);
 	public void endProgram();
 }

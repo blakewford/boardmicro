@@ -119,16 +119,25 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		mSurfaceView.post(new Runnable(){
 			public void run(){
 				mBackgroundWebView.loadUrl("javascript:writePort("+port+","+value+")");
-//				mBackgroundWebView.loadUrl("javascript:Android.writePort("+port+","+value+")");
+				mBackgroundWebView.loadUrl("javascript:Android.writePort("+port+","+value+")");
 			}
 		});
 	}
 
 	@Override
-        public void writeSPI(final int value) {
+        public void writeSPI(final JsonSpiUpdate[] updates) {
 		mSurfaceView.post(new Runnable(){
 			public void run(){
-				mBackgroundWebView.loadUrl("javascript:writeSPI("+value+")");
+				for(int i = 0; i < updates.length; i++)
+				{
+					JsonSpiUpdate update = updates[i];
+					mBackgroundWebView.loadUrl("javascript:writePort("+0+","+update.ports.bState+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+1+","+update.ports.cState+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+2+","+update.ports.dState+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+3+","+update.ports.eState+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+4+","+update.ports.fState+")");
+					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.spi+")");
+				}
 			}
 		});
 	}

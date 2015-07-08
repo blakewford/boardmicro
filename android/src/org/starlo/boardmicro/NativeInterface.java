@@ -25,22 +25,8 @@ public class NativeInterface
 		mBoardMicro.writePort(port, getUnsigned(value));
 	}
 
-	public void writeSPI(int value) {
-		mBoardMicro.writeSPI(value);
-	}
-
 	public void writeSPI(String jsonString) {
-		JsonSpiUpdate updates[] = mGson.fromJson(jsonString, JsonSpiUpdate[].class);
-		for(int i = 0; i < updates.length; i++)
-		{
-			JsonSpiUpdate update = updates[i];
-			writePort(0, (byte)update.ports.bState);
-			writePort(1, (byte)update.ports.cState);
-			writePort(2, (byte)update.ports.dState);
-			writePort(3, (byte)update.ports.eState);
-			writePort(4, (byte)update.ports.fState);
-			writeSPI(update.spi);
-		}
+		mBoardMicro.writeSPI(mGson.fromJson(jsonString, JsonSpiUpdate[].class));
 	}
 
 	private int getUnsigned(byte value) {
@@ -48,18 +34,4 @@ public class NativeInterface
 	}
 
 	static { System.loadLibrary("run_avr"); }
-	private class portState
-	{
-		int bState;
-		int cState;
-		int dState;
-		int eState;
-		int fState;
-	}
-
-	private class JsonSpiUpdate
-	{
-		portState ports;
-		int spi;
-	}
 }
