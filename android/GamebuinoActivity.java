@@ -70,35 +70,34 @@ public class GamebuinoActivity extends MainActivity
 		return (SurfaceView)findViewById(R.id.display);
 	}
 
+	private void buttonHit(int r, int v){};
+
 	@Override
 	public void handleButtonPress(View view) {
-                int pinNumber = -1;
                 switch(view.getId())
                 {
                         case R.id.btnUp:
-                                pinNumber = 1;
+                                buttonHit(0x23,0xFD);
                                 break;
                         case R.id.btnRight:
-                                pinNumber = 0;
+                                buttonHit(0x29,0x7F);
                                 break;
                         case R.id.btnDown:
-                                pinNumber = 22;
+                                buttonHit(0x29,0xBF);
                                 break;
                         case R.id.btnLeft:
-                                pinNumber = 23;
+                                buttonHit(0x23,0xFE);
                                 break;
                         case R.id.btnA:
-                                pinNumber = 20;
+                                buttonHit(0x29,0xEF);
                                 break;
                         case R.id.btnB:
-                                pinNumber = 18;
+                                buttonHit(0x29,0xFB);
                                 break;
                         case R.id.btnC:
-                                pinNumber = 11;
+                                buttonHit(0x26,0xF7);
                                 break;
                 }
-                if(pinNumber >= 0)
-                        mBackgroundWebView.loadUrl("javascript:handlePinInput("+pinNumber+")");
         }
 
 	@Override
