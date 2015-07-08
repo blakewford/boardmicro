@@ -13,5 +13,7 @@ public interface BoardMicroInterface {
 	public void setDebugResult(String result);
 	public void writePort(int port, int value);
 	public void writeSPI(JsonSpiUpdate[] updates);
+	public int  getScreenWidth();
+	public int  getScreenHeight();
 	public void endProgram();
 }

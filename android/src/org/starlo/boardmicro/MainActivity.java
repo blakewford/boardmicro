@@ -181,6 +181,16 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	@Override
+	public int getScreenWidth(){
+		return SCREEN_WIDTH;
+	}
+
+	@Override
+	public int getScreenHeight(){
+		return SCREEN_HEIGHT;
+	}
+
+	@Override
         public void endProgram(){
 		mProgramEnded = true;
 	}
