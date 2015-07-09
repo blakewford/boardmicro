@@ -58,6 +58,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	private int mLayout;
 
 	private NativeInterface mRunAVR = null;
+	private boolean mIsNative = false;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -242,18 +243,19 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		mRefreshThread = new Thread(new Runnable(){
 			public void run(){
 				while(!mProgramEnded){
-/*
-					long startTime = System.nanoTime();
-					mProgramEnded = mRunAVR.fetchN(CYCLE_SIZE) == 0;
-					long cycleTime = (System.nanoTime()-startTime)/1000000;
-					Log.v("CYCLE TIME", new Long(cycleTime).toString());
-					try{ Thread.sleep(3*cycleTime); }catch(Exception e){}
-					mSurfaceView.post(new Runnable(){
-						public void run(){
-							mBackgroundWebView.loadUrl("javascript:flushPixelBuffer()");
-						}
-					});
-*/
+					if(mIsNative)
+					{
+						long startTime = System.nanoTime();
+						mProgramEnded = mRunAVR.fetchN(CYCLE_SIZE) == 0;
+						long cycleTime = (System.nanoTime()-startTime)/1000000;
+						Log.v("CYCLE TIME", new Long(cycleTime).toString());
+						try{ Thread.sleep(3*cycleTime); }catch(Exception e){}
+						mSurfaceView.post(new Runnable(){
+							public void run(){
+								mBackgroundWebView.loadUrl("javascript:flushPixelBuffer()");
+							}
+						});
+					}
 					refreshScreenLoop();
 					try{
 						Thread.yield();
@@ -361,11 +363,13 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 			builder.setMessage(getMessageString())
 			.setPositiveButton(getDropboxString(), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					mIsNative = false;
 					new DbxChooser(DropboxConstants.API_KEY).forResultType(DbxChooser.ResultType.DIRECT_LINK).launch(MainActivity.this, DBX_CHOOSER_REQUEST);
 				}
 			})
 			.setNegativeButton(getExampleString(), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					mIsNative = true;
 					new ExampleListFragment().show(getFragmentManager(),"");
 				}
 			});
