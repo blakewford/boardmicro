@@ -131,12 +131,12 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 				for(int i = 0; i < updates.length; i++)
 				{
 					JsonSpiUpdate update = updates[i];
-					mBackgroundWebView.loadUrl("javascript:writePort("+0+","+update.ports.bState+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+1+","+update.ports.cState+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+2+","+update.ports.dState+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+3+","+update.ports.eState+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+4+","+update.ports.fState+")");
-					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.spi+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+0+","+update.p.b+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+1+","+update.p.c+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+2+","+update.p.d+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+3+","+update.p.e+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+4+","+update.p.f+")");
+					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
 				}
 			}
 		});
@@ -242,7 +242,10 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 			public void run(){
 				while(!mProgramEnded){
 /*
-					mProgramEnded = mRunAVR.fetchN(2000000) == 0;
+					long startTime = System.nanoTime();
+					mProgramEnded = mRunAVR.fetchN(1000000) == 0;
+					long endTime  = System.nanoTime();
+					Log.v("CYCLE TIME", new Long((endTime - startTime)/1000000).toString());
 					mSurfaceView.post(new Runnable(){
 						public void run(){
 							mBackgroundWebView.loadUrl("javascript:flushPixelBuffer()");
