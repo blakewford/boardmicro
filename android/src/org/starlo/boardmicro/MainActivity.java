@@ -30,7 +30,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 
 	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
-	private static final int CYCLE_SIZE = 100000;
+	private static final int CYCLE_SIZE = 250000;
 	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
@@ -194,7 +194,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 
 	@Override
 	public void buttonHit(int r, int v){
-		mRunAVR.buttonHit(r, v);
+		if(mIsNative) mRunAVR.buttonHit(r, v);
 	}
 
 	@Override
@@ -249,7 +249,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 						mProgramEnded = mRunAVR.fetchN(CYCLE_SIZE) == 0;
 						long cycleTime = (System.nanoTime()-startTime)/1000000;
 						Log.v("CYCLE TIME", new Long(cycleTime).toString());
-						try{ Thread.sleep(3*cycleTime); }catch(Exception e){}
+						try{ Thread.sleep(6*cycleTime); }catch(Exception e){}
 						mSurfaceView.post(new Runnable(){
 							public void run(){
 								mBackgroundWebView.loadUrl("javascript:flushPixelBuffer()");
@@ -257,9 +257,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 						});
 					}
 					refreshScreenLoop();
-					try{
-						Thread.yield();
-					}catch(Exception e){}
+					try{ Thread.yield(); }catch(Exception e){}
 				}
 			}
 		});
