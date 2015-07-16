@@ -99,6 +99,20 @@ public class GamebuinoActivity extends MainActivity
         }
 
 	@Override
+        public void writeSPI(final JsonSpiUpdate[] updates) {
+		mSurfaceView.post(new Runnable(){
+			public void run(){
+				for(int i = 0; i < updates.length; i++)
+				{
+					JsonSpiUpdate update = updates[i];
+					mBackgroundWebView.loadUrl("javascript:writePort("+1+","+update.p.c+")");
+					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
+				}
+			}
+		});
+	}
+
+	@Override
 	protected String getTarget(){
 		return "atmega328";
 	}

@@ -85,11 +85,26 @@ public class BoardMicroActivity extends MainActivity
 
 	@Override
         public void setDebugResult(final String result){
-                if(mShouldToastResult)
-                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                sendBroadcast(new Intent(DebugActivity.SEND_RESULT_ACTION).putExtra("result", result));
-                mShouldToastResult = false;
-        }
+		if(mShouldToastResult)
+			Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+		sendBroadcast(new Intent(DebugActivity.SEND_RESULT_ACTION).putExtra("result", result));
+		mShouldToastResult = false;
+	}
+
+	@Override
+        public void writeSPI(final JsonSpiUpdate[] updates) {
+		mSurfaceView.post(new Runnable(){
+			public void run(){
+				for(int i = 0; i < updates.length; i++)
+				{
+					JsonSpiUpdate update = updates[i];
+					mBackgroundWebView.loadUrl("javascript:writePort("+2+","+update.p.d+")");
+					mBackgroundWebView.loadUrl("javascript:writePort("+3+","+update.p.e+")");
+					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
+				}
+			}
+		});
+	}
 
 	@Override
         protected void filterOutUnsupportedPins(){

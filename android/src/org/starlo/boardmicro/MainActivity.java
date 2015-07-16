@@ -34,7 +34,6 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
-	private SurfaceView mSurfaceView;
 	private SurfaceHolder mHolder;
 	private Bitmap mScaledBitmap;
 	private Thread mRefreshThread = null;
@@ -51,6 +50,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	protected int mScreenHeight;
 	protected WebView mBackgroundWebView;
 	protected boolean mShouldToastResult = false;
+	protected SurfaceView mSurfaceView;
 
 	private int SCREEN_WIDTH;
 	private int SCREEN_HEIGHT;
@@ -122,24 +122,6 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 			public void run(){
 				mBackgroundWebView.loadUrl("javascript:writePort("+port+","+value+")");
 				mBackgroundWebView.loadUrl("javascript:Android.writePort("+port+","+value+")");
-			}
-		});
-	}
-
-	@Override
-        public void writeSPI(final JsonSpiUpdate[] updates) {
-		mSurfaceView.post(new Runnable(){
-			public void run(){
-				for(int i = 0; i < updates.length; i++)
-				{
-					JsonSpiUpdate update = updates[i];
-					mBackgroundWebView.loadUrl("javascript:writePort("+0+","+update.p.b+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+1+","+update.p.c+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+2+","+update.p.d+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+3+","+update.p.e+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+4+","+update.p.f+")");
-					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
-				}
 			}
 		});
 	}
@@ -219,6 +201,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	protected abstract SurfaceView getDisplay();
 	protected abstract void startDebugActivity();
 
+	public abstract void writeSPI(final JsonSpiUpdate[] updates);
 	protected abstract View findExampleListView(View view);
 	protected abstract View getExampleView();
 	protected abstract String getExampleDir();
