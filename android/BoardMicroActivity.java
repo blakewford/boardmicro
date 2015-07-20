@@ -93,6 +93,7 @@ public class BoardMicroActivity extends MainActivity
 
 	@Override
         public void writeSPI(final JsonSpiUpdate[] updates) {
+		final long startTime = System.nanoTime();
 		mSurfaceView.post(new Runnable(){
 			public void run(){
 				for(int i = 0; i < updates.length; i++)
@@ -102,6 +103,7 @@ public class BoardMicroActivity extends MainActivity
 					mBackgroundWebView.loadUrl("javascript:writePort("+3+","+update.p.e+")");
 					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
 				}
+				mPostTime = (System.nanoTime()-startTime)/1000000;
 			}
 		});
 	}

@@ -100,6 +100,7 @@ public class GamebuinoActivity extends MainActivity
 
 	@Override
         public void writeSPI(final JsonSpiUpdate[] updates) {
+		final long startTime = System.nanoTime();
 		mSurfaceView.post(new Runnable(){
 			public void run(){
 				for(int i = 0; i < updates.length; i++)
@@ -108,6 +109,7 @@ public class GamebuinoActivity extends MainActivity
 					mBackgroundWebView.loadUrl("javascript:writePort("+1+","+update.p.c+")");
 					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
 				}
+				mPostTime = (System.nanoTime()-startTime)/1000000;
 			}
 		});
 	}

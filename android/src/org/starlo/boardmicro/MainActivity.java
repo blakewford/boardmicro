@@ -30,7 +30,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 
 	public static final String SEND_COMMAND_ACTION = "sendCommand";
 
-	private static final int CYCLE_SIZE = 250000;
+	private static final int CYCLE_SIZE = 200000;
 	private static final int DBX_CHOOSER_REQUEST = 0;
 	private static final String ASSET_URL = "file:///android_asset/avrcore.html";
 
@@ -51,6 +51,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 	protected WebView mBackgroundWebView;
 	protected boolean mShouldToastResult = false;
 	protected SurfaceView mSurfaceView;
+	protected long mPostTime = 0;
 
 	private int SCREEN_WIDTH;
 	private int SCREEN_HEIGHT;
@@ -232,7 +233,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 						mProgramEnded = mRunAVR.fetchN(CYCLE_SIZE) == 0;
 						long cycleTime = (System.nanoTime()-startTime)/1000000;
 						Log.v("CYCLE TIME", new Long(cycleTime).toString());
-						try{ Thread.sleep(6*cycleTime); }catch(Exception e){}
+						try{ Thread.sleep((mPostTime/cycleTime)*cycleTime); }catch(Exception e){}
 						mSurfaceView.post(new Runnable(){
 							public void run(){
 								mBackgroundWebView.loadUrl("javascript:flushPixelBuffer()");
