@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:weightSum="10"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <SurfaceView
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:id="@+id/display"
+        android:layout_weight="2.2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <View
+        android:background="@drawable/board"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_weight="5.6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+   <LinearLayout style="@style/keyboard_row" android:id="@+id/portB">
+        <View style="@style/keyboard_button" android:id="@+id/pin0" android:background="@drawable/rounded_port"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin1" android:background="@drawable/rounded_port"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin2" android:background="@drawable/rounded_port"/>
+        <View style="@style/keyboard_button" android:background="@drawable/port_inactive"/>
+        <View style="@style/keyboard_button" android:background="@drawable/port_inactive"/>
+        <View style="@style/keyboard_button" android:background="@drawable/port_inactive"/>
+   </LinearLayout>
+</LinearLayout>

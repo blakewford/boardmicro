@@ -222,6 +222,22 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		return getResources().getString(id);
 	}
 
+	protected void refreshScreenLoop(){
+		if(mScreenDirty){
+			mScreenDirty = false;
+			if(mScaledBitmap != null)
+				mScaledBitmap.recycle();
+			Canvas canvas = mHolder.lockCanvas();
+			if(canvas != null){
+				canvas.drawColor(Color.BLACK);
+				mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				mScaledBitmap = getScaledBitmap();
+				canvas.drawBitmap(mScaledBitmap, 0, 0, null);
+				mHolder.unlockCanvasAndPost(canvas);
+			}
+		}
+	}
+
 	private void startRefreshThread(){
 		endProgram();
 		mRefreshThread = new Thread(new Runnable(){
@@ -260,22 +276,6 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 		for(int i = 0; i < SCREEN_HEIGHT; i++){
 			for(int j = 0; j < SCREEN_WIDTH; j++){
 				setPixel(j, i, color);
-			}
-		}
-	}
-
-	private void refreshScreenLoop(){
-		if(mScreenDirty){
-			mScreenDirty = false;
-			if(mScaledBitmap != null)
-				mScaledBitmap.recycle();
-			Canvas canvas = mHolder.lockCanvas();
-			if(canvas != null){
-				canvas.drawColor(Color.BLACK);
-				mBitmap.setPixels(mPixelArray, 0, SCREEN_WIDTH, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				mScaledBitmap = getScaledBitmap();
-				canvas.drawBitmap(mScaledBitmap, 0, 0, null);
-				mHolder.unlockCanvasAndPost(canvas);
 			}
 		}
 	}

@@ -46,7 +46,7 @@ $(BASENAME).hex: $(BASENAME).elf
 $(BASENAME).bin: $(BASENAME).elf
 	avr-objcopy -I elf32-avr -O binary $(BASENAME).elf $(BASENAME).bin
 
-.PHONY $(TARGET).html: $(BASENAME).hex
+.PHONY $(TARGET).html:
 	echo 'var target = "$(TARGET)";' > js/scratch.js
 	echo 'var variant = "$(VARIANT)";' >> js/scratch.js
 ifeq ($(DROPBOX),yes)
@@ -65,6 +65,10 @@ ifeq ($(TARGET),atmega328)
 	-@mkdir android/src/org/starlo/boardmicro/gamebuino
 	cp -f android/GamebuinoAndroidManifest.xml android/AndroidManifest.xml
 	ln -f android/GamebuinoActivity.java android/src/org/starlo/boardmicro/gamebuino/GamebuinoActivity.java
+else ifeq ($(TARGET),attiny85)
+	-@mkdir android/src/org/starlo/boardmicro/gemma
+	cp -f android/GemmaAndroidManifest.xml android/AndroidManifest.xml
+	ln -f android/GemmaActivity.java android/src/org/starlo/boardmicro/gemma/GemmaActivity.java
 else
 	cp -f android/BoardMicroAndroidManifest.xml android/AndroidManifest.xml
 	ln -f android/BoardMicroActivity.java android/src/org/starlo/boardmicro/BoardMicroActivity.java
@@ -103,4 +107,5 @@ clean:
 	-@rm android/AndroidManifest.xml
 	-@rm android/src/org/starlo/boardmicro/BoardMicroActivity.java
 	-@rm android/src/org/starlo/boardmicro/gamebuino/GamebuinoActivity.java
+	-@rm android/src/org/starlo/boardmicro/gemma/GemmaActivity.java
 	-@rm android/src/org/starlo/boardmicro/DebugActivity.java
