@@ -1,4 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:weightSum="10"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -15,12 +18,57 @@
         android:layout_weight="5.6"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
-   <LinearLayout style="@style/keyboard_row" android:id="@+id/portB">
-        <View style="@style/keyboard_button" android:id="@+id/pin0" android:background="@drawable/rounded_port"/>
-        <View style="@style/keyboard_button" android:id="@+id/pin1" android:background="@drawable/rounded_port"/>
+    </LinearLayout>
+    <LinearLayout
+        android:weightSum="10"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <View
+        android:layout_weight="2.95"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <LinearLayout
+        android:weightSum="8"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+        <View android:layout_weight="1" android:layout_width="0dp" android:layout_height="match_parent"/>
         <View style="@style/keyboard_button" android:id="@+id/pin2" android:background="@drawable/rounded_port"/>
+        <View android:layout_weight="4" android:layout_width="0dp" android:layout_height="match_parent"/>
+        <View android:layout_weight="1" android:layout_width="0dp" android:layout_height="match_parent" android:background="@drawable/port_inactive"/>
+    </LinearLayout>
+    <View
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical"
+        android:weightSum="8"
+        android:layout_weight="0.7"
+        android:orientation="horizontal">
+        <View style="@style/keyboard_button" android:id="@+id/pin0" android:background="@drawable/rounded_port"/>
+        <View android:layout_weight="6" android:layout_width="0dp" android:layout_height="match_parent"/>
+        <View style="@style/keyboard_button" android:id="@+id/pin1" android:background="@drawable/rounded_port"/>
+    </LinearLayout>
+    <View
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical"
+        android:weightSum="8"
+        android:layout_weight="0.7"
+        android:orientation="horizontal">
+        <View android:layout_weight="1" android:layout_width="0dp" android:layout_height="match_parent"/>
         <View style="@style/keyboard_button" android:background="@drawable/port_inactive"/>
+        <View android:layout_weight="4" android:layout_width="0dp" android:layout_height="match_parent"/>
         <View style="@style/keyboard_button" android:background="@drawable/port_inactive"/>
-        <View style="@style/keyboard_button" android:background="@drawable/port_inactive"/>
-   </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

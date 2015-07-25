@@ -70,8 +70,8 @@ public class GemmaActivity extends MainActivity
         public void setPinState(char port, byte pin, boolean status) {
 		Resources r = getResources();
 		final boolean finalStatus = status;
-		final View view = findViewById(r.getIdentifier("port"+new Character(port).toString(), "id", this.getPackageName()))
-			.findViewById(r.getIdentifier("pin"+new Byte(pin).toString(), "id", this.getPackageName()));
+		if(port != 'B') return;
+		final View view = findViewById(r.getIdentifier("pin"+new Byte(pin).toString(), "id", this.getPackageName()));
 		view.post(new Runnable(){
 			public void run(){
 				if(view.getId() == R.id.pin1)
