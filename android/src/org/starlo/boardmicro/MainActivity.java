@@ -331,7 +331,8 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 					mDropboxCalled = true;
 					new SourceFragment().show(getFragmentManager(),"");
 				}else if(!DropboxConstants.USE_DROPBOX){
-					startProcess("javascript:loadDefault()");
+					mIsNative = true;
+					new ExampleListFragment().show(getFragmentManager(),"");
 				}
 			}
 		});
@@ -361,6 +362,26 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 
 	private class ExampleListFragment extends DialogFragment
 	{
+		private void select(String file){
+			try{
+				String line = null;
+				StringBuilder stringBuilder = new StringBuilder();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(MainActivity.this.getAssets().open(getExampleDir()+"/"+file)));
+				while((line = reader.readLine()) != null)
+				{
+					mRunAVR.loadPartialProgram(line);
+				}
+				mRunAVR.engineInit(getTarget());
+				startRefreshThread();
+				mSurfaceView.post(new Runnable(){
+					public void run(){
+						mBackgroundWebView.loadUrl("javascript:initScreen()");
+					}
+				});
+				dismiss();
+			}catch(Exception e){}
+		}
+
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState){
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -375,27 +396,10 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						String file = (String)listView.getItemAtPosition(position);
-						try{
-							String line = null;
-							StringBuilder stringBuilder = new StringBuilder();
-							BufferedReader reader = new BufferedReader(new InputStreamReader(MainActivity.this.getAssets().open(getExampleDir()+"/"+file)));
-							while((line = reader.readLine()) != null)
-							{
-								mRunAVR.loadPartialProgram(line);
-							}
-							mRunAVR.engineInit(getTarget());
-							startRefreshThread();
-							mSurfaceView.post(new Runnable(){
-								public void run(){
-									mBackgroundWebView.loadUrl("javascript:initScreen()");
-								}
-							});
-							dismiss();
-						}catch(Exception e)
-						{
-						}
+						select(file);
 					}
 				});
+				if(examples.length == 1) select(examples[0]);
 			}catch(Exception e)
 			{
 			}
