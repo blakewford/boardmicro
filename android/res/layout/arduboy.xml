@@ -3,7 +3,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00979C">
+        android:background="#660033">
     <SurfaceView
         android:layout_gravity="center_vertical|center_horizontal"
         android:id="@+id/display"
@@ -18,14 +18,14 @@
         android:id="@+id/btnA"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="#FF0000"
+        android:background="#FFFFFF"
         android:onClick="handleButtonPress"/>
     <View android:layout_width="48dp" android:layout_height="48dp"/>
     <Button
         android:id="@+id/btnB"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="#FF0000"
+        android:background="#FFFFFF"
         android:onClick="handleButtonPress"/>
     </LinearLayout>
 </LinearLayout>
