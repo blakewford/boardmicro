@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import org.starlo.boardmicro.*;
-
 import org.starlo.boardmicro.arduboy.R;
 
 public class ArduboyActivity extends MainActivity
@@ -23,7 +22,7 @@ public class ArduboyActivity extends MainActivity
 
 	@Override
 	protected Bitmap getScaledBitmap() {
-		return Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (int)Math.round((mScreenHeight/4)*0.5) + mScreenHeight/4, false);
+		return Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (int)Math.round(mScreenHeight/3), false);
 	}
 
 	@Override

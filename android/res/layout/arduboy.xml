@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:weightSum="16"
+        android:weightSum="10"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -7,9 +7,13 @@
     <SurfaceView
         android:layout_gravity="center_vertical|center_horizontal"
         android:id="@+id/display"
-        android:layout_weight="4.5"
+        android:layout_weight="4"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <Button
         android:id="@+id/btnA"
         android:layout_width="48dp"
@@ -22,4 +26,5 @@
         android:layout_height="48dp"
         android:background="#FF0000"
         android:onClick="handleButtonPress"/>
+    </LinearLayout>
 </LinearLayout>
