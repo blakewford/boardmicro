@@ -69,6 +69,10 @@ else ifeq ($(TARGET),attiny85)
 	-@mkdir android/src/org/starlo/boardmicro/gemma
 	cp -f android/GemmaAndroidManifest.xml android/AndroidManifest.xml
 	ln -f android/GemmaActivity.java android/src/org/starlo/boardmicro/gemma/GemmaActivity.java
+else ifeq ($(VARIANT),arduboy)
+	-@mkdir android/src/org/starlo/boardmicro/arduboy
+	cp -f android/ArduboyAndroidManifest.xml android/AndroidManifest.xml
+	ln -f android/ArduboyActivity.java android/src/org/starlo/boardmicro/arduboy/ArduboyActivity.java
 else
 	cp -f android/BoardMicroAndroidManifest.xml android/AndroidManifest.xml
 	ln -f android/BoardMicroActivity.java android/src/org/starlo/boardmicro/BoardMicroActivity.java
