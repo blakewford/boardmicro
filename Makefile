@@ -85,6 +85,8 @@ endif
 	cat js/common.js >> $@.html
 ifeq ($(TARGET),atmega328)
 	cat js/nokia_spi_driver.js >> $@.html
+else ifeq ($(VARIANT),arduboy)
+	cat js/oled_spi_driver.js >> $@.html
 else
 	cat js/tft_spi_driver.js >> $@.html
 endif
