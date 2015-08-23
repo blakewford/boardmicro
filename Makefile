@@ -112,4 +112,5 @@ clean:
 	-@rm android/src/org/starlo/boardmicro/BoardMicroActivity.java
 	-@rm android/src/org/starlo/boardmicro/gamebuino/GamebuinoActivity.java
 	-@rm android/src/org/starlo/boardmicro/gemma/GemmaActivity.java
+	-@rm android/src/org/starlo/boardmicro/arduboy/ArduboyActivity.java
 	-@rm android/src/org/starlo/boardmicro/DebugActivity.java
