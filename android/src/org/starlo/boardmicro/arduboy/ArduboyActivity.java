@@ -17,13 +17,13 @@ public class ArduboyActivity extends MainActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setConfiguration(R.layout.display_layout, 160, 128);
+		setConfiguration(R.layout.arduboy, 128, 64);
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	protected Bitmap getScaledBitmap() {
-		return Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (mScreenHeight/5)*2 + mScreenHeight/20, false);
+		return Bitmap.createScaledBitmap(mBitmap, mScreenWidth, (int)Math.round((mScreenHeight/4)*0.5) + mScreenHeight/4, false);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class ArduboyActivity extends MainActivity
 
         @Override
         public String getExampleDir(){
-            return "boardmicro";
+            return "arduboy";
         }
 
         @Override
@@ -62,17 +62,7 @@ public class ArduboyActivity extends MainActivity
         }
 
         @Override
-        public void setPinState(char port, byte pin, boolean status) {
-		Resources r = getResources();
-		final boolean finalStatus = status;
-		final View view = findViewById(r.getIdentifier("port"+new Character(port).toString(), "id", this.getPackageName()))
-			.findViewById(r.getIdentifier("pin"+new Byte(pin).toString(), "id", this.getPackageName()));
-		view.post(new Runnable(){
-			public void run(){
-				view.setBackgroundColor(finalStatus ? Color.GREEN: Color.RED);
-			}
-		});
-        }
+        public void setPinState(char port, byte pin, boolean status) {}
 
 	@Override
 	protected void startDebugActivity(){}
@@ -94,7 +84,6 @@ public class ArduboyActivity extends MainActivity
 				{
 					JsonSpiUpdate update = updates[i];
 					mBackgroundWebView.loadUrl("javascript:writePort("+2+","+update.p.d+")");
-					mBackgroundWebView.loadUrl("javascript:writePort("+3+","+update.p.e+")");
 					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
 				}
 				mPostTime = (System.nanoTime()-startTime)/1000000;
@@ -103,22 +92,7 @@ public class ArduboyActivity extends MainActivity
 	}
 
 	@Override
-        protected void filterOutUnsupportedPins(){
-                findViewById(R.id.portC).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portC).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portC).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portC).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portC).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portC).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portE).findViewById(R.id.pin0).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portE).findViewById(R.id.pin1).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portE).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portE).findViewById(R.id.pin4).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portE).findViewById(R.id.pin5).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portE).findViewById(R.id.pin7).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portF).findViewById(R.id.pin2).setVisibility(View.INVISIBLE);
-                findViewById(R.id.portF).findViewById(R.id.pin3).setVisibility(View.INVISIBLE);
-        }
+        protected void filterOutUnsupportedPins(){}
 
 	@Override
 	protected String getTarget(){

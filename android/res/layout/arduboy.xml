@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:weightSum="16"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00979C">
+    <SurfaceView
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:id="@+id/display"
+        android:layout_weight="4.5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <Button
+        android:id="@+id/btnA"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="#FF0000"
+        android:onClick="handleButtonPress"/>
+    <Button
+        android:id="@+id/btnB"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="#FF0000"
+        android:onClick="handleButtonPress"/>
+</LinearLayout>

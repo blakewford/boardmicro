@@ -399,7 +399,7 @@ public abstract class MainActivity extends Activity implements SurfaceHolder.Cal
 						select(file);
 					}
 				});
-				if(examples.length == 1) select(examples[0]);
+				//if(examples.length == 1) select(examples[0]);
 			}catch(Exception e)
 			{
 			}
