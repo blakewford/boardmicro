@@ -14,8 +14,11 @@ import org.starlo.boardmicro.arduboy.R;
 
 public class ArduboyActivity extends MainActivity
 {
+	private OLED mScreen = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		mScreen = new OLED();
 		setConfiguration(R.layout.arduboy, 128, 64);
 		super.onCreate(savedInstanceState);
 	}
@@ -103,8 +106,7 @@ public class ArduboyActivity extends MainActivity
 				for(int i = 0; i < updates.length; i++)
 				{
 					JsonSpiUpdate update = updates[i];
-					mBackgroundWebView.loadUrl("javascript:writePort("+2+","+update.p.d+")");
-					mBackgroundWebView.loadUrl("javascript:writeSPI("+update.s+")");
+					mScreen.send(update.p.d, update.s);
 				}
 				mPostTime = (System.nanoTime()-startTime)/1000000;
 			}
@@ -117,5 +119,29 @@ public class ArduboyActivity extends MainActivity
 	@Override
 	protected String getTarget(){
 		return "atmega32u4";
+	}
+
+	private class OLED
+	{
+		private int X=0, Y=0;
+		public void send(int portValue, int data) {
+			if(portValue == 0x50)
+			{
+				for(int j = 0; j < 8; j++)
+				{
+					int color = Color.parseColor((data & (1 << j)) == 0 ? "#000000": "#FFFFFF");
+					setPixel(X, Y+j, color);
+				}
+				if(++X == getScreenWidth())
+				{
+					X = 0;
+					Y += 8;
+					if(Y == getScreenHeight())
+					{
+						Y = 0;
+					}
+				}
+			}
+		}
 	}
 }
