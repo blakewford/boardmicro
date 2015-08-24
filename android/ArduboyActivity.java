@@ -27,6 +27,27 @@ public class ArduboyActivity extends MainActivity
 
 	@Override
 	public void handleButtonPress(View view) {
+		switch(view.getId())
+		{
+			case R.id.btnUp:
+				buttonHit(0x23,0xEF);
+				break;
+			case R.id.btnRight:
+				buttonHit(0x26,0x80);
+				break;
+			case R.id.btnDown:
+				buttonHit(0x23,0xBF);
+				break;
+			case R.id.btnLeft:
+				buttonHit(0x23,0xDF);
+				break;
+			case R.id.btnA:
+				buttonHit(0x2F,0x7F);
+				break;
+			case R.id.btnB:
+				buttonHit(0x2F,0xBF);
+				break;
+		}
 	}
 
         @Override
