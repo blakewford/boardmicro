@@ -105,21 +105,57 @@ int main(int argc, char *argv[])
 
     gImage = gtk_image_new_from_file("screen");
 
+    GtkWidget* horizontal_linear_layout0 = gtk_hbox_new(FALSE, 0);
+    GtkWidget* blank_left = gtk_hbox_new(FALSE, 0);
+    gtk_widget_set_size_request(blank_left, 44, 44);
+    GtkWidget* up_button = gtk_button_new();
+    gtk_widget_set_size_request(up_button, 44, 44);
+    GtkWidget* blank_right = gtk_hbox_new(FALSE, 0);
+    gtk_widget_set_size_request(blank_right, 44, 44);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), blank_left);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), up_button);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), blank_right);
+
     GtkWidget* horizontal_linear_layout = gtk_hbox_new(FALSE, 0);
     gtk_box_set_spacing((GtkBox*)horizontal_linear_layout, 44);
 
-    GtkWidget* a_button = gtk_button_new_with_label("A");
+    GtkWidget* left_button = gtk_button_new();
+    gtk_widget_set_size_request(left_button, 44, 44);
+    GtkWidget* right_button = gtk_button_new();
+    gtk_widget_set_size_request(right_button, 44, 44);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), left_button);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), right_button);
+
+    GtkWidget* horizontal_linear_layout2 = gtk_hbox_new(FALSE, 0);
+    GtkWidget* blank_left1 = gtk_hbox_new(FALSE, 0);
+    gtk_widget_set_size_request(blank_left1, 44, 44);
+    GtkWidget* down_button = gtk_button_new();
+    gtk_widget_set_size_request(down_button, 44, 44);
+    GtkWidget* blank_right1 = gtk_hbox_new(FALSE, 0);
+    gtk_widget_set_size_request(blank_right1, 44, 44);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), blank_left1);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), down_button);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), blank_right1);
+
+    GtkWidget* horizontal_linear_layout3 = gtk_hbox_new(FALSE, 0);
+    GtkWidget* blank_left2 = gtk_hbox_new(FALSE, 0);
+    gtk_widget_set_size_request(blank_left2, 44, 44);
+    GtkWidget* a_button = gtk_button_new();
     gtk_widget_set_size_request(a_button, 44, 44);
-    GtkWidget* b_button = gtk_button_new_with_label("B");
+    GtkWidget* b_button = gtk_button_new();
     gtk_widget_set_size_request(b_button, 44, 44);
-    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), a_button);
-    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), b_button);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout3), blank_left2);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout3), a_button);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout3), b_button);
 
     GtkWidget* parent_linear_layout = gtk_hbox_new(FALSE, 0);
     GtkWidget* vertical_linear_layout = gtk_vbox_new(FALSE, 15);
 
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), gImage, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout0, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout2, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout3, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(parent_linear_layout), vertical_linear_layout, FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(layout), parent_linear_layout);
