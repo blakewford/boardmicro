@@ -17,12 +17,6 @@
 GtkWidget* gImage = NULL;
 GtkWidget* gScaledImage = NULL;
 
-extern "C"{
-void loadPartialProgram(uint8_t* binary);
-void engineInit(const char* m);
-int32_t fetchN(int32_t n);
-}
-
 static void put_pixel(GdkPixbuf *pixbuf, int x, int y, uint32_t color)
 {
     int width, height, rowstride, n_channels;
@@ -98,6 +92,42 @@ void* refreshUI(void* obj)
     }
 }
 
+static void buttonHandler(GtkButton* button)
+{
+    int r, v;
+    if(!strcmp(gtk_widget_get_name((GtkWidget*)button), "UP"))
+    {
+        r = 0x23;
+        v = 0xEF;
+    }
+    if(!strcmp(gtk_widget_get_name((GtkWidget*)button), "R"))
+    {
+        r = 0x26;
+        v = 0x80;
+    }
+    if(!strcmp(gtk_widget_get_name((GtkWidget*)button), "DOWN"))
+    {
+        r = 0x23;
+        v = 0xBF;
+    }
+    if(!strcmp(gtk_widget_get_name((GtkWidget*)button), "L"))
+    {
+        r = 0x23;
+        v = 0xDF;
+    }
+    if(!strcmp(gtk_widget_get_name((GtkWidget*)button), "A"))
+    {
+        r = 0x2F;
+        v = 0x7F;
+    }
+    if(!strcmp(gtk_widget_get_name((GtkWidget*)button), "B"))
+    {
+        r = 0x2F;
+        v = 0xBF;
+    }
+    buttonHit(r,v);
+}
+
 int main(int argc, char *argv[])
 {
     FILE* executable = NULL;
@@ -143,6 +173,8 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), blank_left);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), up_button);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), blank_right);
+    gtk_widget_set_name(up_button, "UP");
+    g_signal_connect(up_button, "clicked", G_CALLBACK(buttonHandler), NULL);
 
     GtkWidget* horizontal_linear_layout = gtk_hbox_new(FALSE, 0);
     gtk_box_set_spacing((GtkBox*)horizontal_linear_layout, 44);
@@ -156,6 +188,10 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), left_button);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), right_button);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), blank_right1);
+    gtk_widget_set_name(left_button, "L");
+    g_signal_connect(left_button, "clicked", G_CALLBACK(buttonHandler), NULL);
+    gtk_widget_set_name(right_button, "R");
+    g_signal_connect(right_button, "clicked", G_CALLBACK(buttonHandler), NULL);
 
     GtkWidget* horizontal_linear_layout2 = gtk_hbox_new(FALSE, 0);
     GtkWidget* blank_left1 = gtk_hbox_new(FALSE, 0);
@@ -167,6 +203,8 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), blank_left1);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), down_button);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), blank_right2);
+    gtk_widget_set_name(down_button, "DOWN");
+    g_signal_connect(down_button, "clicked", G_CALLBACK(buttonHandler), NULL);
 
     GtkWidget* horizontal_linear_layout3 = gtk_hbox_new(FALSE, 0);
     GtkWidget* blank_left2 = gtk_hbox_new(FALSE, 0);
@@ -178,6 +216,10 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout3), blank_left2);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout3), a_button);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout3), b_button);
+    gtk_widget_set_name(a_button, "A");
+    g_signal_connect(a_button, "clicked", G_CALLBACK(buttonHandler), NULL);
+    gtk_widget_set_name(b_button, "B");
+    g_signal_connect(b_button, "clicked", G_CALLBACK(buttonHandler), NULL);
 
     GtkWidget* parent_linear_layout = gtk_hbox_new(FALSE, 0);
     GtkWidget* vertical_linear_layout = gtk_vbox_new(FALSE, 15);
