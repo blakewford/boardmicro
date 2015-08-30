@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sched.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -10,6 +11,7 @@
 #define COlOR_SCALE (0x10000/0x100)
 
 GtkWidget* gImage = NULL;
+GtkWidget* gScaledImage = NULL;
 
 void loadPartialProgram(uint8_t* binary);
 void engineInit(const char* m);
@@ -20,13 +22,13 @@ static void put_pixel(GdkPixbuf *pixbuf, int x, int y, uint32_t color)
     int width, height, rowstride, n_channels;
     guchar *pixels, *p;
 
-    n_channels = gdk_pixbuf_get_n_channels (pixbuf);
+    n_channels = gdk_pixbuf_get_n_channels(pixbuf);
 
-    width = gdk_pixbuf_get_width (pixbuf);
-    height = gdk_pixbuf_get_height (pixbuf);
+    width = gdk_pixbuf_get_width(pixbuf);
+    height = gdk_pixbuf_get_height(pixbuf);
 
-    rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-    pixels = gdk_pixbuf_get_pixels (pixbuf);
+    rowstride = gdk_pixbuf_get_rowstride(pixbuf);
+    pixels = gdk_pixbuf_get_pixels(pixbuf);
 
     p = pixels + y * rowstride + x * n_channels;
     p[0] = (color >> 16) & 0xFF;
@@ -40,10 +42,11 @@ static void writeSPI(struct spiWrite call)
 {
     if(call.ports[2] == 0x50)
     {
+        GdkPixbuf* buffer = gtk_image_get_pixbuf((GtkImage*)gImage);
         for(int j = 0; j < 8; j++)
         {
             int color = (call.spi & (1 << j)) == 0 ? 0x000000: 0xFFFFFF;
-            put_pixel(gtk_image_get_pixbuf((GtkImage*)gImage), X, Y+j, color);
+            put_pixel(buffer, X, Y+j, color);
         }
         if(++X == 128)
         {
@@ -55,7 +58,6 @@ static void writeSPI(struct spiWrite call)
             }
         }
     }
-    gtk_widget_queue_draw(gImage);
 }
 
 bool GtkRunning = true;
@@ -69,7 +71,25 @@ void* simavr(void* obj)
     {
     }
 
-    if(GtkRunning) gtk_main_quit();
+    if(GtkRunning)
+    {
+        gtk_main_quit();
+        GtkRunning = false;
+    }
+
+    return NULL;
+}
+
+void* refreshUI(void* obj)
+{
+    sleep(2);
+    while(GtkRunning)
+    {
+        GdkPixbuf* buffer = gdk_pixbuf_scale_simple(gtk_image_get_pixbuf((GtkImage*)gImage), 256, 128, GDK_INTERP_NEAREST);
+        gtk_image_set_from_pixbuf((GtkImage*)gScaledImage, buffer);
+        gtk_widget_queue_draw(gScaledImage);
+        sleep(1);
+    }
 
     return NULL;
 }
@@ -104,6 +124,8 @@ int main(int argc, char *argv[])
     gtk_widget_modify_bg(layout, GTK_STATE_NORMAL, &color);
 
     gImage = gtk_image_new_from_file("screen");
+    GdkPixbuf* buffer = gdk_pixbuf_scale_simple(gtk_image_get_pixbuf((GtkImage*)gImage), 256, 128, GDK_INTERP_NEAREST);
+    gScaledImage = gtk_image_new_from_pixbuf(buffer);
 
     GtkWidget* horizontal_linear_layout0 = gtk_hbox_new(FALSE, 0);
     GtkWidget* blank_left = gtk_hbox_new(FALSE, 0);
@@ -111,7 +133,7 @@ int main(int argc, char *argv[])
     GtkWidget* up_button = gtk_button_new();
     gtk_widget_set_size_request(up_button, 44, 44);
     GtkWidget* blank_right = gtk_hbox_new(FALSE, 0);
-    gtk_widget_set_size_request(blank_right, 44, 44);
+    gtk_widget_set_size_request(blank_right, 168, 44);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), blank_left);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), up_button);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout0), blank_right);
@@ -123,19 +145,22 @@ int main(int argc, char *argv[])
     gtk_widget_set_size_request(left_button, 44, 44);
     GtkWidget* right_button = gtk_button_new();
     gtk_widget_set_size_request(right_button, 44, 44);
+    GtkWidget* blank_right1 = gtk_hbox_new(FALSE, 0);
+    gtk_widget_set_size_request(blank_right1, 80, 44);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), left_button);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), right_button);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout), blank_right1);
 
     GtkWidget* horizontal_linear_layout2 = gtk_hbox_new(FALSE, 0);
     GtkWidget* blank_left1 = gtk_hbox_new(FALSE, 0);
     gtk_widget_set_size_request(blank_left1, 44, 44);
     GtkWidget* down_button = gtk_button_new();
     gtk_widget_set_size_request(down_button, 44, 44);
-    GtkWidget* blank_right1 = gtk_hbox_new(FALSE, 0);
-    gtk_widget_set_size_request(blank_right1, 44, 44);
+    GtkWidget* blank_right2 = gtk_hbox_new(FALSE, 0);
+    gtk_widget_set_size_request(blank_right2, 168, 44);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), blank_left1);
     gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), down_button);
-    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), blank_right1);
+    gtk_container_add(GTK_CONTAINER(horizontal_linear_layout2), blank_right2);
 
     GtkWidget* horizontal_linear_layout3 = gtk_hbox_new(FALSE, 0);
     GtkWidget* blank_left2 = gtk_hbox_new(FALSE, 0);
@@ -151,7 +176,7 @@ int main(int argc, char *argv[])
     GtkWidget* parent_linear_layout = gtk_hbox_new(FALSE, 0);
     GtkWidget* vertical_linear_layout = gtk_vbox_new(FALSE, 15);
 
-    gtk_box_pack_start(GTK_BOX(vertical_linear_layout), gImage, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vertical_linear_layout), gScaledImage, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout0, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout2, FALSE, FALSE, 0);
@@ -168,13 +193,16 @@ int main(int argc, char *argv[])
     setSPICallback(&writeSPI);
 
     pthread_t simavr_thread;
+    pthread_t refresh_thread;
     pthread_create(&simavr_thread, NULL, simavr, NULL);
+    pthread_create(&refresh_thread, NULL, refreshUI, NULL);
 
     gtk_main();
 
     GtkRunning = false;
 
     pthread_join(simavr_thread, NULL);
+    pthread_join(refresh_thread, NULL);
 
     return 0;
 }
