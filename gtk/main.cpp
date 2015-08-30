@@ -2,9 +2,13 @@
 #include <sched.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
 #include <pthread.h>
 #include <gtk/gtk.h>
+
+#include <chrono>
+#include <thread>
 
 #include "sim_board_micro.h"
 
@@ -13,9 +17,11 @@
 GtkWidget* gImage = NULL;
 GtkWidget* gScaledImage = NULL;
 
+extern "C"{
 void loadPartialProgram(uint8_t* binary);
 void engineInit(const char* m);
 int32_t fetchN(int32_t n);
+}
 
 static void put_pixel(GdkPixbuf *pixbuf, int x, int y, uint32_t color)
 {
@@ -88,10 +94,8 @@ void* refreshUI(void* obj)
         GdkPixbuf* buffer = gdk_pixbuf_scale_simple(gtk_image_get_pixbuf((GtkImage*)gImage), 256, 128, GDK_INTERP_NEAREST);
         gtk_image_set_from_pixbuf((GtkImage*)gScaledImage, buffer);
         gtk_widget_queue_draw(gScaledImage);
-        sleep(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-
-    return NULL;
 }
 
 int main(int argc, char *argv[])
@@ -101,9 +105,11 @@ int main(int argc, char *argv[])
     if(executable)
     {
         char buffer[1024];
+        uint8_t unsignedBuffer[1024];
         while(fgets(buffer , 1024, executable) != NULL)
         {
-            loadPartialProgram(buffer);
+            memcpy(unsignedBuffer, buffer, 1024);
+            loadPartialProgram(unsignedBuffer);
         }
         fclose(executable);
     }

@@ -6,5 +6,6 @@ struct spiWrite
 	uint8_t spi;
 };
 
+extern "C" {
 void setSPICallback(void (*callback)(struct spiWrite call));
-
+}
