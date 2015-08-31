@@ -13,6 +13,7 @@
 #include "sim_board_micro.h"
 
 #define COlOR_SCALE (0x10000/0x100)
+#define SCREEN_IMAGE "screen"
 
 GtkWidget* gImage = NULL;
 GtkWidget* gScaledImage = NULL;
@@ -159,7 +160,28 @@ int main(int argc, char *argv[])
     color.blue = 0x33*COlOR_SCALE;
     gtk_widget_modify_bg(layout, GTK_STATE_NORMAL, &color);
 
-    gImage = gtk_image_new_from_file("screen");
+    char linkBuffer[32];
+    char pathBuffer[256];
+    memset(pathBuffer, '\0', 256);
+    sprintf(linkBuffer, "/proc/%d/exe", getpid());
+    readlink(linkBuffer, pathBuffer, 256);
+
+    char* temp = pathBuffer;
+    char* found = strstr(pathBuffer, "/" );
+    while(found != NULL)
+    {
+        temp += (found-temp);
+        temp++;
+        found = strstr(temp, "/" );
+    }
+
+    char screenPathBuffer[256];
+    memset(screenPathBuffer, '\0', 256);
+    int length = temp-pathBuffer;
+    strncpy(screenPathBuffer, pathBuffer, length);
+    strncpy(screenPathBuffer+length, SCREEN_IMAGE, strlen(SCREEN_IMAGE));
+    gImage = gtk_image_new_from_file(screenPathBuffer);
+
     GdkPixbuf* buffer = gdk_pixbuf_scale_simple(gtk_image_get_pixbuf((GtkImage*)gImage), 256, 128, GDK_INTERP_NEAREST);
     gScaledImage = gtk_image_new_from_pixbuf(buffer);
 
