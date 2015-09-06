@@ -243,7 +243,6 @@ int main(int argc, char *argv[])
     gtk_widget_set_name(b_button, "B");
     g_signal_connect(b_button, "clicked", G_CALLBACK(buttonHandler), NULL);
 
-    GtkWidget* parent_linear_layout = gtk_hbox_new(FALSE, 0);
     GtkWidget* vertical_linear_layout = gtk_vbox_new(FALSE, 15);
 
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), gScaledImage, FALSE, FALSE, 0);
@@ -252,8 +251,7 @@ int main(int argc, char *argv[])
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout2, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vertical_linear_layout), horizontal_linear_layout3, FALSE, FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(parent_linear_layout), vertical_linear_layout, FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(layout), parent_linear_layout);
+    gtk_container_add(GTK_CONTAINER(layout), vertical_linear_layout);
 
     g_signal_connect(G_OBJECT(layout), "destroy",
     G_CALLBACK(gtk_main_quit), NULL);
