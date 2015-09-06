@@ -6,5 +6,8 @@ android/src/org/starlo/boardmicro/DropboxConstants.java
 android/src/org/starlo/boardmicro/ConfigConstants.java
 prebuilt
 htmlfrag/dropbox
+gtk/Arduboy/bin
+gtk/Arduboy/obj
+gtk/Arduboy.userprefs
 js/gdrive.js
 boardmicro.pem
