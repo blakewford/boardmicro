@@ -7,6 +7,7 @@ namespace Arduboy
 {
 	class MainClass
 	{
+		private static int X=0, Y=0;
 		private static volatile bool GtkRunning = true;
 
 		private static void Simulation()
@@ -32,10 +33,24 @@ namespace Arduboy
 			}
 			SimAVR.SharpSPI callback = (portC, value) =>
 			{
+				if(portC == 0x50)
+				{
+					for(int j = 0; j < 8; j++)
+					{
+						//int color = (value & (1 << j)) == 0 ? 0x000000: 0xFFFFFF;
+					}
+					if(++X == 128)
+					{
+						X = 0;
+						Y += 8;
+						if(Y == 64)
+						{
+							Y = 0;
+						}
+					}
+				}
 			};
 			SimAVR.SharpCallback(callback);
-
-
 			new Thread(Simulation).Start();
 			Application.Run();
 			GtkRunning = false;

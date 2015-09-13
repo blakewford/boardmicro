@@ -5,7 +5,10 @@ public partial class MainWindow: Gtk.Window
 {
 	private const int COlOR_SCALE = 256;
 
-	public MainWindow () : base (Gtk.WindowType.Toplevel)
+	public Gtk.Image Standard {get; set;}
+	public Gtk.Image Scaled {get; set;}
+
+	public MainWindow() : base (Gtk.WindowType.Toplevel)
 	{
 		Build();
 		SetPosition(Gtk.WindowPosition.Center);
@@ -17,9 +20,9 @@ public partial class MainWindow: Gtk.Window
 		ModifyBg(StateType.Normal, color);
 
 		Fixed vLinearLayout = new Fixed();
-		Gtk.Image screen = new Gtk.Image ("screen");
-		Gtk.Image scaled = new Gtk.Image(screen.Pixbuf.ScaleSimple (256, 128, Gdk.InterpType.Nearest));
-		vLinearLayout.Put(scaled, 0, 0);
+		Standard = new Gtk.Image ("screen");
+		Scaled = new Gtk.Image(Standard.Pixbuf.ScaleSimple (256, 128, Gdk.InterpType.Nearest));
+		vLinearLayout.Put(Scaled, 0, 0);
 
 		Gtk.Button upButton = new Gtk.Button();
 		upButton.SetSizeRequest(44, 44);
