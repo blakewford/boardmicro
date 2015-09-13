@@ -10,6 +10,7 @@ namespace Arduboy
 			Application.Init();
 			MainWindow win = new MainWindow();
 			win.ShowAll();
+			SimAVR.loadPartialProgram(null);
 			Application.Run();
 		}
 	}
