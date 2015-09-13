@@ -30,6 +30,12 @@ namespace Arduboy
 				System.Buffer.BlockCopy(encoding.GetBytes(line), 0, bytes, 0, bytes.Length);
 				SimAVR.loadPartialProgram(bytes);
 			}
+			SimAVR.SharpSPI callback = (portC, value) =>
+			{
+			};
+			SimAVR.SharpCallback(callback);
+
+
 			new Thread(Simulation).Start();
 			Application.Run();
 			GtkRunning = false;
